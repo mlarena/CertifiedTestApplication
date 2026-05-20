@@ -1,0 +1,52 @@
+@model IEnumerable<CertifiedTestApplication.Models.Entities.User>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Пользователи</h2>
+    <a asp-action="Create" class="btn btn-primary btn-sm">Создать пользователя</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover border">
+        <thead class="table-light">
+            <tr>
+                <th>Логин</th>
+                <th>ФИО</th>
+                <th>Роль</th>
+                <th>Статус</th>
+                <th>Создан</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Login</td>
+                    <td>@item.FullName</td>
+                    <td>@item.Role?.Name</td>
+                    <td>
+                        @if (item.IsBlocked)
+                        {
+                            <span class="badge bg-danger">Заблокирован</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Активен</span>
+                        }
+                    </td>
+                    <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>
+                        @if (item.Login != "sa")
+                        {
+                            <form asp-action="ToggleBlock" asp-route-id="@item.Id" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                    @(item.IsBlocked ? "Разблокировать" : "Заблокировать")
+                                </button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

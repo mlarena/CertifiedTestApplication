@@ -1,0 +1,45 @@
+@model IEnumerable<CertifiedTestApplication.Models.Entities.Test>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Тесты</h2>
+    <a asp-action="Create" class="btn btn-primary btn-sm">Создать тест</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover border">
+        <thead class="table-light">
+            <tr>
+                <th>Название</th>
+                <th>Категория</th>
+                <th>Автор</th>
+                <th>Тайминг (сек)</th>
+                <th>Статус</th>
+                <th class="text-end">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Category?.Name</td>
+                    <td>@item.Author?.FullName</td>
+                    <td>@(item.TimeLimit > 0 ? item.TimeLimit.ToString() : "Нет")</td>
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span class="badge bg-success">Активен</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Черновик</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm py-0">Редактировать</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

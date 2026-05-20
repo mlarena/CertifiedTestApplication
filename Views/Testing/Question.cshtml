@@ -1,0 +1,111 @@
+@model CertifiedTestApplication.Models.Entities.Question
+@{
+    var attempt = (CertifiedTestApplication.Models.Entities.TestAttempt)ViewBag.Attempt;
+    var qNum = (int)ViewBag.QuestionNumber;
+    var total = (int)ViewBag.TotalQuestions;
+    var answers = (IEnumerable<CertifiedTestApplication.Models.Entities.Answer>)ViewBag.Answers;
+    var userAnswers = (IEnumerable<CertifiedTestApplication.Models.Entities.UserAnswer>)ViewBag.UserAnswers;
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">@attempt.Test?.Title</h4>
+        <div class="text-muted small">Вопрос @qNum из @total</div>
+    </div>
+
+    <div class="progress mb-4" style="height: 5px;">
+        <div class="progress-bar" role="progressbar" style="width: @(qNum * 100 / total)%"></div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <div class="text-center mb-4">
+                    <img src="@Model.ImagePath" class="img-fluid rounded border" style="max-height: 300px;" />
+                </div>
+            }
+
+            <h5 class="mb-4">@Model.Text</h5>
+
+            <form id="answerForm">
+                <input type="hidden" name="attemptId" value="@attempt.Id" />
+                <input type="hidden" name="questionId" value="@Model.Id" />
+
+                @if (Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Numeric)
+                {
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Введите числовой ответ:</label>
+                        <input type="number" step="any" name="rawValue" class="form-control form-control-sm w-50" 
+                               value="@userAnswers.FirstOrDefault()?.RawValue" onchange="saveAnswer()" />
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var a in answers)
+                        {
+                            var isChecked = userAnswers.Any(ua => ua.SelectedAnswerId == a.Id);
+                            <label class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                                <input class="form-check-input me-3" 
+                                       type="@(Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Single ? "radio" : "checkbox")" 
+                                       name="selectedAnswers" value="@a.Id" 
+                                       @(isChecked ? "checked" : "") onchange="saveAnswer()" />
+                                <span>@a.Text</span>
+                            </label>
+                        }
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        @if (qNum > 1 && (attempt.Test?.CanReturnToQuestion ?? true))
+        {
+            <a asp-action="Question" asp-route-attemptId="@attempt.Id" asp-route-questionNumber="@(qNum - 1)" 
+               class="btn btn-outline-secondary btn-sm px-4">Назад</a>
+        }
+        else
+        {
+            <div></div>
+        }
+
+        @if (qNum < total)
+        {
+            <a asp-action="Question" asp-route-attemptId="@attempt.Id" asp-route-questionNumber="@(qNum + 1)" 
+               class="btn btn-primary btn-sm px-4" id="nextBtn">Далее</a>
+        }
+        else
+        {
+            <a asp-action="Finish" asp-route-attemptId="@attempt.Id" 
+               class="btn btn-success btn-sm px-4" onclick="return confirm('Завершить тест?')">Завершить</a>
+        }
+    </div>
+</div>
+
+<div id="saveStatus" class="position-fixed bottom-0 end-0 p-3 small text-muted" style="display:none;">
+    <div class="spinner-border spinner-border-sm text-primary me-1" role="status"></div> Сохранение...
+</div>
+
+@section Scripts {
+    <script>
+        function saveAnswer() {
+            const form = document.getElementById('answerForm');
+            const formData = new FormData(form);
+            const status = document.getElementById('saveStatus');
+            
+            status.style.display = 'block';
+            
+            fetch('/Testing/SaveAnswer', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                setTimeout(() => { status.style.display = 'none'; }, 500);
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при сохранении ответа!');
+            });
+        }
+    </script>
+}

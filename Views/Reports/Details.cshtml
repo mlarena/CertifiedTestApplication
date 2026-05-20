@@ -1,0 +1,69 @@
+@model IEnumerable<CertifiedTestApplication.Controllers.QuestionResultViewModel>
+@{
+    var attempt = (CertifiedTestApplication.Models.Entities.TestAttempt)ViewBag.Attempt;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Разбор ошибок</h2>
+        <p class="text-muted mb-0">Тест: @attempt.Test?.Title | Результат: <strong>@attempt.Score%</strong></p>
+    </div>
+    <a href="javascript:window.history.back()" class="btn btn-outline-secondary btn-sm">Назад</a>
+</div>
+
+@foreach (var item in Model)
+{
+    <div class="card mb-3 shadow-sm border-0 @(item.IsCorrect ? "border-start border-success border-4" : "border-start border-danger border-4")">
+        <div class="card-body p-3">
+            <div class="d-flex justify-content-between">
+                <h6 class="mb-3">@item.Question.Text</h6>
+                @if (item.IsCorrect)
+                {
+                    <span class="badge bg-success-subtle text-success border border-success-subtle small h-100">Верно</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle small h-100">Ошибка</span>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(item.Question.ImagePath))
+            {
+                <div class="mb-3">
+                    <img src="@item.Question.ImagePath" class="img-thumbnail" style="max-height: 150px;" />
+                </div>
+            }
+
+            @if (item.Question.Type == CertifiedTestApplication.Models.Entities.QuestionType.Numeric)
+            {
+                <div class="small">
+                    <div>Ваш ответ: <strong class="@(item.IsCorrect ? "text-success" : "text-danger")">@item.UserAnswers.FirstOrDefault()?.RawValue</strong></div>
+                    @if (!item.IsCorrect)
+                    {
+                        <div class="text-muted">Правильный ответ: <strong>@item.Answers.FirstOrDefault()?.NumericValue</strong></div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var a in item.Answers)
+                    {
+                        var isUserSelected = item.UserAnswers.Any(ua => ua.SelectedAnswerId == a.Id);
+                        <div class="list-group-item py-1 px-0 border-0 small d-flex align-items-center">
+                            <span class="me-2">
+                                @if (a.IsCorrect) { <i class="bi bi-check-circle-fill text-success"></i> }
+                                else if (isUserSelected && !a.IsCorrect) { <i class="bi bi-x-circle-fill text-danger"></i> }
+                                else { <i class="bi bi-circle text-light border rounded-circle"></i> }
+                            </span>
+                            <span class="@(isUserSelected ? "fw-bold" : "") @(a.IsCorrect ? "text-success" : (isUserSelected ? "text-danger" : ""))">
+                                @a.Text
+                                @if (isUserSelected) { <small class="text-muted ms-2">(Ваш выбор)</small> }
+                            </span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

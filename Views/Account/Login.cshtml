@@ -1,0 +1,43 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вход - АСТП</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body { background-color: #f8f9fa; }
+        .login-container { max-width: 400px; margin-top: 100px; }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">Вход в систему</h3>
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small">Логин</label>
+                        <input name="login" class="form-control form-control-sm" required autofocus />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small">Пароль</label>
+                        <input name="password" type="password" class="form-control form-control-sm" required />
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-sm">Войти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

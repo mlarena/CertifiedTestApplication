@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<CertifiedTestApplication.Models.Entities.Test>
+@{
+    ViewData["Title"] = "Доступные тесты";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mb-5">
+    <h1 class="display-6">Система технического тестирования</h1>
+    <p class="text-muted">Выберите тест для начала прохождения</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var test in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle small">@test.Category?.Name</span>
+                        @if (test.TimeLimit > 0)
+                        {
+                            <span class="text-muted small"><i class="bi bi-clock"></i> @(test.TimeLimit / 60) мин</span>
+                        }
+                    </div>
+                    <h5 class="card-title">@test.Title</h5>
+                    <p class="card-text small text-muted">@test.Description</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-3">
+                    <a asp-controller="Testing" asp-action="Start" asp-route-testId="@test.Id" class="btn btn-outline-primary btn-sm w-100">Начать тест</a>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">На данный момент нет активных тестов.</p>
+        </div>
+    }
 </div>

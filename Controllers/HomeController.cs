@@ -1,19 +1,30 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CertifiedTestApplication.Data;
 using CertifiedTestApplication.Models;
+using CertifiedTestApplication.Models.Entities;
 
 namespace CertifiedTestApplication.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly ApplicationDbContext _context;
+
+    public HomeController(ApplicationDbContext context)
     {
-        return View();
+        _context = context;
     }
 
-    public IActionResult Privacy()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var tests = await _context.Tests
+            .Include(t => t.Category)
+            .Where(t => t.IsActive)
+            .ToListAsync();
+        return View(tests);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

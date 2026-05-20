@@ -1,0 +1,29 @@
+@model IEnumerable<CertifiedTestApplication.Models.Entities.Log>
+
+<h2>Системный журнал (Логи)</h2>
+
+<div class="table-responsive mt-3">
+    <table class="table table-sm table-hover border" style="font-size: 0.85rem;">
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Пользователь</th>
+                <th>Действие</th>
+                <th>Сущность</th>
+                <th>ID/Инфо</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Timestamp.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")</td>
+                    <td>@item.User?.FullName <br/><small class="text-muted">@item.User?.Login</small></td>
+                    <td>@item.Action</td>
+                    <td>@item.EntityName</td>
+                    <td class="text-truncate" style="max-width: 200px;">@item.EntityId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
