@@ -1,0 +1,52 @@
+@model CertifiedTestApplication.Models.Entities.Test
+
+<h2>Создать тест</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small">Название теста</label>
+                        <input asp-for="Title" class="form-control form-control-sm" required />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Категория</label>
+                        <select asp-for="CategoryId" class="form-select form-select-sm" 
+                                asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Описание</label>
+                        <textarea asp-for="Description" class="form-control form-control-sm" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Лимит времени (в секундах, 0 - без лимита)</label>
+                        <input asp-for="TimeLimit" type="number" class="form-control form-control-sm" value="0" />
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox">
+                        <label class="form-check-label small">Активен (доступен для прохождения)</label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="CanReturnToQuestion" class="form-check-input" type="checkbox" checked>
+                        <label class="form-check-label small">Разрешить возврат к предыдущим вопросам</label>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-sm">Создать и перейти к вопросам</button>
+                        <a asp-action="Index" class="btn btn-link btn-sm text-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

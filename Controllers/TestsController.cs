@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CertifiedTestApplication.Data;
 using CertifiedTestApplication.Models.Entities;
+using CertifiedTestApplication.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace CertifiedTestApplication.Controllers;
 
@@ -18,16 +21,133 @@ public class TestsController : Controller
         _environment = environment;
     }
 
+    // --- Экспорт и Импорт ---
+
+    public async Task<IActionResult> Export(Guid id)
+    {
+        var test = await _context.Tests
+            .Include(t => t.Category)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (test == null) return NotFound();
+
+        var questions = await _context.Questions
+            .Where(q => q.TestId == id)
+            .OrderBy(q => q.Order)
+            .ToListAsync();
+
+        var exportDto = new TestExportDto
+        {
+            Title = test.Title,
+            Description = test.Description,
+            TimeLimit = test.TimeLimit,
+            CanReturnToQuestion = test.CanReturnToQuestion,
+            Questions = new List<QuestionExportDto>()
+        };
+
+        foreach (var q in questions)
+        {
+            var answers = await _context.Answers
+                .Where(a => a.QuestionId == q.Id)
+                .ToListAsync();
+
+            exportDto.Questions.Add(new QuestionExportDto
+            {
+                Text = q.Text,
+                Type = q.Type,
+                Order = q.Order,
+                Answers = answers.Select(a => new AnswerExportDto
+                {
+                    Text = a.Text,
+                    IsCorrect = a.IsCorrect,
+                    NumericValue = a.NumericValue
+                }).ToList()
+            });
+        }
+
+        var json = JsonConvert.SerializeObject(exportDto, Formatting.Indented);
+        var fileName = $"Test_{test.Title.Replace(" ", "_")}.json";
+        return File(Encoding.UTF8.GetBytes(json), "application/json", fileName);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Import(IFormFile jsonFile, int categoryId)
+    {
+        if (jsonFile == null || jsonFile.Length == 0)
+        {
+            TempData["Error"] = "Файл не выбран";
+            return RedirectToAction(nameof(Index));
+        }
+
+        try
+        {
+            using var reader = new StreamReader(jsonFile.OpenReadStream());
+            var content = await reader.ReadToEndAsync();
+            var importDto = JsonConvert.DeserializeObject<TestExportDto>(content);
+
+            if (importDto == null) throw new Exception("Неверный формат файла");
+
+            var test = new Test
+            {
+                Id = Guid.NewGuid(),
+                Title = importDto.Title + " (Импорт)",
+                Description = importDto.Description,
+                TimeLimit = importDto.TimeLimit,
+                CanReturnToQuestion = importDto.CanReturnToQuestion,
+                CategoryId = categoryId,
+                AuthorId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value),
+                IsActive = false
+            };
+
+            _context.Tests.Add(test);
+
+            foreach (var qDto in importDto.Questions)
+            {
+                var question = new Question
+                {
+                    Id = Guid.NewGuid(),
+                    TestId = test.Id,
+                    Text = qDto.Text,
+                    Type = qDto.Type,
+                    Order = qDto.Order
+                };
+                _context.Questions.Add(question);
+
+                foreach (var aDto in qDto.Answers)
+                {
+                    _context.Answers.Add(new Answer
+                    {
+                        Id = Guid.NewGuid(),
+                        QuestionId = question.Id,
+                        Text = aDto.Text,
+                        IsCorrect = aDto.IsCorrect,
+                        NumericValue = aDto.NumericValue
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = $"Тест '{test.Title}' успешно импортирован";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "Ошибка при импорте: " + ex.Message;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
     // Список тестов
     public async Task<IActionResult> Index()
     {
+        ViewBag.Categories = await _context.Categories.ToListAsync();
         var tests = await _context.Tests
             .Include(t => t.Category)
             .Include(t => t.Author)
             .ToListAsync();
         return View(tests);
     }
-
     // Создание теста
     [HttpGet]
     public async Task<IActionResult> Create()
