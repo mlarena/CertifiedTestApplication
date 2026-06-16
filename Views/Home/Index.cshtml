@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CertifiedTestApplication.Models.Entities.Test>
+@model IEnumerable<CertifiedTestApplication.Models.Entities.Test>
 @{
     ViewData["Title"] = "Доступные тесты";
 }
@@ -11,6 +11,11 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach (var test in Model)
     {
+        var questionCount = test.Questions?.Count ?? 0;
+        var lastAttempt = test.Attempts?
+            .Where(a => a.UserId == Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value))
+            .OrderByDescending(a => a.StartedAt)
+            .FirstOrDefault();
         <div class="col">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
@@ -18,14 +23,47 @@
                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle small">@test.Category?.Name</span>
                         @if (test.TimeLimit > 0)
                         {
-                            <span class="text-muted small"><i class="bi bi-clock"></i> @(test.TimeLimit / 60) мин</span>
+                            <span class="text-muted small">&#9202; @(test.TimeLimit / 60) мин</span>
                         }
                     </div>
                     <h5 class="card-title">@test.Title</h5>
-                    <p class="card-text small text-muted">@test.Description</p>
+                    <p class="card-text small text-muted mb-3">@test.Description</p>
+
+                    <div class="d-flex gap-3 mb-3">
+                        <span class="small text-muted">
+                            <span class="fw-medium">@questionCount</span> вопросов
+                        </span>
+                    </div>
+
+                    @if (lastAttempt != null && lastAttempt.Status == CertifiedTestApplication.Models.Entities.AttemptStatus.Completed)
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-3 p-2 @(lastAttempt.Score >= 80 ? "bg-success-subtle" : "bg-danger-subtle") rounded">
+                            <span class="small @(lastAttempt.Score >= 80 ? "text-success" : "text-danger")">
+                                Предыдущий результат: <strong>@lastAttempt.Score%</strong>
+                            </span>
+                            @if (lastAttempt.Score >= 80)
+                            {
+                                <span class="badge bg-success">Сдал</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Не сдал</span>
+                            }
+                        </div>
+                    }
                 </div>
                 <div class="card-footer bg-transparent border-0 pb-3">
-                    <a asp-controller="Testing" asp-action="Start" asp-route-testId="@test.Id" class="btn btn-outline-primary btn-sm w-100">Начать тест</a>
+                    <a asp-controller="Testing" asp-action="Start" asp-route-testId="@test.Id"
+                       class="btn @(lastAttempt != null && lastAttempt.Status == CertifiedTestApplication.Models.Entities.AttemptStatus.InProgress ? "btn-warning" : "btn-outline-primary") btn-sm w-100">
+                        @if (lastAttempt != null && lastAttempt.Status == CertifiedTestApplication.Models.Entities.AttemptStatus.InProgress)
+                        {
+                            @:Продолжить
+                        }
+                        else
+                        {
+                            @:Начать тест
+                        }
+                    </a>
                 </div>
             </div>
         </div>

@@ -20,10 +20,15 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
+        var userId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+
         var tests = await _context.Tests
             .Include(t => t.Category)
+            .Include(t => t.Questions)
+            .Include(t => t.Attempts!.Where(a => a.UserId == userId))
             .Where(t => t.IsActive)
             .ToListAsync();
+
         return View(tests);
     }
 

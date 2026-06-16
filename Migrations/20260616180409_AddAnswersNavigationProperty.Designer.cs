@@ -3,6 +3,7 @@ using System;
 using CertifiedTestApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CertifiedTestApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260616180409_AddAnswersNavigationProperty")]
+    partial class AddAnswersNavigationProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,7 +345,7 @@ namespace CertifiedTestApplication.Migrations
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Question", b =>
                 {
                     b.HasOne("CertifiedTestApplication.Models.Entities.Test", "Test")
-                        .WithMany("Questions")
+                        .WithMany()
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -372,7 +375,7 @@ namespace CertifiedTestApplication.Migrations
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.TestAttempt", b =>
                 {
                     b.HasOne("CertifiedTestApplication.Models.Entities.Test", "Test")
-                        .WithMany("Attempts")
+                        .WithMany()
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -421,13 +424,6 @@ namespace CertifiedTestApplication.Migrations
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
-                });
-
-            modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Test", b =>
-                {
-                    b.Navigation("Attempts");
-
-                    b.Navigation("Questions");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,24 +1,192 @@
 @model CertifiedTestApplication.Models.Entities.TestAttempt
+@{
+    var questionResults = ViewBag.QuestionResults as IEnumerable<CertifiedTestApplication.Controllers.QuestionResultDetail>;
+    var correctCount = (int)ViewBag.CorrectCount;
+    var totalCount = (int)ViewBag.TotalCount;
+}
 
-<div class="container mt-5 text-center" style="max-width: 600px;">
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-5">
-            <div class="mb-4">
-                <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
+<style>
+    .result-question {
+        border-left: 4px solid #dee2e6;
+    }
+    .result-question.correct {
+        border-left-color: #198754;
+    }
+    .result-question.incorrect {
+        border-left-color: #dc3545;
+    }
+    .result-answer {
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin-bottom: 2px;
+    }
+    .result-answer.correct-selected {
+        background-color: #d1e7dd;
+        border: 1px solid #badbcc;
+    }
+    .result-answer.incorrect-selected {
+        background-color: #f8d7da;
+        border: 1px solid #f5c2c7;
+    }
+    .result-answer.correct-not-selected {
+        background-color: #d1e7dd;
+        opacity: 0.6;
+    }
+</style>
+
+<div class="container mt-4" style="max-width: 850px;">
+    <!-- Заголовок -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 text-center">
+            <div class="mb-3">
+                @if (Model.Score >= 80)
+                {
+                    <span style="font-size: 4rem;">&#127942;</span>
+                }
+                else
+                {
+                    <span style="font-size: 4rem;">&#128170;</span>
+                }
             </div>
-            <h2 class="mb-3">Тест завершен!</h2>
-            <p class="text-muted mb-4">Вы прошли тест: <strong>@Model.Test?.Title</strong></p>
-            
-            <div class="display-4 mb-2 @(Model.Score >= 80 ? "text-success" : "text-danger")">
-                @Model.Score%
+            <h2 class="mb-2">Тест завершён!</h2>
+            <p class="text-muted mb-3">@Model.Test?.Title</p>
+
+            <div class="d-inline-flex align-items-center gap-4 p-3 bg-light rounded-3">
+                <div>
+                    <div class="display-4 fw-bold @(Model.Score >= 80 ? "text-success" : "text-danger")">
+                        @Model.Score%
+                    </div>
+                    <div class="small text-muted">Результат</div>
+                </div>
+                <div class="vr"></div>
+                <div>
+                    <div class="display-4 fw-bold">
+                        @correctCount <span class="text-muted h4">/ @totalCount</span>
+                    </div>
+                    <div class="small text-muted">Правильных ответов</div>
+                </div>
             </div>
-            <p class="small text-muted mb-4">Ваш результат</p>
 
-            <hr />
+            <div class="mt-3">
+                @if (Model.Score >= 80)
+                {
+                    <span class="badge bg-success fs-6 px-3 py-2">Тест пройден</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger fs-6 px-3 py-2">Тест не пройден</span>
+                }
+            </div>
 
-            <div class="d-grid gap-2 mt-4">
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">Вернуться на главную</a>
+            <div class="mt-3 small text-muted">
+                Время прохождения:
+                @{
+                    var duration = Model.FinishedAt.HasValue
+                        ? Model.FinishedAt.Value - Model.StartedAt
+                        : TimeSpan.Zero;
+                }
+                @duration.Minutes мин @duration.Seconds сек
             </div>
         </div>
+    </div>
+
+    <!-- Разбор ответов -->
+    <h5 class="mb-3">Разбор ответов</h5>
+
+    @if (questionResults != null)
+    {
+        int qIndex = 0;
+        @foreach (var qr in questionResults)
+        {
+            qIndex++;
+            <div class="card border-0 shadow-sm mb-3 result-question @(qr.IsCorrect ? "correct" : "incorrect")">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-start gap-2">
+                            <span class="badge @(qr.IsCorrect ? "bg-success" : "bg-danger") flex-shrink-0 mt-1">
+                                @(qr.IsCorrect ? "✔" : "✘")
+                            </span>
+                            <div>
+                                <span class="small text-muted">Вопрос @qIndex</span>
+                                <div class="fw-medium">@qr.Question.Text</div>
+                            </div>
+                        </div>
+                        <span class="badge bg-light text-dark border flex-shrink-0">
+                            @(
+                                qr.Question.Type == CertifiedTestApplication.Models.Entities.QuestionType.Single ? "Один" :
+                                qr.Question.Type == CertifiedTestApplication.Models.Entities.QuestionType.Multiple ? "Несколько" :
+                                "Число"
+                            )
+                        </span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(qr.Question.ImagePath))
+                    {
+                        <div class="mb-2">
+                            <img src="@qr.Question.ImagePath" class="img-fluid rounded border" style="max-height: 200px;" />
+                        </div>
+                    }
+
+                    @if (qr.Question.Type == CertifiedTestApplication.Models.Entities.QuestionType.Numeric)
+                    {
+                        var userVal = qr.UserAnswers.FirstOrDefault()?.RawValue;
+                        var correctVal = qr.CorrectAnswers.FirstOrDefault()?.NumericValue;
+                        <div class="small">
+                            <span class="text-muted">Ваш ответ:</span>
+                            <strong class="@(qr.IsCorrect ? "text-success" : "text-danger")">
+                                @(userVal ?? "нет ответа")
+                            </strong>
+                            @if (!qr.IsCorrect)
+                            {
+                                <span class="text-muted ms-2">Правильный: <strong class="text-success">@correctVal</strong></span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        var userSelectedIds = qr.UserAnswers
+                            .Where(ua => ua.SelectedAnswerId.HasValue)
+                            .Select(ua => ua.SelectedAnswerId!.Value)
+                            .ToHashSet();
+                        var correctIds = qr.CorrectAnswers.Select(a => a.Id).ToHashSet();
+
+                        <div class="small">
+                            @foreach (var a in qr.CorrectAnswers.Concat(
+                                qr.UserAnswers.Where(ua => ua.SelectedAnswerId.HasValue)
+                                    .Select(ua => qr.CorrectAnswers.FirstOrDefault(c => c.Id == ua.SelectedAnswerId) == null ? new { Id = ua.SelectedAnswerId!.Value } : null)
+                                    .Where(x => x != null)
+                                    .Select(x => new CertifiedTestApplication.Models.Entities.Answer { Id = x!.Id, Text = "???", IsCorrect = false })
+                            ).GroupBy(a => a.Id).Select(g => g.First()))
+                            {
+                                var isCorrectAnswer = correctIds.Contains(a.Id);
+                                var isSelected = userSelectedIds.Contains(a.Id);
+
+                                <div class="result-answer @(isCorrectAnswer && isSelected ? "correct-selected" : "") @(isSelected && !isCorrectAnswer ? "incorrect-selected" : "") @(isCorrectAnswer && !isSelected ? "correct-not-selected" : "")">
+                                    @if (isSelected && isCorrectAnswer)
+                                    {
+                                        <span class="text-success me-1">✔</span>
+                                    }
+                                    else if (isSelected && !isCorrectAnswer)
+                                    {
+                                        <span class="text-danger me-1">✘</span>
+                                    }
+                                    else if (isCorrectAnswer)
+                                    {
+                                        <span class="text-success me-1">→</span>
+                                    }
+                                    @a.Text
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+
+    <!-- Кнопки -->
+    <div class="d-flex justify-content-between mt-4 mb-5">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">На главную</a>
+        <a asp-controller="Reports" asp-action="MyResults" class="btn btn-outline-primary">Мои результаты</a>
     </div>
 </div>

@@ -1,37 +1,45 @@
 @model CertifiedTestApplication.Models.Entities.Question
 
-<h2>Добавить вопрос</h2>
+<h5 class="mb-3">Добавить вопрос</h5>
 
 <div class="row">
-    <div class="col-md-6">
-        <form asp-action="AddQuestion" enctype="multipart/form-data">
-            <input type="hidden" asp-for="TestId" />
-            
-            <div class="mb-2">
-                <label class="form-label small">Текст вопроса</label>
-                <textarea asp-for="Text" class="form-control form-control-sm" rows="3" required></textarea>
+    <div class="col-lg-6">
+        <div class="card border shadow-sm">
+            <div class="card-header bg-white py-2">
+                <h6 class="mb-0">Новый вопрос</h6>
             </div>
+            <div class="card-body p-3">
+                <form asp-action="AddQuestion" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="TestId" />
 
-            <div class="mb-2">
-                <label class="form-label small">Тип вопроса</label>
-                <select asp-for="Type" class="form-select form-select-sm" 
-                        asp-items="Html.GetEnumSelectList<CertifiedTestApplication.Models.Entities.QuestionType>()"></select>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Текст вопроса</label>
+                        <textarea asp-for="Text" class="form-control" rows="4" required></textarea>
+                    </div>
 
-            <div class="mb-2">
-                <label class="form-label small">Порядок (сортировка)</label>
-                <input asp-for="Order" type="number" class="form-control form-control-sm" />
-            </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-medium">Тип вопроса</label>
+                            <select asp-for="Type" class="form-select"
+                                    asp-items="Html.GetEnumSelectList<CertifiedTestApplication.Models.Entities.QuestionType>()"></select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-medium">Порядок</label>
+                            <input asp-for="Order" type="number" class="form-control" min="1" />
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label small">Изображение (необязательно)</label>
-                <input type="file" name="image" class="form-control form-control-sm" accept="image/*" />
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Изображение (необязательно)</label>
+                        <input type="file" name="image" class="form-control" accept="image/*" />
+                    </div>
 
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary btn-sm">Далее (добавить ответы)</button>
-                <a asp-action="Edit" asp-route-id="@Model.TestId" class="btn btn-link btn-sm text-secondary">Отмена</a>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Создать и добавить ответы</button>
+                        <a asp-action="Edit" asp-route-id="@Model.TestId" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>

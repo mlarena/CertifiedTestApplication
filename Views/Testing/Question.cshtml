@@ -5,24 +5,129 @@
     var total = (int)ViewBag.TotalQuestions;
     var answers = (IEnumerable<CertifiedTestApplication.Models.Entities.Answer>)ViewBag.Answers;
     var userAnswers = (IEnumerable<CertifiedTestApplication.Models.Entities.UserAnswer>)ViewBag.UserAnswers;
+    var answeredIds = (IEnumerable<Guid>)ViewBag.AnsweredQuestionIds;
+    var questions = (IEnumerable<CertifiedTestApplication.Models.Entities.Question>)ViewBag.Questions;
+    var timeLimit = attempt.Test?.TimeLimit ?? 0;
+    var secondsLeft = timeLimit > 0
+        ? Math.Max(0, (int)(timeLimit - (DateTime.UtcNow - attempt.StartedAt).TotalSeconds))
+        : -1;
 }
 
-<div class="container mt-4" style="max-width: 800px;">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">@attempt.Test?.Title</h4>
-        <div class="text-muted small">Вопрос @qNum из @total</div>
+<style>
+    .question-nav-btn {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: all 0.15s;
+    }
+    .question-nav-btn.answered {
+        background-color: #198754;
+        color: #fff;
+        border-color: #198754;
+    }
+    .question-nav-btn.current {
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13,110,253,0.25);
+    }
+    .question-nav-btn:not(.answered):not(.current) {
+        background-color: #fff;
+        color: #6c757d;
+        border-color: #dee2e6;
+    }
+    .question-nav-btn:hover {
+        transform: scale(1.1);
+    }
+    .timer-warning {
+        animation: pulse 1s infinite;
+    }
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    .answer-option {
+        transition: all 0.15s;
+        cursor: pointer;
+    }
+    .answer-option:hover {
+        background-color: #f8f9fa;
+    }
+    .answer-option.selected {
+        background-color: #e7f1ff;
+        border-color: #0d6efd;
+    }
+</style>
+
+<div class="container mt-3" style="max-width: 850px;">
+    <!-- Заголовок и таймер -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0 text-truncate me-3">@attempt.Test?.Title</h5>
+        @if (secondsLeft >= 0)
+        {
+            <div class="flex-shrink-0" id="timer" data-seconds="@secondsLeft">
+                <span class="badge @(secondsLeft < 60 ? "bg-danger timer-warning" : "bg-secondary") fs-6 px-3 py-2">
+                    <span id="timerIcon" class="me-1">&#9202;</span>
+                    <span id="timerText">--:--</span>
+                </span>
+            </div>
+        }
     </div>
 
-    <div class="progress mb-4" style="height: 5px;">
-        <div class="progress-bar" role="progressbar" style="width: @(qNum * 100 / total)%"></div>
+    <!-- Прогресс-бар -->
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="progress flex-grow-1" style="height: 6px;">
+            <div class="progress-bar bg-success" role="progressbar"
+                 style="width: @(answeredIds.Count() * 100 / total)%"
+                 aria-valuenow="@answeredIds.Count()" aria-valuemin="0" aria-valuemax="@total"></div>
+        </div>
+        <span class="text-muted small flex-shrink-0">@answeredIds.Count() / @total</span>
     </div>
 
+    <!-- Навигация по вопросам (горизонтальная) -->
+    <div class="mb-3 p-2 bg-light rounded">
+        <div class="d-flex flex-wrap gap-1 justify-content-center">
+            @for (int i = 1; i <= total; i++)
+            {
+                var q = questions.ElementAt(i - 1);
+                var isAnswered = answeredIds.Contains(q.Id);
+                var isCurrent = i == qNum;
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm question-nav-btn @(isAnswered ? "answered" : "") @(isCurrent ? "current" : "")"
+                        onclick="navigateTo(@i)"
+                        title="Вопрос @i">
+                    @i
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Вопрос -->
     <div class="card shadow-sm border-0">
         <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="badge bg-light text-dark border">Вопрос @qNum из @total</span>
+                <span class="badge @(
+                    Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Single ? "bg-primary" :
+                    Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Multiple ? "bg-info" :
+                    "bg-warning text-dark"
+                )">
+                    @(
+                        Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Single ? "Один ответ" :
+                        Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Multiple ? "Несколько ответов" :
+                        "Числовой ответ"
+                    )
+                </span>
+            </div>
+
             @if (!string.IsNullOrEmpty(Model.ImagePath))
             {
                 <div class="text-center mb-4">
-                    <img src="@Model.ImagePath" class="img-fluid rounded border" style="max-height: 300px;" />
+                    <img src="@Model.ImagePath" class="img-fluid rounded border" style="max-height: 350px;" />
                 </div>
             }
 
@@ -31,26 +136,30 @@
             <form id="answerForm">
                 <input type="hidden" name="attemptId" value="@attempt.Id" />
                 <input type="hidden" name="questionId" value="@Model.Id" />
+                @Html.AntiForgeryToken()
 
                 @if (Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Numeric)
                 {
                     <div class="mb-3">
                         <label class="form-label small text-muted">Введите числовой ответ:</label>
-                        <input type="number" step="any" name="rawValue" class="form-control form-control-sm w-50" 
-                               value="@userAnswers.FirstOrDefault()?.RawValue" onchange="saveAnswer()" />
+                        <input type="number" step="any" name="rawValue" class="form-control w-50"
+                               value="@userAnswers.FirstOrDefault()?.RawValue"
+                               oninput="debounceSave()" placeholder="Введите число..." />
                     </div>
                 }
                 else
                 {
-                    <div class="list-group">
+                    var inputType = Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Single ? "radio" : "checkbox";
+                    <div class="d-grid gap-2">
                         @foreach (var a in answers)
                         {
                             var isChecked = userAnswers.Any(ua => ua.SelectedAnswerId == a.Id);
-                            <label class="list-group-item list-group-item-action d-flex align-items-center py-3">
-                                <input class="form-check-input me-3" 
-                                       type="@(Model.Type == CertifiedTestApplication.Models.Entities.QuestionType.Single ? "radio" : "checkbox")" 
-                                       name="selectedAnswers" value="@a.Id" 
-                                       @(isChecked ? "checked" : "") onchange="saveAnswer()" />
+                            <label class="answer-option list-group-item d-flex align-items-center py-3 rounded @(isChecked ? "selected" : "")">
+                                <input class="form-check-input me-3"
+                                       type="@inputType"
+                                       name="selectedAnswers" value="@a.Id"
+                                       @(isChecked ? "checked" : "")
+                                       onchange="onAnswerChange(this)" />
                                 <span>@a.Text</span>
                             </label>
                         }
@@ -60,11 +169,14 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between mt-4">
+    <!-- Навигация внизу -->
+    <div class="d-flex justify-content-between mt-3 mb-5">
         @if (qNum > 1 && (attempt.Test?.CanReturnToQuestion ?? true))
         {
-            <a asp-action="Question" asp-route-attemptId="@attempt.Id" asp-route-questionNumber="@(qNum - 1)" 
-               class="btn btn-outline-secondary btn-sm px-4">Назад</a>
+            <button type="button" class="btn btn-outline-secondary px-4"
+                    onclick="saveAndNavigate(@qNum, @(qNum - 1))">
+                &larr; Назад
+            </button>
         }
         else
         {
@@ -73,39 +185,159 @@
 
         @if (qNum < total)
         {
-            <a asp-action="Question" asp-route-attemptId="@attempt.Id" asp-route-questionNumber="@(qNum + 1)" 
-               class="btn btn-primary btn-sm px-4" id="nextBtn">Далее</a>
+            <button type="button" class="btn btn-primary px-4"
+                    onclick="saveAndNavigate(@qNum, @(qNum + 1))">
+                Далее &rarr;
+            </button>
         }
         else
         {
-            <a asp-action="Finish" asp-route-attemptId="@attempt.Id" 
-               class="btn btn-success btn-sm px-4" onclick="return confirm('Завершить тест?')">Завершить</a>
+            <button type="button" class="btn btn-success px-4"
+                    onclick="finishTest()">
+                Завершить тест
+            </button>
         }
     </div>
 </div>
 
-<div id="saveStatus" class="position-fixed bottom-0 end-0 p-3 small text-muted" style="display:none;">
-    <div class="spinner-border spinner-border-sm text-primary me-1" role="status"></div> Сохранение...
+<!-- Статус сохранения -->
+<div id="saveStatus" class="position-fixed bottom-0 end-0 p-3 small" style="display:none;">
+    <span class="badge bg-light text-dark border shadow-sm py-2 px-3">
+        <span class="spinner-border spinner-border-sm text-success me-1" role="status"></span>
+        Сохранено
+    </span>
+</div>
+
+<!-- Модальное окно завершения -->
+<div class="modal fade" id="finishModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h6 class="modal-title">Завершить тест?</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Вы ответили на <strong>@answeredIds.Count()</strong> из <strong>@total</strong> вопросов.</p>
+                @if (answeredIds.Count() < total)
+                {
+                    <p class="text-warning small mb-0">
+                        Осталось <strong>@(total - answeredIds.Count())</strong> вопросов без ответа. Они будут засчитаны как неправильные.
+                    </p>
+                }
+                else
+                {
+                    <p class="text-success small mb-0">Все вопросы отвечены.</p>
+                }
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Вернуться к тесту</button>
+                <a id="finishLink" href="#" class="btn btn-success btn-sm">Завершить</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
+        let saveTimeout = null;
+        let currentQuestion = @qNum;
+        let totalQuestions = @total;
+        let attemptId = '@attempt.Id';
+
+        // Таймер
+        (function() {
+            const timerEl = document.getElementById('timer');
+            if (!timerEl) return;
+
+            let seconds = parseInt(timerEl.dataset.seconds);
+            const timerText = document.getElementById('timerText');
+            const timerBadge = timerEl.querySelector('.badge');
+
+            function updateTimer() {
+                if (seconds <= 0) {
+                    timerText.textContent = '00:00';
+                    timerBadge.classList.add('bg-danger', 'timer-warning');
+                    timerBadge.classList.remove('bg-secondary');
+                    window.location.href = '/Testing/Finish?attemptId=' + attemptId;
+                    return;
+                }
+
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                timerText.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+                if (seconds < 60) {
+                    timerBadge.classList.add('bg-danger', 'timer-warning');
+                    timerBadge.classList.remove('bg-secondary');
+                }
+
+                seconds--;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        })();
+
+        // Автосохранение с debounce
+        function debounceSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveAnswer, 500);
+        }
+
+        function onAnswerChange(input) {
+            // Визуальная обратная связь
+            const label = input.closest('.answer-option');
+            if (input.type === 'radio') {
+                document.querySelectorAll('.answer-option').forEach(l => l.classList.remove('selected'));
+            }
+            if (input.checked) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
+            saveAnswer();
+        }
+
         function saveAnswer() {
             const form = document.getElementById('answerForm');
             const formData = new FormData(form);
             const status = document.getElementById('saveStatus');
-            
+
+            // Для radio: убедиться что отправляется только одно значение
+            if (formData.getAll('selectedAnswers').length > 1) {
+                const radio = form.querySelector('input[type="radio"]:checked');
+                formData.delete('selectedAnswers');
+                if (radio) formData.append('selectedAnswers', radio.value);
+            }
+
             status.style.display = 'block';
-            
+
             fetch('/Testing/SaveAnswer', {
                 method: 'POST',
                 body: formData
-            }).then(response => {
-                setTimeout(() => { status.style.display = 'none'; }, 500);
+            }).then(r => r.json()).then(data => {
+                setTimeout(() => { status.style.display = 'none'; }, 800);
             }).catch(error => {
-                console.error('Error:', error);
-                alert('Ошибка при сохранении ответа!');
+                console.error('Save error:', error);
+                status.style.display = 'none';
             });
+        }
+
+        function saveAndNavigate(from, to) {
+            saveAnswer();
+            setTimeout(() => {
+                window.location.href = '/Testing/Question?attemptId=' + attemptId + '&questionNumber=' + to;
+            }, 200);
+        }
+
+        function navigateTo(num) {
+            if (num === currentQuestion) return;
+            saveAndNavigate(currentQuestion, num);
+        }
+
+        function finishTest() {
+            document.getElementById('finishLink').href = '/Testing/Finish?attemptId=' + attemptId;
+            new bootstrap.Modal(document.getElementById('finishModal')).show();
         }
     </script>
 }

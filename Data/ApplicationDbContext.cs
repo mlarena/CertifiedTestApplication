@@ -32,14 +32,20 @@ public class ApplicationDbContext : DbContext
         // Настройка связей (каскадное удаление при необходимости)
         modelBuilder.Entity<Question>()
             .HasOne(q => q.Test)
-            .WithMany()
+            .WithMany(t => t.Questions)
             .HasForeignKey(q => q.TestId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Answer>()
             .HasOne(a => a.Question)
-            .WithMany()
+            .WithMany(q => q.Answers)
             .HasForeignKey(a => a.QuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<TestAttempt>()
+            .HasOne(a => a.Test)
+            .WithMany(t => t.Attempts)
+            .HasForeignKey(a => a.TestId)
             .OnDelete(DeleteBehavior.Cascade);
             
         // Начальные данные для ролей

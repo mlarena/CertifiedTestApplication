@@ -148,6 +148,7 @@ public class TestsController : Controller
             .ToListAsync();
         return View(tests);
     }
+
     // Создание теста
     [HttpGet]
     public async Task<IActionResult> Create()
@@ -179,15 +180,23 @@ public class TestsController : Controller
         var test = await _context.Tests
             .Include(t => t.Category)
             .FirstOrDefaultAsync(t => t.Id == id);
-            
+
         if (test == null) return NotFound();
 
         ViewBag.Categories = await _context.Categories.ToListAsync();
-        ViewBag.Questions = await _context.Questions
+        var questions = await _context.Questions
             .Where(q => q.TestId == id)
             .OrderBy(q => q.Order)
             .ToListAsync();
 
+        foreach (var q in questions)
+        {
+            q.Answers = await _context.Answers
+                .Where(a => a.QuestionId == q.Id)
+                .ToListAsync();
+        }
+
+        ViewBag.Questions = questions;
         return View(test);
     }
 
@@ -208,9 +217,13 @@ public class TestsController : Controller
     // --- Управление вопросами ---
 
     [HttpGet]
-    public IActionResult AddQuestion(Guid testId)
+    public async Task<IActionResult> AddQuestion(Guid testId)
     {
-        var question = new Question { TestId = testId, Order = 0 };
+        var maxOrder = await _context.Questions
+            .Where(q => q.TestId == testId)
+            .MaxAsync(q => (int?)q.Order) ?? 0;
+
+        var question = new Question { TestId = testId, Order = maxOrder + 1 };
         return View(question);
     }
 
@@ -221,12 +234,12 @@ public class TestsController : Controller
         if (ModelState.IsValid)
         {
             question.Id = Guid.NewGuid();
-            
+
             if (image != null)
             {
                 string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "questions");
                 if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-                
+
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -249,11 +262,12 @@ public class TestsController : Controller
         var question = await _context.Questions
             .Include(q => q.Test)
             .FirstOrDefaultAsync(q => q.Id == id);
-            
+
         if (question == null) return NotFound();
 
         ViewBag.Answers = await _context.Answers
             .Where(a => a.QuestionId == id)
+            .OrderBy(a => a.Text)
             .ToListAsync();
 
         return View(question);
@@ -268,6 +282,8 @@ public class TestsController : Controller
             if (image != null)
             {
                 string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "questions");
+                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -279,12 +295,19 @@ public class TestsController : Controller
 
             _context.Update(question);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Edit), new { id = question.TestId });
+            TempData["Success"] = "Вопрос сохранён";
+            return RedirectToAction(nameof(EditQuestion), new { id = question.Id });
         }
+
+        ViewBag.Answers = await _context.Answers
+            .Where(a => a.QuestionId == question.Id)
+            .ToListAsync();
+
         return View(question);
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteQuestion(Guid id)
     {
         var question = await _context.Questions.FindAsync(id);
@@ -293,9 +316,26 @@ public class TestsController : Controller
             var testId = question.TestId;
             _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
+            TempData["Success"] = "Вопрос удалён";
             return RedirectToAction(nameof(Edit), new { id = testId });
         }
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateQuestionOrder(Guid testId, Guid[] questionIds)
+    {
+        for (int i = 0; i < questionIds.Length; i++)
+        {
+            var question = await _context.Questions.FindAsync(questionIds[i]);
+            if (question != null && question.TestId == testId)
+            {
+                question.Order = i + 1;
+            }
+        }
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 
     // --- Управление ответами ---
@@ -304,20 +344,79 @@ public class TestsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddAnswer(Guid questionId, string text, bool isCorrect, double? numericValue)
     {
+        var question = await _context.Questions.FindAsync(questionId);
+        if (question == null) return NotFound();
+
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            TempData["Error"] = "Текст ответа не может быть пустым";
+            return RedirectToAction(nameof(EditQuestion), new { id = questionId });
+        }
+
         var answer = new Answer
         {
             Id = Guid.NewGuid(),
             QuestionId = questionId,
-            Text = text,
+            Text = text.Trim(),
             IsCorrect = isCorrect,
-            NumericValue = numericValue
+            NumericValue = question.Type == QuestionType.Numeric ? numericValue : null
         };
+
         _context.Answers.Add(answer);
         await _context.SaveChangesAsync();
+        TempData["Success"] = "Ответ добавлен";
         return RedirectToAction(nameof(EditQuestion), new { id = questionId });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> EditAnswer(Guid id)
+    {
+        var answer = await _context.Answers
+            .Include(a => a.Question)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        if (answer == null) return NotFound();
+
+        return View(answer);
+    }
+
     [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditAnswer(Answer answer)
+    {
+        var existing = await _context.Answers.FindAsync(answer.Id);
+        if (existing == null) return NotFound();
+
+        if (string.IsNullOrWhiteSpace(answer.Text))
+        {
+            TempData["Error"] = "Текст ответа не может быть пустым";
+            return RedirectToAction(nameof(EditQuestion), new { id = existing.QuestionId });
+        }
+
+        existing.Text = answer.Text.Trim();
+        existing.IsCorrect = answer.IsCorrect;
+        existing.NumericValue = answer.NumericValue;
+
+        await _context.SaveChangesAsync();
+        TempData["Success"] = "Ответ сохранён";
+        return RedirectToAction(nameof(EditQuestion), new { id = existing.QuestionId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ToggleAnswerCorrect(Guid id)
+    {
+        var answer = await _context.Answers.FindAsync(id);
+        if (answer == null) return NotFound();
+
+        answer.IsCorrect = !answer.IsCorrect;
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(EditQuestion), new { id = answer.QuestionId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteAnswer(Guid id)
     {
         var answer = await _context.Answers.FindAsync(id);
@@ -326,8 +425,22 @@ public class TestsController : Controller
             var qId = answer.QuestionId;
             _context.Answers.Remove(answer);
             await _context.SaveChangesAsync();
+            TempData["Success"] = "Ответ удалён";
             return RedirectToAction(nameof(EditQuestion), new { id = qId });
         }
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SaveAnswerInline(Guid id, string text, bool isCorrect)
+    {
+        var answer = await _context.Answers.FindAsync(id);
+        if (answer == null) return NotFound();
+
+        answer.Text = text?.Trim() ?? "";
+        answer.IsCorrect = isCorrect;
+
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }

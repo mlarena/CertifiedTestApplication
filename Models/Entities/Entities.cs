@@ -51,6 +51,9 @@ public class Test
     public int TimeLimit { get; set; } // в секундах
     public bool IsActive { get; set; }
     public bool CanReturnToQuestion { get; set; } = true;
+    
+    public List<Question>? Questions { get; set; }
+    public List<TestAttempt>? Attempts { get; set; }
 }
 
 public enum QuestionType
@@ -72,6 +75,8 @@ public class Question
     public string Text { get; set; } = string.Empty;
     public string? ImagePath { get; set; }
     public int Order { get; set; }
+    
+    public List<Answer>? Answers { get; set; }
 }
 
 public class Answer
