@@ -3,6 +3,7 @@
     var questionResults = ViewBag.QuestionResults as IEnumerable<CertifiedTestApplication.Controllers.QuestionResultDetail>;
     var correctCount = (int)ViewBag.CorrectCount;
     var totalCount = (int)ViewBag.TotalCount;
+    var forceFinish = ViewBag.ForceFinish as bool? ?? false;
 }
 
 <style>
@@ -85,8 +86,14 @@
                         ? Model.FinishedAt.Value - Model.StartedAt
                         : TimeSpan.Zero;
                 }
-                @duration.Minutes мин @duration.Seconds сек
+                @((int)duration.TotalMinutes) мин @duration.Seconds сек
             </div>
+            @if (forceFinish)
+            {
+                <div class="mt-2">
+                    <span class="badge bg-warning text-dark">Время вышло. Тест завершён автоматически.</span>
+                </div>
+            }
         </div>
     </div>
 

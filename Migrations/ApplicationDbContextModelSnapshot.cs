@@ -45,7 +45,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answers", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Category", b =>
@@ -63,7 +63,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Log", b =>
@@ -97,7 +97,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Question", b =>
@@ -126,7 +126,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Role", b =>
@@ -144,7 +144,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -199,7 +199,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Tests", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.TestAttempt", b =>
@@ -232,7 +232,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TestAttempts");
+                    b.ToTable("TestAttempts", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.User", b =>
@@ -271,7 +271,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
@@ -316,7 +316,7 @@ namespace CertifiedTestApplication.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("UserAnswers");
+                    b.ToTable("UserAnswers", (string)null);
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.Answer", b =>

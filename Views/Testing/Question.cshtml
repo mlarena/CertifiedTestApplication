@@ -8,10 +8,13 @@
     var answeredIds = (IEnumerable<Guid>)ViewBag.AnsweredQuestionIds;
     var questions = (IEnumerable<CertifiedTestApplication.Models.Entities.Question>)ViewBag.Questions;
     var timeLimit = attempt.Test?.TimeLimit ?? 0;
+    var canReturn = attempt.Test?.CanReturnToQuestion ?? true;
     var secondsLeft = timeLimit > 0
-        ? Math.Max(0, (int)(timeLimit - (DateTime.UtcNow - attempt.StartedAt).TotalSeconds))
+        ? Math.Max(0, (int)(timeLimit - (DateTime.UtcNow - attempt.StartedAt).TotalSeconds) - 3)
         : -1;
 }
+
+<meta name="robots" content="noindex, nofollow" />
 
 <style>
     .question-nav-btn {
@@ -40,7 +43,13 @@
         color: #6c757d;
         border-color: #dee2e6;
     }
-    .question-nav-btn:hover {
+    .question-nav-btn.locked {
+        background-color: #f8f9fa;
+        color: #ccc;
+        border-color: #e9ecef;
+        cursor: not-allowed;
+    }
+    .question-nav-btn:hover:not(.locked) {
         transform: scale(1.1);
     }
     .timer-warning {
@@ -64,21 +73,19 @@
 </style>
 
 <div class="container mt-3" style="max-width: 850px;">
-    <!-- Заголовок и таймер -->
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h5 class="mb-0 text-truncate me-3">@attempt.Test?.Title</h5>
         @if (secondsLeft >= 0)
         {
             <div class="flex-shrink-0" id="timer" data-seconds="@secondsLeft">
                 <span class="badge @(secondsLeft < 60 ? "bg-danger timer-warning" : "bg-secondary") fs-6 px-3 py-2">
-                    <span id="timerIcon" class="me-1">&#9202;</span>
+                    <span class="me-1">&#9202;</span>
                     <span id="timerText">--:--</span>
                 </span>
             </div>
         }
     </div>
 
-    <!-- Прогресс-бар -->
     <div class="d-flex align-items-center gap-2 mb-3">
         <div class="progress flex-grow-1" style="height: 6px;">
             <div class="progress-bar bg-success" role="progressbar"
@@ -88,7 +95,7 @@
         <span class="text-muted small flex-shrink-0">@answeredIds.Count() / @total</span>
     </div>
 
-    <!-- Навигация по вопросам (горизонтальная) -->
+    <!-- Навигация по вопросам -->
     <div class="mb-3 p-2 bg-light rounded">
         <div class="d-flex flex-wrap gap-1 justify-content-center">
             @for (int i = 1; i <= total; i++)
@@ -96,12 +103,23 @@
                 var q = questions.ElementAt(i - 1);
                 var isAnswered = answeredIds.Contains(q.Id);
                 var isCurrent = i == qNum;
-                <button type="button"
-                        class="btn btn-outline-secondary btn-sm question-nav-btn @(isAnswered ? "answered" : "") @(isCurrent ? "current" : "")"
-                        onclick="navigateTo(@i)"
-                        title="Вопрос @i">
-                    @i
-                </button>
+                var isAccessible = canReturn || isAnswered || isCurrent || (!isAnswered && i == qNum + 1);
+
+                if (isAccessible)
+                {
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-sm question-nav-btn @(isAnswered ? "answered" : "") @(isCurrent ? "current" : "")"
+                            onclick="navigateTo(@i)"
+                            title="Вопрос @i">
+                        @i
+                    </button>
+                }
+                else
+                {
+                    <span class="btn btn-sm question-nav-btn locked" title="Недоступно">
+                        @i
+                    </span>
+                }
             }
         </div>
     </div>
@@ -171,7 +189,7 @@
 
     <!-- Навигация внизу -->
     <div class="d-flex justify-content-between mt-3 mb-5">
-        @if (qNum > 1 && (attempt.Test?.CanReturnToQuestion ?? true))
+        @if (qNum > 1 && canReturn)
         {
             <button type="button" class="btn btn-outline-secondary px-4"
                     onclick="saveAndNavigate(@qNum, @(qNum - 1))">
@@ -231,7 +249,11 @@
             </div>
             <div class="modal-footer py-2">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Вернуться к тесту</button>
-                <a id="finishLink" href="#" class="btn btn-success btn-sm">Завершить</a>
+                <form asp-action="Finish" method="post" class="d-inline" id="finishForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="attemptId" value="@attempt.Id" />
+                    <button type="submit" class="btn btn-success btn-sm">Завершить</button>
+                </form>
             </div>
         </div>
     </div>
@@ -243,6 +265,12 @@
         let currentQuestion = @qNum;
         let totalQuestions = @total;
         let attemptId = '@attempt.Id';
+        let saving = false;
+
+        // Anti-cache: перезагрузить при возврате из кэша браузера
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted) location.reload();
+        });
 
         // Таймер
         (function() {
@@ -253,39 +281,35 @@
             const timerText = document.getElementById('timerText');
             const timerBadge = timerEl.querySelector('.badge');
 
-            function updateTimer() {
+            async function updateTimer() {
                 if (seconds <= 0) {
                     timerText.textContent = '00:00';
                     timerBadge.classList.add('bg-danger', 'timer-warning');
                     timerBadge.classList.remove('bg-secondary');
-                    window.location.href = '/Testing/Finish?attemptId=' + attemptId;
+                    clearTimeout(saveTimeout);
+                    await saveAnswer();
+                    document.getElementById('finishForm')?.submit();
                     return;
                 }
-
                 const m = Math.floor(seconds / 60);
                 const s = seconds % 60;
                 timerText.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-
                 if (seconds < 60) {
                     timerBadge.classList.add('bg-danger', 'timer-warning');
                     timerBadge.classList.remove('bg-secondary');
                 }
-
                 seconds--;
             }
-
             updateTimer();
             setInterval(updateTimer, 1000);
         })();
 
-        // Автосохранение с debounce
         function debounceSave() {
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(saveAnswer, 500);
         }
 
         function onAnswerChange(input) {
-            // Визуальная обратная связь
             const label = input.closest('.answer-option');
             if (input.type === 'radio') {
                 document.querySelectorAll('.answer-option').forEach(l => l.classList.remove('selected'));
@@ -295,39 +319,47 @@
             } else {
                 label.classList.remove('selected');
             }
-            saveAnswer();
+            debounceSave();
         }
 
-        function saveAnswer() {
+        async function saveAnswer() {
+            if (saving) return;
+            saving = true;
+
             const form = document.getElementById('answerForm');
             const formData = new FormData(form);
             const status = document.getElementById('saveStatus');
 
-            // Для radio: убедиться что отправляется только одно значение
             if (formData.getAll('selectedAnswers').length > 1) {
                 const radio = form.querySelector('input[type="radio"]:checked');
-                formData.delete('selectedAnswers');
-                if (radio) formData.append('selectedAnswers', radio.value);
+                if (radio) {
+                    formData.delete('selectedAnswers');
+                    formData.append('selectedAnswers', radio.value);
+                }
             }
 
             status.style.display = 'block';
 
-            fetch('/Testing/SaveAnswer', {
-                method: 'POST',
-                body: formData
-            }).then(r => r.json()).then(data => {
+            try {
+                const r = await fetch('/Testing/SaveAnswer', { method: 'POST', body: formData });
+                if (r.status === 400) {
+                    const data = await r.json();
+                    if (data.error === 'timeout') {
+                        document.getElementById('finishForm')?.submit();
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.error('Save error:', e);
+            } finally {
+                saving = false;
                 setTimeout(() => { status.style.display = 'none'; }, 800);
-            }).catch(error => {
-                console.error('Save error:', error);
-                status.style.display = 'none';
-            });
+            }
         }
 
-        function saveAndNavigate(from, to) {
-            saveAnswer();
-            setTimeout(() => {
-                window.location.href = '/Testing/Question?attemptId=' + attemptId + '&questionNumber=' + to;
-            }, 200);
+        async function saveAndNavigate(from, to) {
+            await saveAnswer();
+            window.location.href = '/Testing/Question?attemptId=' + attemptId + '&questionNumber=' + to;
         }
 
         function navigateTo(num) {
@@ -335,8 +367,9 @@
             saveAndNavigate(currentQuestion, num);
         }
 
-        function finishTest() {
-            document.getElementById('finishLink').href = '/Testing/Finish?attemptId=' + attemptId;
+        async function finishTest() {
+            clearTimeout(saveTimeout);
+            await saveAnswer();
             new bootstrap.Modal(document.getElementById('finishModal')).show();
         }
     </script>
