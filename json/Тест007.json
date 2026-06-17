@@ -1,0 +1,52 @@
+{
+  "Title": "заголовок теста",
+  "Description": null,
+  "TimeLimit": 0,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "ьmulte",
+      "Type": 2,
+      "Order": 0,
+      "Answers": [
+        {
+          "Text": "ответ 3",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ответ 1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ответ 2",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "вапваа1111п",
+      "Type": 1,
+      "Order": 0,
+      "Answers": [
+        {
+          "Text": "ответ 3",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ответ 2",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ответ 1",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

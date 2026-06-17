@@ -266,13 +266,13 @@
         let totalQuestions = @total;
         let attemptId = '@attempt.Id';
         let saving = false;
+        let currentSavePromise = null;
+        let answeredCount = @answeredIds.Count();
 
-        // Anti-cache: перезагрузить при возврате из кэша браузера
         window.addEventListener('pageshow', function(e) {
             if (e.persisted) location.reload();
         });
 
-        // Таймер
         (function() {
             const timerEl = document.getElementById('timer');
             if (!timerEl) return;
@@ -306,7 +306,11 @@
 
         function debounceSave() {
             clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(saveAnswer, 500);
+            saveTimeout = setTimeout(function() {
+                if (!saving) {
+                    currentSavePromise = saveAnswer();
+                }
+            }, 500);
         }
 
         function onAnswerChange(input) {
@@ -353,6 +357,7 @@
                 console.error('Save error:', e);
             } finally {
                 saving = false;
+                currentSavePromise = null;
                 setTimeout(() => { status.style.display = 'none'; }, 800);
             }
         }
@@ -369,7 +374,24 @@
 
         async function finishTest() {
             clearTimeout(saveTimeout);
-            await saveAnswer();
+            if (saving && currentSavePromise) {
+                await currentSavePromise;
+            } else if (!saving) {
+                await saveAnswer();
+            }
+            try {
+                const r = await fetch('/Testing/GetAnsweredCount?attemptId=' + attemptId);
+                if (r.ok) {
+                    const data = await r.json();
+                    answeredCount = data.count;
+                }
+            } catch (e) {}
+            const body = document.querySelector('#finishModal .modal-body');
+            body.innerHTML =
+                '<p class="mb-2">Вы ответили на <strong>' + answeredCount + '</strong> из <strong>' + totalQuestions + '</strong> вопросов.</p>' +
+                (answeredCount < totalQuestions
+                    ? '<p class="text-warning small mb-0">Осталось <strong>' + (totalQuestions - answeredCount) + '</strong> вопросов без ответа. Они будут засчитаны как неправильные.</p>'
+                    : '<p class="text-success small mb-0">Все вопросы отвечены.</p>');
             new bootstrap.Modal(document.getElementById('finishModal')).show();
         }
     </script>

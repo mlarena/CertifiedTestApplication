@@ -253,6 +253,21 @@ public class TestingController : Controller
         return Ok(new { saved = true, hasAnswer });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAnsweredCount(Guid attemptId)
+    {
+        var (attempt, isBlocked, error) = await LoadAttemptWithChecks(attemptId);
+        if (attempt == null) return BadRequest();
+
+        var count = await _context.UserAnswers
+            .Where(ua => ua.AttemptId == attemptId)
+            .Select(ua => ua.QuestionId)
+            .Distinct()
+            .CountAsync();
+
+        return Ok(new { count });
+    }
+
     // Завершение теста (POST)
     [HttpPost]
     [ValidateAntiForgeryToken]
