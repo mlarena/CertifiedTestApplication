@@ -1,0 +1,119 @@
+{
+  "Title": "Основы PostgreSQL",
+  "Description": "Тестирование знаний основ СУБД PostgreSQL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой тип данных используется для хранения целых чисел от -2147483648 до 2147483647?",
+      "Type": 0,
+      "Order": 1,
+      "Answers": [
+        { "Text": "BIGINT", "IsCorrect": false, "NumericValue": null },
+        { "Text": "INTEGER", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SMALLINT", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SERIAL", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда создаст новую базу данных в PostgreSQL?",
+      "Type": 0,
+      "Order": 2,
+      "Answers": [
+        { "Text": "CREATE DATABASE mydb;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "NEW DATABASE mydb;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "MAKE DATABASE mydb;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "INIT DATABASE mydb;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных являются допустимыми типами данных для хранения текста в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "CHAR", "IsCorrect": true, "NumericValue": null },
+        { "Text": "VARCHAR", "IsCorrect": true, "NumericValue": null },
+        { "Text": "TEXT", "IsCorrect": true, "NumericValue": null },
+        { "Text": "STRING", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько уровней изоляции транзакций поддерживает PostgreSQL по умолчанию?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой оператор используется для удаления таблицы в PostgreSQL?",
+      "Type": 0,
+      "Order": 5,
+      "Answers": [
+        { "Text": "DELETE TABLE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "REMOVE TABLE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DROP TABLE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "DESTROY TABLE", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных операторов JOIN поддерживаются в PostgreSQL?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "INNER JOIN", "IsCorrect": true, "NumericValue": null },
+        { "Text": "LEFT JOIN", "IsCorrect": true, "NumericValue": null },
+        { "Text": "RIGHT JOIN", "IsCorrect": true, "NumericValue": null },
+        { "Text": "FULL OUTER JOIN", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CROSS JOIN", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое максимальное количество столбцов может содержать таблица в PostgreSQL?",
+      "Type": 2,
+      "Order": 7,
+      "Answers": [
+        { "Text": "256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1024", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1600", "IsCorrect": true, "NumericValue": null },
+        { "Text": "32767", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой тип данных PostgreSQL используется для хранения JSON без проверки валидности?",
+      "Type": 0,
+      "Order": 8,
+      "Answers": [
+        { "Text": "JSONB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "JSON", "IsCorrect": true, "NumericValue": null },
+        { "Text": "XML", "IsCorrect": false, "NumericValue": null },
+        { "Text": "JSONA", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что делает команда VACUUM в PostgreSQL?",
+      "Type": 0,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Удаляет базу данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Освобождает место в файле данных и обновляет статистику планировщика", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Создаёт резервную копию", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Перезапускает сервер", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое расширение позволяет использовать полнотекстовый поиск в PostgreSQL?",
+      "Type": 0,
+      "Order": 10,
+      "Answers": [
+        { "Text": "pg_trgm", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgcrypto", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Встроенный механизм полнотекстового поиска (tsvector/tsquery)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "elasticSearch", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}
