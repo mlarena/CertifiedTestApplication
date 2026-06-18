@@ -57,6 +57,11 @@
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
                         <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Назад</a>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline ms-auto">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('Удалить тест «@Model.Title»? Все вопросы и ответы будут удалены.')">Удалить тест</button>
+                        </form>
                     </div>
                 </form>
             </div>

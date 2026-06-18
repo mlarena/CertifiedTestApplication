@@ -6,7 +6,7 @@
   "Questions": [
     {
       "Text": "Какая команда создаёт нового пользователя в PostgreSQL?",
-      "Type": 0,
+      "Type": 1,
       "Order": 1,
       "Answers": [
         { "Text": "CREATE USER name PASSWORD 'pass';", "IsCorrect": true, "NumericValue": null },
@@ -17,7 +17,7 @@
     },
     {
       "Text": "Какие из перечисленных предустановленных ролей существуют в PostgreSQL?",
-      "Type": 1,
+      "Type": 2,
       "Order": 2,
       "Answers": [
         { "Text": "postgres", "IsCorrect": true, "NumericValue": null },
@@ -28,8 +28,8 @@
       ]
     },
     {
-      "Text": "Как授予 пользователю право на подключение к базе данных?",
-      "Type": 0,
+      "Text": "Как предоставить пользователю право на подключение к базе данных?",
+      "Type": 1,
       "Order": 3,
       "Answers": [
         { "Text": "GRANT CONNECT ON DATABASE mydb TO username;", "IsCorrect": true, "NumericValue": null },
@@ -40,18 +40,18 @@
     },
     {
       "Text": "Какое количество максимально предустановленных ролей может быть назначено одному пользователю?",
-      "Type": 2,
+      "Type": 3,
       "Order": 4,
       "Answers": [
         { "Text": "Ограничение зависит от конфигурации сервера", "IsCorrect": true, "NumericValue": null },
-        { "Text": "10", "IsCorrect": false, "NumericValue": null },
-        { "Text": "50", "IsCorrect": false, "NumericValue": null },
-        { "Text": "100", "IsCorrect": false, "NumericValue": null }
+        { "Text": "10", "IsCorrect": false, "NumericValue": 10 },
+        { "Text": "50", "IsCorrect": false, "NumericValue": 50 },
+        { "Text": "100", "IsCorrect": false, "NumericValue": 100 }
       ]
     },
     {
       "Text": "Что означает опция LOGIN при создании роли?",
-      "Type": 0,
+      "Type": 1,
       "Order": 5,
       "Answers": [
         { "Text": "Роль может подключаться к серверу", "IsCorrect": true, "NumericValue": null },
@@ -62,7 +62,7 @@
     },
     {
       "Text": "Какие привилегии можно предоставить на уровне таблицы?",
-      "Type": 1,
+      "Type": 2,
       "Order": 6,
       "Answers": [
         { "Text": "SELECT", "IsCorrect": true, "NumericValue": null },
@@ -74,7 +74,7 @@
     },
     {
       "Text": "Как отозвать привилегию у пользователя?",
-      "Type": 0,
+      "Type": 1,
       "Order": 7,
       "Answers": [
         { "Text": "REVOKE SELECT ON table FROM user;", "IsCorrect": true, "NumericValue": null },
@@ -85,7 +85,7 @@
     },
     {
       "Text": "Что такое 'ROW LEVEL SECURITY' в PostgreSQL?",
-      "Type": 0,
+      "Type": 1,
       "Order": 8,
       "Answers": [
         { "Text": "Механизм ограничения доступа к строкам таблицы на основе политик", "IsCorrect": true, "NumericValue": null },
@@ -96,7 +96,7 @@
     },
     {
       "Text": "Какая роль необходима для выполнения VACUUM и ANALYZE?",
-      "Type": 0,
+      "Type": 1,
       "Order": 9,
       "Answers": [
         { "Text": "Владелец таблицы или суперпользователь", "IsCorrect": true, "NumericValue": null },
@@ -107,13 +107,13 @@
     },
     {
       "Text": "Сколько максимальных уровней вложенности групп (roles) поддерживает PostgreSQL?",
-      "Type": 2,
+      "Type": 3,
       "Order": 10,
       "Answers": [
-        { "Text": "8", "IsCorrect": false, "NumericValue": null },
-        { "Text": "16", "IsCorrect": true, "NumericValue": null },
-        { "Text": "32", "IsCorrect": false, "NumericValue": null },
-        { "Text": "64", "IsCorrect": false, "NumericValue": null }
+        { "Text": "8", "IsCorrect": false, "NumericValue": 8 },
+        { "Text": "16", "IsCorrect": true, "NumericValue": 16 },
+        { "Text": "32", "IsCorrect": false, "NumericValue": 32 },
+        { "Text": "64", "IsCorrect": false, "NumericValue": 64 }
       ]
     }
   ]

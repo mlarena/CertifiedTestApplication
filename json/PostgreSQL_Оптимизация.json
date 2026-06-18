@@ -6,7 +6,7 @@
   "Questions": [
     {
       "Text": "Какая команда показывает план выполнения запроса в PostgreSQL?",
-      "Type": 0,
+      "Type": 1,
       "Order": 1,
       "Answers": [
         { "Text": "EXPLAIN", "IsCorrect": true, "NumericValue": null },
@@ -17,7 +17,7 @@
     },
     {
       "Text": "Какие типы индексов поддерживаются в PostgreSQL?",
-      "Type": 1,
+      "Type": 2,
       "Order": 2,
       "Answers": [
         { "Text": "B-tree", "IsCorrect": true, "NumericValue": null },
@@ -30,7 +30,7 @@
     },
     {
       "Text": "Что делает команда ANALYZE в PostgreSQL?",
-      "Type": 0,
+      "Type": 1,
       "Order": 3,
       "Answers": [
         { "Text": "Собирает статистику о распределении данных для планировщика запросов", "IsCorrect": true, "NumericValue": null },
@@ -41,7 +41,7 @@
     },
     {
       "Text": "Какой параметр shared_buffers определяет?",
-      "Type": 0,
+      "Type": 1,
       "Order": 4,
       "Answers": [
         { "Text": "Размер общей памяти для буферов сервера", "IsCorrect": true, "NumericValue": null },
@@ -52,7 +52,7 @@
     },
     {
       "Text": "Какой тип индекса лучше всего подходит для полнотекстового поиска?",
-      "Type": 0,
+      "Type": 1,
       "Order": 5,
       "Answers": [
         { "Text": "GIN (Generalized Inverted Index)", "IsCorrect": true, "NumericValue": null },
@@ -63,7 +63,7 @@
     },
     {
       "Text": "Какие из перечисленных параметров влияют на производительность запросов?",
-      "Type": 1,
+      "Type": 2,
       "Order": 6,
       "Answers": [
         { "Text": "work_mem", "IsCorrect": true, "NumericValue": null },
@@ -75,18 +75,18 @@
     },
     {
       "Text": "Сколько рабочих процессов (worker processes) рекомендуется настраивать на сервере с 8 ядрами CPU?",
-      "Type": 2,
+      "Type": 3,
       "Order": 7,
       "Answers": [
-        { "Text": "4", "IsCorrect": false, "NumericValue": null },
-        { "Text": "8", "IsCorrect": true, "NumericValue": null },
-        { "Text": "16", "IsCorrect": false, "NumericValue": null },
-        { "Text": "32", "IsCorrect": false, "NumericValue": null }
+        { "Text": "4", "IsCorrect": false, "NumericValue": 4 },
+        { "Text": "8", "IsCorrect": true, "NumericValue": 8 },
+        { "Text": "16", "IsCorrect": false, "NumericValue": 16 },
+        { "Text": "32", "IsCorrect": false, "NumericValue": 32 }
       ]
     },
     {
       "Text": "Что такое 'sequential scan' и когда он используется?",
-      "Type": 0,
+      "Type": 1,
       "Order": 8,
       "Answers": [
         { "Text": "Последовательное чтение всей таблицы, когда нет подходящего индекса или таблица маленькая", "IsCorrect": true, "NumericValue": null },
@@ -97,7 +97,7 @@
     },
     {
       "Text": "Какой параметр определяет интервал между чекпоинтами (checkpoint)?",
-      "Type": 0,
+      "Type": 1,
       "Order": 9,
       "Answers": [
         { "Text": "checkpoint_timeout", "IsCorrect": true, "NumericValue": null },
@@ -108,7 +108,7 @@
     },
     {
       "Text": "Какой командой можно увидеть статистику использования индексов?",
-      "Type": 0,
+      "Type": 1,
       "Order": 10,
       "Answers": [
         { "Text": "SELECT * FROM pg_stat_user_indexes;", "IsCorrect": true, "NumericValue": null },

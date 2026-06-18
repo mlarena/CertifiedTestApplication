@@ -56,6 +56,11 @@
                     <td class="text-end">
                         <a asp-action="Export" asp-route-id="@item.Id" class="btn btn-outline-success btn-sm py-0">Экспорт</a>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm py-0">Редактировать</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger btn-sm py-0"
+                                    onclick="return confirm('Удалить тест «@item.Title»?')">Удалить</button>
+                        </form>
                     </td>
                 </tr>
             }

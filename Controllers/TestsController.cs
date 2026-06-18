@@ -214,6 +214,21 @@ public class TestsController : Controller
         return View(test);
     }
 
+    // Удаление теста
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var test = await _context.Tests.FindAsync(id);
+        if (test == null) return NotFound();
+
+        _context.Tests.Remove(test);
+        await _context.SaveChangesAsync();
+
+        TempData["Success"] = "Тест удалён";
+        return RedirectToAction(nameof(Index));
+    }
+
     // --- Управление вопросами ---
 
     [HttpGet]
@@ -353,6 +368,11 @@ public class TestsController : Controller
             return RedirectToAction(nameof(EditQuestion), new { id = questionId });
         }
 
+        if (isCorrect && question.Type == QuestionType.Single)
+        {
+            await UnsetOtherCorrectAnswers(questionId, null);
+        }
+
         var answer = new Answer
         {
             Id = Guid.NewGuid(),
@@ -384,13 +404,20 @@ public class TestsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditAnswer(Answer answer)
     {
-        var existing = await _context.Answers.FindAsync(answer.Id);
+        var existing = await _context.Answers
+            .Include(a => a.Question)
+            .FirstOrDefaultAsync(a => a.Id == answer.Id);
         if (existing == null) return NotFound();
 
         if (string.IsNullOrWhiteSpace(answer.Text))
         {
             TempData["Error"] = "Текст ответа не может быть пустым";
             return RedirectToAction(nameof(EditQuestion), new { id = existing.QuestionId });
+        }
+
+        if (answer.IsCorrect && existing.Question?.Type == QuestionType.Single && !existing.IsCorrect)
+        {
+            await UnsetOtherCorrectAnswers(existing.QuestionId, existing.Id);
         }
 
         existing.Text = answer.Text.Trim();
@@ -406,10 +433,18 @@ public class TestsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleAnswerCorrect(Guid id)
     {
-        var answer = await _context.Answers.FindAsync(id);
+        var answer = await _context.Answers
+            .Include(a => a.Question)
+            .FirstOrDefaultAsync(a => a.Id == id);
         if (answer == null) return NotFound();
 
         answer.IsCorrect = !answer.IsCorrect;
+
+        if (answer.IsCorrect && answer.Question?.Type == QuestionType.Single)
+        {
+            await UnsetOtherCorrectAnswers(answer.QuestionId, answer.Id);
+        }
+
         await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(EditQuestion), new { id = answer.QuestionId });
@@ -434,13 +469,32 @@ public class TestsController : Controller
     [HttpPost]
     public async Task<IActionResult> SaveAnswerInline(Guid id, string text, bool isCorrect)
     {
-        var answer = await _context.Answers.FindAsync(id);
+        var answer = await _context.Answers
+            .Include(a => a.Question)
+            .FirstOrDefaultAsync(a => a.Id == id);
         if (answer == null) return NotFound();
+
+        if (isCorrect && answer.Question?.Type == QuestionType.Single && !answer.IsCorrect)
+        {
+            await UnsetOtherCorrectAnswers(answer.QuestionId, answer.Id);
+        }
 
         answer.Text = text?.Trim() ?? "";
         answer.IsCorrect = isCorrect;
 
         await _context.SaveChangesAsync();
         return Ok();
+    }
+
+    private async Task UnsetOtherCorrectAnswers(Guid questionId, Guid? excludeAnswerId)
+    {
+        var otherCorrect = await _context.Answers
+            .Where(a => a.QuestionId == questionId && a.IsCorrect && a.Id != excludeAnswerId)
+            .ToListAsync();
+
+        foreach (var a in otherCorrect)
+        {
+            a.IsCorrect = false;
+        }
     }
 }

@@ -5,8 +5,8 @@
   "CanReturnToQuestion": true,
   "Questions": [
     {
-      "Text": "Какая системная представление показывает текущие подключения к базе данных?",
-      "Type": 0,
+      "Text": "Какое системное представление показывает текущие подключения к базе данных?",
+      "Type": 1,
       "Order": 1,
       "Answers": [
         { "Text": "pg_stat_activity", "IsCorrect": true, "NumericValue": null },
@@ -17,19 +17,19 @@
     },
     {
       "Text": "Какие из перечисленных представлений предоставляют статистику по базам данных?",
-      "Type": 1,
+      "Type": 2,
       "Order": 2,
       "Answers": [
         { "Text": "pg_stat_database", "IsCorrect": true, "NumericValue": null },
         { "Text": "pg_stat_bgwriter", "IsCorrect": true, "NumericValue": null },
-        { "Text": "pg_stat_user_tables", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_stat_user_tables", "IsCorrect": false, "NumericValue": null },
         { "Text": "pg_stat_activity", "IsCorrect": false, "NumericValue": null },
         { "Text": "pg_stat_replication", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {
-      "Text": "Как terminated отключить навешанное подключение (idle connection)?",
-      "Type": 0,
+      "Text": "Как отключить зависшее подключение (idle connection) в PostgreSQL?",
+      "Type": 1,
       "Order": 3,
       "Answers": [
         { "Text": "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';", "IsCorrect": true, "NumericValue": null },
@@ -40,7 +40,7 @@
     },
     {
       "Text": "Что показывает параметр 'active' в pg_stat_activity?",
-      "Type": 0,
+      "Type": 1,
       "Order": 4,
       "Answers": [
         { "Text": "Сейчас выполняется запрос", "IsCorrect": true, "NumericValue": null },
@@ -51,7 +51,7 @@
     },
     {
       "Text": "Какой параметр postgresql.conf включает логирование медленных запросов?",
-      "Type": 0,
+      "Type": 1,
       "Order": 5,
       "Answers": [
         { "Text": "log_min_duration_statement", "IsCorrect": true, "NumericValue": null },
@@ -62,18 +62,18 @@
     },
     {
       "Text": "Сколько различных состояний (state) может быть у запроса в pg_stat_activity?",
-      "Type": 2,
+      "Type": 3,
       "Order": 6,
       "Answers": [
-        { "Text": "3 (active, idle, idle in transaction)", "IsCorrect": false, "NumericValue": null },
-        { "Text": "4 (active, idle, idle in transaction, fastpath function call)", "IsCorrect": true, "NumericValue": null },
-        { "Text": "5", "IsCorrect": false, "NumericValue": null },
-        { "Text": "6", "IsCorrect": false, "NumericValue": null }
+        { "Text": "3", "IsCorrect": false, "NumericValue": 3 },
+        { "Text": "4", "IsCorrect": true, "NumericValue": 4 },
+        { "Text": "5", "IsCorrect": false, "NumericValue": 5 },
+        { "Text": "6", "IsCorrect": false, "NumericValue": 6 }
       ]
     },
     {
       "Text": "Что такое 'checkpointer' в PostgreSQL?",
-      "Type": 0,
+      "Type": 1,
       "Order": 7,
       "Answers": [
         { "Text": "Фоновый процесс, который записывает изменённые страницы из буферного кэша на диск", "IsCorrect": true, "NumericValue": null },
@@ -84,7 +84,7 @@
     },
     {
       "Text": "Какая команда покажет размеры всех таблиц в базе данных?",
-      "Type": 0,
+      "Type": 1,
       "Order": 8,
       "Answers": [
         { "Text": "SELECT pg_size_pretty(pg_total_relation_size(relid)) FROM pg_stat_user_tables;", "IsCorrect": true, "NumericValue": null },
@@ -95,7 +95,7 @@
     },
     {
       "Text": "Какой процесс PostgreSQL отвечает за запись WAL-журнала на диск?",
-      "Type": 0,
+      "Type": 1,
       "Order": 9,
       "Answers": [
         { "Text": "wal writer", "IsCorrect": true, "NumericValue": null },
@@ -106,7 +106,7 @@
     },
     {
       "Text": "Какой параметр postgresql.conf определяет максимальное количество одновременных подключений?",
-      "Type": 0,
+      "Type": 1,
       "Order": 10,
       "Answers": [
         { "Text": "max_connections", "IsCorrect": true, "NumericValue": null },

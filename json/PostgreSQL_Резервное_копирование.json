@@ -5,8 +5,8 @@
   "CanReturnToQuestion": true,
   "Questions": [
     {
-      "Text": "Какой утилита используется для создания логического резервного копия PostgreSQL?",
-      "Type": 0,
+      "Text": "Какая утилита используется для создания логического резервного копия PostgreSQL?",
+      "Type": 1,
       "Order": 1,
       "Answers": [
         { "Text": "pg_dump", "IsCorrect": true, "NumericValue": null },
@@ -17,7 +17,7 @@
     },
     {
       "Text": "Какие форматы вывода поддерживает pg_dump?",
-      "Type": 1,
+      "Type": 2,
       "Order": 2,
       "Answers": [
         { "Text": "plain (SQL)", "IsCorrect": true, "NumericValue": null },
@@ -29,7 +29,7 @@
     },
     {
       "Text": "Что делает флаг -Fc при использовании pg_dump?",
-      "Type": 0,
+      "Type": 1,
       "Order": 3,
       "Answers": [
         { "Text": "Создаёт резервную копию в формате custom (сжатый архив)", "IsCorrect": true, "NumericValue": null },
@@ -40,7 +40,7 @@
     },
     {
       "Text": "Какой минимальный уровень журналирования (wal_level) необходим для базового резервного копирования?",
-      "Type": 0,
+      "Type": 1,
       "Order": 4,
       "Answers": [
         { "Text": "minimal", "IsCorrect": true, "NumericValue": null },
@@ -51,18 +51,18 @@
     },
     {
       "Text": "Сколько параметров архивирования WAL необходимо настроить для работы pg_basebackup?",
-      "Type": 2,
+      "Type": 3,
       "Order": 5,
       "Answers": [
-        { "Text": "1 (archive_mode)", "IsCorrect": false, "NumericValue": null },
-        { "Text": "2 (archive_mode и archive_command)", "IsCorrect": true, "NumericValue": null },
-        { "Text": "3 (archive_mode, archive_command и archive_timeout)", "IsCorrect": false, "NumericValue": null },
-        { "Text": "4", "IsCorrect": false, "NumericValue": null }
+        { "Text": "1 (archive_mode)", "IsCorrect": false, "NumericValue": 1 },
+        { "Text": "2 (archive_mode и archive_command)", "IsCorrect": true, "NumericValue": 2 },
+        { "Text": "3 (archive_mode, archive_command и archive_timeout)", "IsCorrect": false, "NumericValue": 3 },
+        { "Text": "4", "IsCorrect": false, "NumericValue": 4 }
       ]
     },
     {
       "Text": "Какая команда восстанавливает базу данных из резервной копии в формате custom?",
-      "Type": 0,
+      "Type": 1,
       "Order": 6,
       "Answers": [
         { "Text": "pg_restore -d dbname backup.dump", "IsCorrect": true, "NumericValue": null },
@@ -73,7 +73,7 @@
     },
     {
       "Text": "Что такое PITR (Point-in-Time Recovery)?",
-      "Type": 0,
+      "Type": 1,
       "Order": 7,
       "Answers": [
         { "Text": "Восстановление базы данных до определённого момента времени с использованием WAL-журнала", "IsCorrect": true, "NumericValue": null },
@@ -84,7 +84,7 @@
     },
     {
       "Text": "Какие файлы WAL (Write-Ahead Log) необходимы для восстановления после сбоя?",
-      "Type": 1,
+      "Type": 2,
       "Order": 8,
       "Answers": [
         { "Text": "Сегменты WAL от момента последнего pg_basebackup", "IsCorrect": true, "NumericValue": null },
@@ -95,7 +95,7 @@
     },
     {
       "Text": "Какой параметр postgresql.conf определяет максимальное количество сегментов WAL для хранения?",
-      "Type": 0,
+      "Type": 1,
       "Order": 9,
       "Answers": [
         { "Text": "wal_keep_size", "IsCorrect": true, "NumericValue": null },
@@ -106,7 +106,7 @@
     },
     {
       "Text": "Какой параметр pg_basebackup позволяет выполнять резервное копирование через потоковую передачу WAL?",
-      "Type": 0,
+      "Type": 1,
       "Order": 10,
       "Answers": [
         { "Text": "-R (--write-recovery-conf)", "IsCorrect": true, "NumericValue": null },
