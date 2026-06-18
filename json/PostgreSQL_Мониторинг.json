@@ -65,10 +65,10 @@
       "Type": 3,
       "Order": 6,
       "Answers": [
-        { "Text": "3", "IsCorrect": false, "NumericValue": 3 },
-        { "Text": "4", "IsCorrect": true, "NumericValue": 4 },
-        { "Text": "5", "IsCorrect": false, "NumericValue": 5 },
-        { "Text": "6", "IsCorrect": false, "NumericValue": 6 }
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "6", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

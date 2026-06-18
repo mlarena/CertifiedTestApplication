@@ -44,9 +44,9 @@
       "Order": 4,
       "Answers": [
         { "Text": "Ограничение зависит от конфигурации сервера", "IsCorrect": true, "NumericValue": null },
-        { "Text": "10", "IsCorrect": false, "NumericValue": 10 },
-        { "Text": "50", "IsCorrect": false, "NumericValue": 50 },
-        { "Text": "100", "IsCorrect": false, "NumericValue": 100 }
+        { "Text": "10", "IsCorrect": false, "NumericValue": null },
+        { "Text": "50", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {
@@ -110,10 +110,10 @@
       "Type": 3,
       "Order": 10,
       "Answers": [
-        { "Text": "8", "IsCorrect": false, "NumericValue": 8 },
-        { "Text": "16", "IsCorrect": true, "NumericValue": 16 },
-        { "Text": "32", "IsCorrect": false, "NumericValue": 32 },
-        { "Text": "64", "IsCorrect": false, "NumericValue": 64 }
+        { "Text": "8", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16", "IsCorrect": true, "NumericValue": null },
+        { "Text": "32", "IsCorrect": false, "NumericValue": null },
+        { "Text": "64", "IsCorrect": false, "NumericValue": null }
       ]
     }
   ]

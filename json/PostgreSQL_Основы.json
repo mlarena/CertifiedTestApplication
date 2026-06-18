@@ -42,10 +42,10 @@
       "Type": 3,
       "Order": 4,
       "Answers": [
-        { "Text": "3", "IsCorrect": false, "NumericValue": 3 },
-        { "Text": "4", "IsCorrect": true, "NumericValue": 4 },
-        { "Text": "5", "IsCorrect": false, "NumericValue": 5 },
-        { "Text": "2", "IsCorrect": false, "NumericValue": 2 }
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {
@@ -76,10 +76,10 @@
       "Type": 3,
       "Order": 7,
       "Answers": [
-        { "Text": "256", "IsCorrect": false, "NumericValue": 256 },
-        { "Text": "1024", "IsCorrect": false, "NumericValue": 1024 },
-        { "Text": "1600", "IsCorrect": true, "NumericValue": 1600 },
-        { "Text": "32767", "IsCorrect": false, "NumericValue": 32767 }
+        { "Text": "256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1024", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1600", "IsCorrect": true, "NumericValue": null },
+        { "Text": "32767", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

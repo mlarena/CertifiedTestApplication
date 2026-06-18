@@ -1,6 +1,6 @@
 {
   "Title": "Название теста для экспрта-импорта",
-  "Description": "Название теста для экспрта-импорта. \r\nДля определение разных типов вопросов.",
+  "Description": null,
   "TimeLimit": 0,
   "CanReturnToQuestion": true,
   "Questions": [
@@ -53,6 +53,33 @@
         },
         {
           "Text": "Ответ 4",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Числовой",
+      "Type": 3,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "3",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "2",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "4",
           "IsCorrect": true,
           "NumericValue": null
         }

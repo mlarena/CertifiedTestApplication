@@ -54,10 +54,10 @@
       "Type": 3,
       "Order": 5,
       "Answers": [
-        { "Text": "1 (archive_mode)", "IsCorrect": false, "NumericValue": 1 },
-        { "Text": "2 (archive_mode и archive_command)", "IsCorrect": true, "NumericValue": 2 },
-        { "Text": "3 (archive_mode, archive_command и archive_timeout)", "IsCorrect": false, "NumericValue": 3 },
-        { "Text": "4", "IsCorrect": false, "NumericValue": 4 }
+        { "Text": "1 (archive_mode)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2 (archive_mode и archive_command)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3 (archive_mode, archive_command и archive_timeout)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

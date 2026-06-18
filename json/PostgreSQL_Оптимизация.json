@@ -78,10 +78,10 @@
       "Type": 3,
       "Order": 7,
       "Answers": [
-        { "Text": "4", "IsCorrect": false, "NumericValue": 4 },
-        { "Text": "8", "IsCorrect": true, "NumericValue": 8 },
-        { "Text": "16", "IsCorrect": false, "NumericValue": 16 },
-        { "Text": "32", "IsCorrect": false, "NumericValue": 32 }
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "8", "IsCorrect": true, "NumericValue": null },
+        { "Text": "16", "IsCorrect": false, "NumericValue": null },
+        { "Text": "32", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

@@ -1,4 +1,7 @@
 @model IEnumerable<CertifiedTestApplication.Models.Entities.Test>
+@{
+    var categories = ViewBag.Categories as IEnumerable<CertifiedTestApplication.Models.Entities.Category>;
+}
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Тесты</h2>
@@ -23,26 +26,83 @@
     </div>
 }
 
+<!-- Панель поиска и фильтров -->
+<div class="card border shadow-sm mb-3">
+    <div class="card-body py-2 px-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small mb-1">Поиск</label>
+                <div class="position-relative">
+                    <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Название теста..." autocomplete="off" />
+                    <div id="autocompleteList" class="list-group position-absolute w-100" style="z-index:1000;display:none;max-height:200px;overflow-y:auto;"></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small mb-1">Категория</label>
+                <select id="filterCategory" class="form-select form-select-sm">
+                    <option value="">Все категории</option>
+                    @if (categories != null)
+                    {
+                        @foreach (var c in categories)
+                        {
+                            <option value="@c.Name">@c.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small mb-1">Статус</label>
+                <select id="filterStatus" class="form-select form-select-sm">
+                    <option value="">Все</option>
+                    <option value="active">Активен</option>
+                    <option value="draft">Черновик</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small mb-1">Вопросов</label>
+                <select id="filterQuestions" class="form-select form-select-sm">
+                    <option value="">Все</option>
+                    <option value="0">Нет вопросов</option>
+                    <option value="1-5">1–5</option>
+                    <option value="6-10">6–10</option>
+                    <option value="11+">11+</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button id="resetFilters" class="btn btn-outline-secondary btn-sm w-100" title="Сбросить фильтры">&#10005;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="table-responsive">
-    <table class="table table-sm table-hover border">
+    <table class="table table-sm table-hover border" id="testsTable">
         <thead class="table-light">
             <tr>
-                <th>Название</th>
-                <th>Категория</th>
-                <th>Автор</th>
-                <th>Тайминг (сек)</th>
-                <th>Статус</th>
+                <th class="sortable" data-col="0" data-type="string">Название <span class="sort-icon"></span></th>
+                <th class="sortable" data-col="1" data-type="string">Категория <span class="sort-icon"></span></th>
+                <th class="sortable" data-col="2" data-type="string">Автор <span class="sort-icon"></span></th>
+                <th class="sortable" data-col="3" data-type="number">Вопросов <span class="sort-icon"></span></th>
+                <th class="sortable" data-col="4" data-type="number">Тайминг (сек) <span class="sort-icon"></span></th>
+                <th class="sortable" data-col="5" data-type="string">Статус <span class="sort-icon"></span></th>
                 <th class="text-end">Действия</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                var questionCount = item.Questions?.Count ?? 0;
+                <tr data-title="@item.Title.ToLower()"
+                    data-category="@item.Category?.Name"
+                    data-author="@item.Author?.FullName"
+                    data-questions="@questionCount"
+                    data-timing="@item.TimeLimit"
+                    data-status="@(item.IsActive ? "active" : "draft")">
                     <td>@item.Title</td>
                     <td>@item.Category?.Name</td>
                     <td>@item.Author?.FullName</td>
-                    <td>@(item.TimeLimit > 0 ? item.TimeLimit.ToString() : "Нет")</td>
+                    <td>@questionCount</td>
+                    <td data-sort="@item.TimeLimit">@(item.TimeLimit > 0 ? item.TimeLimit.ToString() : "—")</td>
                     <td>
                         @if (item.IsActive)
                         {
@@ -66,6 +126,7 @@
             }
         </tbody>
     </table>
+    <div id="noResults" class="text-center text-muted py-4" style="display:none;">Тестов не найдено</div>
 </div>
 
 <!-- Modal Import -->
@@ -84,7 +145,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small">Категория для импорта</label>
-                        <select name="categoryId" class="form-select form-select-sm" 
+                        <select name="categoryId" class="form-select form-select-sm"
                                 asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"></select>
                     </div>
                 </div>
@@ -96,3 +157,129 @@
         </div>
     </div>
 </div>
+
+<style>
+    .sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+    .sortable:hover { background-color: #e9ecef; }
+    .sort-icon { font-size: 0.7em; opacity: 0.4; }
+    .sort-icon.asc::after { content: " ▲"; opacity: 1; }
+    .sort-icon.desc::after { content: " ▼"; opacity: 1; }
+    #autocompleteList .list-group-item { padding: 6px 12px; cursor: pointer; font-size: 0.875rem; }
+    #autocompleteList .list-group-item:hover { background-color: #e9ecef; }
+</style>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const autocompleteList = document.getElementById('autocompleteList');
+        const filterCategory = document.getElementById('filterCategory');
+        const filterStatus = document.getElementById('filterStatus');
+        const filterQuestions = document.getElementById('filterQuestions');
+        const resetBtn = document.getElementById('resetFilters');
+        const tbody = document.querySelector('#testsTable tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const noResults = document.getElementById('noResults');
+        const titles = [...new Set(rows.map(r => r.dataset.title))];
+
+        // --- Autocomplete ---
+        searchInput.addEventListener('input', function () {
+            const val = this.value.toLowerCase().trim();
+            autocompleteList.innerHTML = '';
+            if (val.length < 1) { autocompleteList.style.display = 'none'; applyFilters(); return; }
+
+            const matches = titles.filter(t => t.includes(val)).slice(0, 8);
+            if (matches.length === 0 || (matches.length === 1 && matches[0] === val)) {
+                autocompleteList.style.display = 'none';
+            } else {
+                matches.forEach(m => {
+                    const item = document.createElement('button');
+                    item.type = 'button';
+                    item.className = 'list-group-item list-group-item-action';
+                    item.textContent = m;
+                    item.addEventListener('click', () => {
+                        searchInput.value = m;
+                        autocompleteList.style.display = 'none';
+                        applyFilters();
+                    });
+                    autocompleteList.appendChild(item);
+                });
+                autocompleteList.style.display = 'block';
+            }
+            applyFilters();
+        });
+
+        searchInput.addEventListener('blur', () => setTimeout(() => autocompleteList.style.display = 'none', 200));
+        searchInput.addEventListener('focus', function () { if (this.value.trim().length >= 1) this.dispatchEvent(new Event('input')); });
+
+        // --- Filters ---
+        [filterCategory, filterStatus, filterQuestions].forEach(el => el.addEventListener('change', applyFilters));
+
+        resetBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            filterCategory.value = '';
+            filterStatus.value = '';
+            filterQuestions.value = '';
+            applyFilters();
+        });
+
+        function applyFilters() {
+            const query = searchInput.value.toLowerCase().trim();
+            const cat = filterCategory.value;
+            const status = filterStatus.value;
+            const qFilter = filterQuestions.value;
+            let visible = 0;
+
+            rows.forEach(row => {
+                const title = row.dataset.title;
+                const category = row.dataset.category;
+                const statusVal = row.dataset.status;
+                const qCount = parseInt(row.dataset.questions) || 0;
+
+                let show = true;
+
+                if (query && !title.includes(query)) show = false;
+                if (cat && category !== cat) show = false;
+                if (status && statusVal !== status) show = false;
+                if (qFilter === '0' && qCount !== 0) show = false;
+                if (qFilter === '1-5' && (qCount < 1 || qCount > 5)) show = false;
+                if (qFilter === '6-10' && (qCount < 6 || qCount > 10)) show = false;
+                if (qFilter === '11+' && qCount < 11) show = false;
+
+                row.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            noResults.style.display = visible === 0 ? 'block' : 'none';
+        }
+
+        // --- Sorting ---
+        let currentSort = { col: -1, asc: true };
+
+        document.querySelectorAll('.sortable').forEach(th => {
+            th.addEventListener('click', function () {
+                const col = parseInt(this.dataset.col);
+                const type = this.dataset.type;
+                const asc = currentSort.col === col ? !currentSort.asc : true;
+                currentSort = { col, asc };
+
+                document.querySelectorAll('.sort-icon').forEach(s => { s.className = 'sort-icon'; });
+                this.querySelector('.sort-icon').className = 'sort-icon ' + (asc ? 'asc' : 'desc');
+
+                const sorted = rows.sort((a, b) => {
+                    let va, vb;
+                    if (col === 3) { va = parseInt(a.dataset.questions) || 0; vb = parseInt(b.dataset.questions) || 0; }
+                    else if (col === 4) { va = parseInt(a.dataset.timing) || 0; vb = parseInt(b.dataset.timing) || 0; }
+                    else {
+                        va = a.children[col]?.textContent.trim().toLowerCase() || '';
+                        vb = b.children[col]?.textContent.trim().toLowerCase() || '';
+                    }
+                    if (va < vb) return asc ? -1 : 1;
+                    if (va > vb) return asc ? 1 : -1;
+                    return 0;
+                });
+
+                sorted.forEach(r => tbody.appendChild(r));
+            });
+        });
+    </script>
+}

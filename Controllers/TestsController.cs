@@ -145,6 +145,7 @@ public class TestsController : Controller
         var tests = await _context.Tests
             .Include(t => t.Category)
             .Include(t => t.Author)
+            .Include(t => t.Questions)
             .ToListAsync();
         return View(tests);
     }
