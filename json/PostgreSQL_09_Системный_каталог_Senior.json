@@ -86,8 +86,8 @@
       "Type": 1,
       "Order": 8,
       "Answers": [
-        { "Text": "Да, ctid может быть проиндексирован, но xmin/xmax — нет", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Все системные столбцы можно индексировать", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, ctid может быть проиндексирован, но xmin/xmax — нет", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Все системные столбцы можно индексировать", "IsCorrect": true, "NumericValue": null },
         { "Text": "Ни один системный столбец нельзя индексировать", "IsCorrect": false, "NumericValue": null },
         { "Text": "Только xmin можно индексировать", "IsCorrect": false, "NumericValue": null }
       ]

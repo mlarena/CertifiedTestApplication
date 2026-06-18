@@ -21,7 +21,7 @@
       "Order": 2,
       "Answers": [
         { "Text": "pg_ctl -D /usr/local/pgsql/data start", "IsCorrect": true, "NumericValue": null },
-        { "Text": "pg_ctl start -D /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl start /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null },
         { "Text": "pg_ctl run -D /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null },
         { "Text": "pg_ctl -start /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null }
       ]

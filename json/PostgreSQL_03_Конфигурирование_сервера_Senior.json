@@ -34,7 +34,7 @@
         { "Text": "ALTER SYSTEM SET auto_config_file = '';", "IsCorrect": false, "NumericValue": null },
         { "Text": "# в postgresql.auto.conf", "IsCorrect": false, "NumericValue": null },
         { "Text": "ALTER SYSTEM RESET ALL; (и удалить файл)", "IsCorrect": false, "NumericValue": null },
-        { "Text": "Файл postgresql.auto.conf нельзя отключить", "IsCorrect": false, "NumericValue": null }
+        { "Text": "Файл postgresql.auto.conf нельзя отключить", "IsCorrect": true, "NumericValue": null }
       ]
     },
     {

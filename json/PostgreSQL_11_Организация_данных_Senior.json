@@ -31,7 +31,7 @@
       "Type": 1,
       "Order": 3,
       "Answers": [
-        { "Text": "Максимум 292 line pointer'а (при размере ItemId = 4 байта, минус заголовок страницы)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Максимум 2042 line pointer'а (при размере ItemId = 4 байта, минус заголовок страницы 24 байта)", "IsCorrect": true, "NumericValue": null },
         { "Text": "Всегда ровно столько, сколько строк на странице", "IsCorrect": false, "NumericValue": null },
         { "Text": "Неограниченное количество", "IsCorrect": false, "NumericValue": null },
         { "Text": "Максимум 1024", "IsCorrect": false, "NumericValue": null }

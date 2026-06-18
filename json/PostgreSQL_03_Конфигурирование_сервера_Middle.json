@@ -94,12 +94,12 @@
       ]
     },
     {
-      "Text": "Какой файл содержит пароли пользователей для аутентификации (если используется)?",
+      "Text": "Какой файл определяет метод аутентификации для подключений клиентов?",
       "Type": 1,
       "Order": 9,
       "Answers": [
         { "Text": "pg_ident.conf", "IsCorrect": false, "NumericValue": null },
-        { "Text": "pg_hba.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_hba.conf", "IsCorrect": true, "NumericValue": null },
         { "Text": "pg_passwd.conf", "IsCorrect": false, "NumericValue": null },
         { "Text": "postgresql.conf", "IsCorrect": false, "NumericValue": null }
       ]
@@ -109,7 +109,7 @@
       "Type": 1,
       "Order": 10,
       "Answers": [
-        { "Text": "maintenance_work_mem", "IsCorrect": true, "NumericValue": null },
+        { "Text": "work_mem", "IsCorrect": true, "NumericValue": null },
         { "Text": "sort_buffer_size", "IsCorrect": false, "NumericValue": null },
         { "Text": "hash_buffer", "IsCorrect": false, "NumericValue": null },
         { "Text": "op_mem", "IsCorrect": false, "NumericValue": null }

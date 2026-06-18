@@ -75,10 +75,10 @@
       "Type": 1,
       "Order": 7,
       "Answers": [
-        { "Text": "FUNCTION", "IsCorrect": true, "NumericValue": null },
+        { "Text": "FUNCTION", "IsCorrect": false, "NumericValue": null },
         { "Text": "OBJECT", "IsCorrect": false, "NumericValue": null },
         { "Text": "STATEMENT", "IsCorrect": false, "NumericValue": null },
-        { "Text": "ALL", "IsCorrect": false, "NumericValue": null }
+        { "Text": "ALL", "IsCorrect": true, "NumericValue": null }
       ]
     },
     {
@@ -86,7 +86,7 @@
       "Type": 1,
       "Order": 8,
       "Answers": [
-        { "Text": "Привилегии, автоматически назначаемые новым объектам, создаваемым指定 ролью", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Привилегии, автоматически назначаемые новым объектам, создаваемым указанной ролью", "IsCorrect": true, "NumericValue": null },
         { "Text": "Привилегии, которые невозможно изменить", "IsCorrect": false, "NumericValue": null },
         { "Text": "Привилегии для системных таблиц", "IsCorrect": false, "NumericValue": null },
         { "Text": "Привилегии, действующие только при запуске сервера", "IsCorrect": false, "NumericValue": null }

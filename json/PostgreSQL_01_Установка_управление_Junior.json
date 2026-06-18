@@ -16,13 +16,13 @@
       ]
     },
     {
-      "Text": "Какая команда используется для запуска PostgreSQL сервера на Linux?",
-      "Type": 1,
+      "Text": "Какие команды используются для запуска PostgreSQL сервера на Linux?",
+      "Type": 2,
       "Order": 2,
       "Answers": [
         { "Text": "mysql start", "IsCorrect": false, "NumericValue": null },
         { "Text": "postgres -D /var/lib/postgresql/data", "IsCorrect": true, "NumericValue": null },
-        { "Text": "pgctl start", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl start -D /var/lib/postgresql/data", "IsCorrect": true, "NumericValue": null },
         { "Text": "service postgres start", "IsCorrect": false, "NumericValue": null }
       ]
     },
@@ -55,8 +55,8 @@
       "Answers": [
         { "Text": "psql --version", "IsCorrect": true, "NumericValue": null },
         { "Text": "postgresql --help", "IsCorrect": false, "NumericValue": null },
-        { "Text": "pg_config --version", "IsCorrect": false, "NumericValue": null },
-        { "Text": "select version()", "IsCorrect": false, "NumericValue": null }
+        { "Text": "pg_version --check", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ver", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

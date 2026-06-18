@@ -31,9 +31,9 @@
       "Type": 1,
       "Order": 3,
       "Answers": [
-        { "Text": "MD5-хеш", "IsCorrect": true, "NumericValue": null },
+        { "Text": "MD5-хеш", "IsCorrect": false, "NumericValue": null },
         { "Text": "Открытым текстом", "IsCorrect": false, "NumericValue": null },
-        { "Text": "SHA-256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SCRAM-SHA-256", "IsCorrect": true, "NumericValue": null },
         { "Text": "Base64", "IsCorrect": false, "NumericValue": null }
       ]
     },

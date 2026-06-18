@@ -43,8 +43,8 @@
       "Order": 4,
       "Answers": [
         { "Text": "Фильтр по таблицам (FOR TABLE)", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Фильтр по схемам (FOR SCHEMA)", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Фильтр по условиям (WHERE)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Фильтр по схемам (FOR TABLES IN SCHEMA)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Фильтр по условиям (WHERE)", "IsCorrect": true, "NumericValue": null },
         { "Text": "Фильтр по колонкам", "IsCorrect": false, "NumericValue": null }
       ]
     },

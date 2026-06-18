@@ -42,9 +42,9 @@
       "Type": 3,
       "Order": 4,
       "Answers": [
-        { "Text": "50", "IsCorrect": false, "NumericValue": null },
+        { "Text": "50", "IsCorrect": true, "NumericValue": null },
         { "Text": "100", "IsCorrect": false, "NumericValue": null },
-        { "Text": "500", "IsCorrect": true, "NumericValue": null },
+        { "Text": "500", "IsCorrect": false, "NumericValue": null },
         { "Text": "1000", "IsCorrect": false, "NumericValue": null }
       ]
     },

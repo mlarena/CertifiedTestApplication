@@ -55,7 +55,7 @@
       "Answers": [
         { "Text": "psql -d dbname", "IsCorrect": true, "NumericValue": null },
         { "Text": "psql --db dbname", "IsCorrect": false, "NumericValue": null },
-        { "Text": "psql dbname", "IsCorrect": false, "NumericValue": null },
+        { "Text": "psql --open dbname", "IsCorrect": false, "NumericValue": null },
         { "Text": "psql --database dbname", "IsCorrect": false, "NumericValue": null }
       ]
     },
@@ -88,7 +88,7 @@
       "Order": 8,
       "Answers": [
         { "Text": "\\c newdb", "IsCorrect": true, "NumericValue": null },
-        { "Text": "\\connect newdb", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\switch newdb", "IsCorrect": false, "NumericValue": null },
         { "Text": "\\use newdb", "IsCorrect": false, "NumericValue": null },
         { "Text": "use newdb", "IsCorrect": false, "NumericValue": null }
       ]

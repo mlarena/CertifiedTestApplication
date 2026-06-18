@@ -67,7 +67,7 @@
         { "Text": "Row-level locks", "IsCorrect": true, "NumericValue": null },
         { "Text": "Table-level locks", "IsCorrect": true, "NumericValue": null },
         { "Text": "Advisory locks", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Predicate locks", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Predicate locks", "IsCorrect": true, "NumericValue": null },
         { "Text": "Page locks", "IsCorrect": false, "NumericValue": null }
       ]
     },
@@ -76,10 +76,10 @@
       "Type": 3,
       "Order": 7,
       "Answers": [
-        { "Text": "1000000", "IsCorrect": false, "NumericValue": null },
-        { "Text": "2000000", "IsCorrect": true, "NumericValue": null },
-        { "Text": "5000000", "IsCorrect": false, "NumericValue": null },
-        { "Text": "10000000", "IsCorrect": false, "NumericValue": null }
+        { "Text": "100000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "200000000", "IsCorrect": true, "NumericValue": null },
+        { "Text": "500000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1000000000", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

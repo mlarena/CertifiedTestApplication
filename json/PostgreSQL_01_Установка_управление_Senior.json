@@ -68,7 +68,7 @@
         { "Text": "huge_pages", "IsCorrect": true, "NumericValue": null },
         { "Text": "temp_buffers", "IsCorrect": false, "NumericValue": null },
         { "Text": "work_mem", "IsCorrect": false, "NumericValue": null },
-        { "Text": "max_shared_region_size", "IsCorrect": true, "NumericValue": null }
+        { "Text": "dynamic_shared_memory_type", "IsCorrect": true, "NumericValue": null }
       ]
     },
     {

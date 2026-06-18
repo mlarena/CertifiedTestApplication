@@ -16,12 +16,12 @@
       ]
     },
     {
-      "Text": "Какой минимальный размер по умолчанию у shared_buffers при инициализации кластера с утилитой initdb (в мегабайтах)?",
+      "Text": "Какой размер по умолчанию имеет параметр shared_buffers при инициализации кластера с утилитой initdb (в мегабайтах)?",
       "Type": 3,
       "Order": 2,
       "Answers": [
-        { "Text": "16", "IsCorrect": true, "NumericValue": null },
-        { "Text": "128", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16", "IsCorrect": false, "NumericValue": null },
+        { "Text": "128", "IsCorrect": true, "NumericValue": null },
         { "Text": "64", "IsCorrect": false, "NumericValue": null },
         { "Text": "32", "IsCorrect": false, "NumericValue": null }
       ]

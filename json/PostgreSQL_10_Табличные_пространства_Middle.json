@@ -49,8 +49,8 @@
       ]
     },
     {
-      "Text": "Как посмотреть размер табличного пространства на диске?",
-      "Type": 1,
+      "Text": "Как посмотреть размер табличного пространства на диске (выберите все верные)?",
+      "Type": 2,
       "Order": 5,
       "Answers": [
         { "Text": "SELECT pg_tablespace_size('myts');", "IsCorrect": true, "NumericValue": null },

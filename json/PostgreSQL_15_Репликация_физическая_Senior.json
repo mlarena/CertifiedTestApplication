@@ -38,8 +38,8 @@
       ]
     },
     {
-      "Text": "Какой параметр standby-сервера определяет, как обрабатывать конфликтные транзакции?",
-      "Type": 1,
+      "Text": "Какие параметры standby-сервера определяют, как обрабатывать конфликтные транзакции?",
+      "Type": 2,
       "Order": 4,
       "Answers": [
         { "Text": "hot_standby_feedback", "IsCorrect": true, "NumericValue": null },

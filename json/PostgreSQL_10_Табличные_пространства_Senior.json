@@ -108,7 +108,7 @@
       "Type": 1,
       "Order": 10,
       "Answers": [
-        { "Text": "Суммирует размеры всех файлов, принадлежащих OID табличного пространства (включая TOAST и WAL)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Суммирует размеры всех файлов, принадлежащих OID табличного пространства (включая TOAST)", "IsCorrect": true, "NumericValue": null },
         { "Text": "Читает метаданные из конфигурационного файла", "IsCorrect": false, "NumericValue": null },
         { "Text": "Использует системный вызов statvfs", "IsCorrect": false, "NumericValue": null },
         { "Text": "Считает только основные файлы, без TOAST", "IsCorrect": false, "NumericValue": null }
