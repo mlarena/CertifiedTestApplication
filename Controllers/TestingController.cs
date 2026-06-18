@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CertifiedTestApplication.Data;
 using CertifiedTestApplication.Models.Entities;
+using CertifiedTestApplication.Models.ViewModels;
+using CertifiedTestApplication.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
@@ -11,10 +13,12 @@ namespace CertifiedTestApplication.Controllers;
 public class TestingController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly ITestEvaluationService _evaluationService;
 
-    public TestingController(ApplicationDbContext context)
+    public TestingController(ApplicationDbContext context, ITestEvaluationService evaluationService)
     {
         _context = context;
+        _evaluationService = evaluationService;
     }
 
     private Guid CurrentUserId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -268,9 +272,7 @@ public class TestingController : Controller
         return Ok(new { count });
     }
 
-    // Завершение теста (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    // Завершение теста (GET) — для автоматического завершения по таймауту
     public async Task<IActionResult> Finish(Guid attemptId)
     {
         var (attempt, isBlocked, error) = await LoadAttemptWithChecks(attemptId);
@@ -281,6 +283,27 @@ public class TestingController : Controller
         if (attempt.Status == AttemptStatus.Completed)
             return RedirectToAction("Index", "Home");
 
+        return await ProcessFinish(attempt, attemptId);
+    }
+
+    // Завершение теста (POST) — для ручного завершения пользователем
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> FinishPost(Guid attemptId)
+    {
+        var (attempt, isBlocked, error) = await LoadAttemptWithChecks(attemptId);
+        if (isBlocked) return RedirectToAction("AccessDenied", "Account");
+        if (error != null || attempt == null)
+            return RedirectToAction("Index", "Home");
+
+        if (attempt.Status == AttemptStatus.Completed)
+            return RedirectToAction("Index", "Home");
+
+        return await ProcessFinish(attempt, attemptId);
+    }
+
+    private async Task<IActionResult> ProcessFinish(TestAttempt attempt, Guid attemptId)
+    {
         var forceFinish = false;
         if (attempt.Test?.TimeLimit > 0)
         {
@@ -289,65 +312,10 @@ public class TestingController : Controller
                 forceFinish = true;
         }
 
-        var questions = await _context.Questions
-            .Where(q => q.TestId == attempt.TestId)
-            .OrderBy(q => q.Order)
-            .ThenBy(q => q.Id)
-            .ToListAsync();
+        var (correctCount, totalCount, questionResults) = await _evaluationService.EvaluateTestAsync(attemptId);
 
-        int correctCount = 0;
-        var questionResults = new List<QuestionResultDetail>();
-
-        foreach (var q in questions)
-        {
-            var correctAnswers = await _context.Answers
-                .Where(a => a.QuestionId == q.Id && a.IsCorrect)
-                .ToListAsync();
-
-            var userAnswers = await _context.UserAnswers
-                .Where(ua => ua.AttemptId == attemptId && ua.QuestionId == q.Id)
-                .ToListAsync();
-
-            bool isCorrect = false;
-
-            if (q.Type == QuestionType.Numeric)
-            {
-                var correctAnswer = correctAnswers.FirstOrDefault();
-                var userVal = userAnswers.FirstOrDefault()?.RawValue;
-                if (correctAnswer?.NumericValue != null && userVal != null &&
-                    double.TryParse(userVal.Replace(",", "."), System.Globalization.NumberStyles.Any,
-                        System.Globalization.CultureInfo.InvariantCulture, out double val))
-                {
-                    isCorrect = Math.Abs(val - correctAnswer.NumericValue.Value) < 0.01;
-                }
-            }
-            else
-            {
-                var userSelectedIds = userAnswers
-                    .Where(ua => ua.SelectedAnswerId.HasValue)
-                    .Select(ua => ua.SelectedAnswerId!.Value)
-                    .ToHashSet();
-                var correctIds = correctAnswers.Select(a => a.Id).ToHashSet();
-
-                isCorrect = correctIds.Count == userSelectedIds.Count &&
-                            correctIds.SetEquals(userSelectedIds);
-            }
-
-            if (isCorrect) correctCount++;
-
-            questionResults.Add(new QuestionResultDetail
-            {
-                Question = q,
-                IsCorrect = isCorrect,
-                UserAnswers = userAnswers,
-                CorrectAnswers = correctAnswers
-            });
-
-            foreach (var ua in userAnswers) ua.IsCorrect = isCorrect;
-        }
-
-        attempt.Score = questions.Count > 0
-            ? Math.Round((double)correctCount / questions.Count * 100, 2)
+        attempt.Score = totalCount > 0
+            ? Math.Round((double)correctCount / totalCount * 100, 2)
             : 0;
         attempt.FinishedAt = DateTime.UtcNow;
         attempt.Status = AttemptStatus.Completed;
@@ -365,17 +333,9 @@ public class TestingController : Controller
 
         ViewBag.QuestionResults = questionResults;
         ViewBag.CorrectCount = correctCount;
-        ViewBag.TotalCount = questions.Count;
+        ViewBag.TotalCount = totalCount;
         ViewBag.ForceFinish = forceFinish;
 
-        return View(attempt);
+        return View("Finish", attempt);
     }
-}
-
-public class QuestionResultDetail
-{
-    public Question Question { get; set; } = null!;
-    public bool IsCorrect { get; set; }
-    public List<UserAnswer> UserAnswers { get; set; } = null!;
-    public List<Answer> CorrectAnswers { get; set; } = null!;
 }

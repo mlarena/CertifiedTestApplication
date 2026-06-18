@@ -1,6 +1,6 @@
 @model CertifiedTestApplication.Models.Entities.TestAttempt
 @{
-    var questionResults = ViewBag.QuestionResults as IEnumerable<CertifiedTestApplication.Controllers.QuestionResultDetail>;
+    var questionResults = ViewBag.QuestionResults as IEnumerable<CertifiedTestApplication.Models.ViewModels.QuestionResultDetail>;
     var correctCount = (int)ViewBag.CorrectCount;
     var totalCount = (int)ViewBag.TotalCount;
     var forceFinish = ViewBag.ForceFinish as bool? ?? false;

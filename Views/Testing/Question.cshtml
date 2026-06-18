@@ -249,7 +249,7 @@
             </div>
             <div class="modal-footer py-2">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Вернуться к тесту</button>
-                <form asp-action="Finish" method="post" class="d-inline" id="finishForm">
+                <form asp-action="FinishPost" method="post" class="d-inline" id="finishForm">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="attemptId" value="@attempt.Id" />
                     <button type="submit" class="btn btn-success btn-sm">Завершить</button>

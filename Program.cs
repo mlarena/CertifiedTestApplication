@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using CertifiedTestApplication.Data;
+using CertifiedTestApplication.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
 
@@ -9,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -26,6 +30,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ITestEvaluationService, TestEvaluationService>();
+builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

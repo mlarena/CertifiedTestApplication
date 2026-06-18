@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CertifiedTestApplication.Data;
 using CertifiedTestApplication.Models.Entities;
+using CertifiedTestApplication.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
@@ -100,12 +101,4 @@ public class ReportsController : Controller
             .ToListAsync();
         return View(logs);
     }
-}
-
-public class QuestionResultViewModel
-{
-    public Question Question { get; set; } = null!;
-    public List<Answer> Answers { get; set; } = null!;
-    public List<UserAnswer> UserAnswers { get; set; } = null!;
-    public bool IsCorrect { get; set; }
 }
