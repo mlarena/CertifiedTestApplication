@@ -1,0 +1,118 @@
+{
+  "Title": "Резервное копирование - Junior",
+  "Description": "Базовые знания о резервном копировании: pg_dump, логическое vs физическое копирование",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой инструмент используется для создания логической резервной копии базы данных PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "pg_dump", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_basebackup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_dumpall", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_restore", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое ключевое слово используется в pg_dump для создания копии всех баз данных?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "--all", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--globals-only", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_dumpall", "IsCorrect": true, "NumericValue": null },
+        { "Text": "--database", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое физическое резервное копирование в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Копирование файлов данных и журналов транзакций на уровне файловой системы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Экспорт данных в SQL-файлы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Создание логических копий с помощью pg_dump", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация данных на другой сервер", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой формат вывода по умолчанию использует pg_dump?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "plain text (SQL)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "custom (-Fc)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "directory (-Fd)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "tar (-Ft)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно восстановить базу данных из логической резервной копии?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "pg_restore", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_load", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_import", "IsCorrect": false, "NumericValue": null },
+        { "Text": "psql -f", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие типы данных может резервировать pg_dump?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Таблицы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Функции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Представления", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Операционную систему", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько основных форматов вывода поддерживает pg_dump?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'точка восстановления' (Point-in-Time Recovery - PITR)?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Восстановление базы данных до конкретного момента времени с помощью журналов транзакций", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Восстановление только последней резервной копии", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Автоматическое восстановление после сбоя", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Ручное восстановление из SQL-файлов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой инструмент используется для создания физической резервной копии в PostgreSQL?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "pg_basebackup", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_dump", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_archivecleanup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_rewind", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл необходимо настроить для архивации журналов транзакций?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "postgresql.conf (archive_mode, archive_command)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_hba.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ident.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "backup_label", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

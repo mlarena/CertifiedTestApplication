@@ -1,0 +1,119 @@
+{
+  "Title": "Использование psql - Middle",
+  "Description": "Тест на знание переменных psql, форматирования вывода и мета-команд",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Как установить переменную окружения в psql?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "\\set VARNAME value", "IsCorrect": true, "NumericValue": null },
+        { "Text": "set VARNAME value", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\setenv VARNAME value", "IsCorrect": false, "NumericValue": null },
+        { "Text": "$VARNAME = value", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно изменить формат вывода на вертикальный?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "\\x", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\vertical", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\v", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\expand", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как установить разделитель для вывода запросов?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "\\pset fieldsep","IsCorrect": true, "NumericValue": null },
+        { "Text": "\\set separator", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\delim", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\csv", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно вывести текущее значение переменной в psql?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "\\echo :VARNAME", "IsCorrect": true, "NumericValue": null },
+        { "Text": "print :VARNAME", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\print :VARNAME", "IsCorrect": false, "NumericValue": null },
+        { "Text": "echo $VARNAME", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как вывести все мета-команды psql?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "\\?", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\help", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\h", "IsCorrect": false, "NumericValue": null },
+        { "Text": "man psql", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие переменные psql влияют на форматирование вывода?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "FORMAT", "IsCorrect": true, "NumericValue": null },
+        { "Text": "BORDER", "IsCorrect": true, "NumericValue": null },
+        { "Text": "PAGER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "NULL", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ENCODING", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет переменная BORDER в psql?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "0", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1", "IsCorrect": true, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как включить тайминг выполнения запросов в psql?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "\\timing", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\time", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\timer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "set timing on", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно сохранить результат запроса в файл?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "\\o filename", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\save filename", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\output filename", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\file filename", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как выполнить shell-команду из psql?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "\\! command", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\shell command", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\exec command", "IsCorrect": false, "NumericValue": null },
+        { "Text": "! command", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

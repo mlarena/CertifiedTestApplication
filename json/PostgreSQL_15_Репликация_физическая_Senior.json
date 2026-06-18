@@ -1,0 +1,118 @@
+{
+  "Title": "Репликация физическая - Senior",
+  "Description": "Экспертные знания: каскадная репликация, управление standby, стратегии failover",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое каскадная репликация в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Репликация, где standby-сервер также является источником для других standby-серверов", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Репликация с автоматическим failover", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация с шифрованием WAL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация с компрессией данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет количество уровней каскадной репликации?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "max_replication_slots", "IsCorrect": true, "NumericValue": null },
+        { "Text": "cascade_level", "IsCorrect": false, "NumericValue": null },
+        { "Text": "replication_depth", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_wal_senders", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой инструмент используется для синхронизации standby с мастером после длительного разрыва?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "pg_rewind", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_dump", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_basebackup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_archivecleanup", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр standby-сервера определяет, как обрабатывать конфликтные транзакции?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "hot_standby_feedback", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_standby_streaming_delay", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_standby_archive_delay", "IsCorrect": true, "NumericValue": null },
+        { "Text": "conflict_resolution", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'pg_rewind'?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Утилита для отката standby-сервера к моменту времени до разрыва репликации", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Утилита для создания резервных копий", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для мониторинга репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для архивации WAL", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет максимальное время задержки для hot standby перед отменой запроса?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "max_standby_streaming_delay", "IsCorrect": true, "NumericValue": null },
+        { "Text": "standby_delay", "IsCorrect": false, "NumericValue": null },
+        { "Text": "replication_delay", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_delay", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно проверить отставание standby от мастера?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "SELECT pg_last_wal_receive_lsn() = pg_last_wal_replay_lsn();", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_stat_replication;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW standby_status;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT replication_lag();", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр мастера определяет, какие standby-серверы являются синхронными?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "synchronous_standby_names", "IsCorrect": true, "NumericValue": null },
+        { "Text": "synchronous_commit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "primary_slot_name", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_sender_timeout", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'promote' в контексте репликации?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Превращение standby-сервера в primary", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Увеличение производительности standby", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Обновление версии PostgreSQL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Добавление новых реплик", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько типов failover поддерживает PostgreSQL нативно?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "1 (только ручной promote)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

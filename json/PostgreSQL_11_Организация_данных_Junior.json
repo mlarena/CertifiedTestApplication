@@ -1,0 +1,118 @@
+{
+  "Title": "Организация данных Низкий уровень - Junior",
+  "Description": "Тест для начинающих администраторов PostgreSQL по теме организации данных на диске",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какое расширение файла используется для данных таблиц в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Файлы данных не имеют расширения (числовые имена)", "IsCorrect": true, "NumericValue": null },
+        { "Text": ".dat", "IsCorrect": false, "NumericValue": null },
+        { "Text": ".db", "IsCorrect": false, "NumericValue": null },
+        { "Text": ".pgd", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Где по умолчанию PostgreSQL хранит файлы данных базы данных (внутри PGDATA)?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "В подкаталоге base/", "IsCorrect": true, "NumericValue": null },
+        { "Text": "В подкаталоге data/", "IsCorrect": false, "NumericValue": null },
+        { "Text": "В подкаталоге db/", "IsCorrect": false, "NumericValue": null },
+        { "Text": "В подкаталоге tables/", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой размер по умолчанию имеет страница (block) данных в PostgreSQL (в байтах)?",
+      "Type": 3,
+      "Order": 3,
+      "Answers": [
+        { "Text": "8192", "IsCorrect": true, "NumericValue": null },
+        { "Text": "4096", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16384", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2048", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое TOAST в PostgreSQL?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Механизм для хранения больших значений, не помещающихся в одну страницу", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Тип индекса для полнотекстового поиска", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Алгоритм сжатия WAL-журнала", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Механизм шифрования данных на диске", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое visibility map (VM) в PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Битовая карта, показывающая, какие страницы содержат только видимые строки", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Карта распределения свободного места на диске", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Карта для распределения строк по страницам", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Индекс для ускорения поиска по первичному ключу", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое free space map (FSM) в PostgreSQL?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Карта, показывающая количество свободного пространства в каждой странице", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Карта для отслеживания удалённых строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Индекс для поиска пустых страниц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кэш для ускорения вставки строк", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл в PostgreSQL хранит visibility map для конкретной таблицы?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "vm ( Visibility Map файл)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "fsm (Free Space Map файл)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "map (Map файл)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "vis (Visibility файл)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL определяет, какая версия строки является видимой для текущей транзакции?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Сравнивает xmin и xmax строки с номером транзакции (XID) текущей транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Использует временные метки (timestamps)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Проверяет флаг «удалена» в заголовке строки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использует блокировку на уровне страницы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое расширение можно установить для просмотра содержимого страниц на диске?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "pageinspect", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_buffercache", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_freespacemap", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgstattuple", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Максимальный размер строки данных (без TOAST) в PostgreSQL в байтах (при стандартном размере страницы)?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "8160", "IsCorrect": true, "NumericValue": null },
+        { "Text": "8192", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4096", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16384", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

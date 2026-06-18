@@ -1,0 +1,119 @@
+{
+  "Title": "Использование psql - Junior",
+  "Description": "Тест на знание основных команд psql и подключения к базе данных",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой командой можно вывести список всех баз данных в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "\\l", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\db", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\list", "IsCorrect": false, "NumericValue": null },
+        { "Text": "show databases", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно вывести список таблиц в текущей базе данных?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "\\dt", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\tables", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\show", "IsCorrect": false, "NumericValue": null },
+        { "Text": "show tables", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно получить структуру таблицы?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "\\d tablename", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\desc tablename", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\schema tablename", "IsCorrect": false, "NumericValue": null },
+        { "Text": "describe tablename", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как выйти из psql?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "\\q", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\exit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "quit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "exit", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как подключиться к конкретной базе данных через psql?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "psql -d dbname", "IsCorrect": true, "NumericValue": null },
+        { "Text": "psql --db dbname", "IsCorrect": false, "NumericValue": null },
+        { "Text": "psql dbname", "IsCorrect": false, "NumericValue": null },
+        { "Text": "psql --database dbname", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие мета-команды psql используются для работы с базами данных?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "\\l", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\c", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\dt", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\dn", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\du", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет порт для подключения к PostgreSQL через psql?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "3306", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5432", "IsCorrect": true, "NumericValue": null },
+        { "Text": "27017", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5433", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как переключиться на другую базу данных в psql?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "\\c newdb", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\connect newdb", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\use newdb", "IsCorrect": false, "NumericValue": null },
+        { "Text": "use newdb", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно вывести список всех ролей (пользователей)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "\\du", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\users", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\lu", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\role", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно вывести список всех схем в текущей базе данных?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "\\dn", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\schema", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\list_schema", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\ds", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "Title": "Установка и управление сервером - Senior",
+  "Description": "Тест на углублённые знания установки PostgreSQL из исходников, тюнинга и управления сервером",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой флаг configure используется для изменения размера страницы (block size) при компиляции PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "--with-blocksize", "IsCorrect": true, "NumericValue": null },
+        { "Text": "--blocksize", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--page-size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--data-page", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой дефолтный размер блока данных (block size) в PostgreSQL?",
+      "Type": 3,
+      "Order": 2,
+      "Answers": [
+        { "Text": "4 KB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "8 KB", "IsCorrect": true, "NumericValue": null },
+        { "Text": "16 KB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "32 KB", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр systemd используется для увеличения лимита файловых дескрипторов PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "LimitNOFILE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "LimitFILE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "MaxOpenFiles", "IsCorrect": false, "NumericValue": null },
+        { "Text": "FileLimit", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно обновить PostgreSQL с одной версии на другую без потери данных?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "pg_upgrade", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_migrate", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_update", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_dumpall | pg_restore", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой системный вызов используется для выделения разделяемой памяти в PostgreSQL на Linux?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "shmget", "IsCorrect": true, "NumericValue": null },
+        { "Text": "mmap", "IsCorrect": false, "NumericValue": null },
+        { "Text": "malloc", "IsCorrect": false, "NumericValue": null },
+        { "Text": "brk", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие параметры можно настроить для управления разделяемой памятью PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "shared_buffers", "IsCorrect": true, "NumericValue": null },
+        { "Text": "huge_pages", "IsCorrect": true, "NumericValue": null },
+        { "Text": "temp_buffers", "IsCorrect": false, "NumericValue": null },
+        { "Text": "work_mem", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_shared_region_size", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой минимум общих буферов (shared_buffers) рекомендуется устанавливать для сервера с 64GB RAM?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "4 GB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "8 GB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16 GB", "IsCorrect": true, "NumericValue": null },
+        { "Text": "32 GB", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл содержит информацию о запущенном экземпляре PostgreSQL и используется для управления процессом?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "postmaster.pid", "IsCorrect": true, "NumericValue": null },
+        { "Text": "postgres.lock", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_instance.pid", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server.lock", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр влияет на использование Huge Pages в PostgreSQL?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "huge_pages", "IsCorrect": true, "NumericValue": null },
+        { "Text": "use_hugepages", "IsCorrect": false, "NumericValue": null },
+        { "Text": "large_pages", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hpage", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение huge_pages рекомендуется для продакшн серверов?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "try", "IsCorrect": true, "NumericValue": null },
+        { "Text": "off", "IsCorrect": false, "NumericValue": null },
+        { "Text": "on", "IsCorrect": false, "NumericValue": null },
+        { "Text": "demand", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

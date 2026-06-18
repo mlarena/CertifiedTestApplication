@@ -1,0 +1,118 @@
+{
+  "Title": "Управление доступом - Junior",
+  "Description": "Базовые знания об управлении доступом в PostgreSQL: роли, привилегии, аутентификация",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какая команда используется для создания нового пользователя в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "CREATE USER", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ADD USER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "NEW USER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "INSERT USER", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из следующих действий выполняет команда REVOKE?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Удаляет привилегии у роли", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Отключает роль", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Удаляет роль из системы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Восстанавливает привилегии по умолчанию", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько ролей по умолчанию создаётся при инициализации PostgreSQL с помощью initdb?",
+      "Type": 3,
+      "Order": 3,
+      "Answers": [
+        { "Text": "1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": true, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'роль' в PostgreSQL?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Объект, который может владеть объектами базы данных и иметь привилегии", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Только учётная запись пользователя для входа", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Группа пользователей с общими привилегиями", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Конфигурационный параметр сервера", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая привилегия позволяет пользователю создавать новые таблицы в схеме?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "CREATE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "INSERT", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из следующих способов аутентификации поддерживаются в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Пароль (password)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Trust (без проверки)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "LDAP", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Windows Authentication", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько максимальных привилегий можно выдать одной командой GRANT?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Без ограничений", "IsCorrect": true, "NumericValue": null },
+        { "Text": "10", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что делает команда GRANT ALL ON DATABASE mydb TO user1?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Выдаёт все привилегии на базу данных mydb пользователю user1", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Создаёт нового пользователя user1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Подключает пользователя user1 к базе данных mydb", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Удаляет все привилегии у пользователя user1", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая роль используется для администрирования PostgreSQL по умолчанию?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "postgres", "IsCorrect": true, "NumericValue": null },
+        { "Text": "admin", "IsCorrect": false, "NumericValue": null },
+        { "Text": "root", "IsCorrect": false, "NumericValue": null },
+        { "Text": "superuser", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой тип аутентификации по умолчанию используется для локальных подключений в pg_hba.conf?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "peer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "md5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "trust", "IsCorrect": false, "NumericValue": null },
+        { "Text": "password", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

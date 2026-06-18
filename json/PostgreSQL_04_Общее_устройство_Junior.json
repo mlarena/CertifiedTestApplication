@@ -1,0 +1,119 @@
+{
+  "Title": "Общее устройство PostgreSQL - Junior",
+  "Description": "Тест на знание клиент-серверной архитектуры и основных концепций PostgreSQL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какая архитектура используется в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Клиент-серверная", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Файловая", "IsCorrect": false, "NumericValue": null },
+        { "Text": "P2P", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Многопоточная", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс обрабатывает запросы клиентов в PostgreSQL?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Backend process", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Master process", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Worker process", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Client process", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое shared buffers в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Область разделяемой памяти для кеширования данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Буфер для сортировки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Буфер для логирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Буфер для репликации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс управляет записью в WAL (Write-Ahead Log)?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "WAL writer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "BGWriter", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Autovacuum", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что делает процесс autovacuum в PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Выполняет очистку и анализ таблиц", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Управляет подключениями", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кеширует запросы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Управляет репликацией", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных процессов существуют в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Background Writer (BGWriter)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Logger", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Optimizer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Compiler", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое максимальное количество процессов-обработчиков (backend) создаётся по умолчанию?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "50", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100", "IsCorrect": true, "NumericValue": null },
+        { "Text": "200", "IsCorrect": false, "NumericValue": null },
+        { "Text": "500", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое каталоги (catalogs) в PostgreSQL?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Системные таблицы с метаданными", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Таблицы данных пользователей", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Индексы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Представления", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой механизм используется для обеспечения целостности данных в PostgreSQL?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "ACID транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CAP теорема", "IsCorrect": false, "NumericValue": null },
+        { "Text": "BASE модель", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Eventual consistency", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое TOAST в PostgreSQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Механизм сжатия больших значений", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Тип данных для текста", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Функция для экспорта данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Протокол передачи данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

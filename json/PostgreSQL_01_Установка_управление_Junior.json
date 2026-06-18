@@ -1,0 +1,119 @@
+{
+  "Title": "Установка и управление сервером - Junior",
+  "Description": "Тест на знание основных понятий установки и управления PostgreSQL на начальном уровне",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой порт по умолчанию использует PostgreSQL для подключения?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "3306", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5432", "IsCorrect": true, "NumericValue": null },
+        { "Text": "27017", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1433", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда используется для запуска PostgreSQL сервера на Linux?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "mysql start", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgres -D /var/lib/postgresql/data", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgctl start", "IsCorrect": false, "NumericValue": null },
+        { "Text": "service postgres start", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой пакетный менеджер используется для установки PostgreSQL в Debian/Ubuntu?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "yum", "IsCorrect": false, "NumericValue": null },
+        { "Text": "dnf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "apt", "IsCorrect": true, "NumericValue": null },
+        { "Text": "zypper", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой суперпользователь создаётся по умолчанию при установке PostgreSQL?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "root", "IsCorrect": false, "NumericValue": null },
+        { "Text": "admin", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgres", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgadmin", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно проверить версию установленного PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "psql --version", "IsCorrect": true, "NumericValue": null },
+        { "Text": "postgresql --help", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_config --version", "IsCorrect": false, "NumericValue": null },
+        { "Text": "select version()", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных операционных систем поддерживаются официальными репозиториями PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Ubuntu", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CentOS", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Arch Linux", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Debian", "IsCorrect": true, "NumericValue": null },
+        { "Text": "FreeBSD", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл является основным конфигурационным файлом PostgreSQL?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "my.cnf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_hba.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько максимальных подключений к БД разрешено по умолчанию в PostgreSQL?",
+      "Type": 3,
+      "Order": 8,
+      "Answers": [
+        { "Text": "50", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100", "IsCorrect": true, "NumericValue": null },
+        { "Text": "200", "IsCorrect": false, "NumericValue": null },
+        { "Text": "500", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда используется для подключения к базе данных через psql?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "psql -h localhost -U postgres -d mydb", "IsCorrect": true, "NumericValue": null },
+        { "Text": "connect mydb", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_connect mydb", "IsCorrect": false, "NumericValue": null },
+        { "Text": "use mydb", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс является главным процессом PostgreSQL сервера?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "postgres", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_master", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_main", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_server", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

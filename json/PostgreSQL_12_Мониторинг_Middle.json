@@ -1,0 +1,118 @@
+{
+  "Title": "Задачи администрирования Мониторинг - Middle",
+  "Description": "Тест для среднего уровня администраторов PostgreSQL по pg_stat_statements и системным представлениям для мониторинга",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какое расширение нужно установить для использования pg_stat_statements?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "CREATE EXTENSION pg_stat_statements;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE EXTENSION stat_statements;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Установить через pg_stat_statements.install()", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Оно включено по умолчанию", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что показывает pg_stat_user_tables?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Количество вставок, обновлений, удалений, seq scan, idx scan", "IsCorrect": true, "NumericValue": null },
+        { "Text": "n_live_tup и n_dead_tup — количество живых и мёртвых строк", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Последнее время вакуума и автоворкума", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Размер таблицы на диске", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как определить таблицы с высоким процентом мёртвых строк (dead tuples)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "SELECT relname, n_dead_tup FROM pg_stat_user_tables ORDER BY n_dead_tup DESC;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_dead_tuples;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT dead_tuples FROM pg_table_stats;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_stat_activity WHERE status = 'dead'", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое pg_stat_bgwriter и какую информацию он предоставляет (выберите все верные)?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Количество записанных bgwriter страниц", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Количество записанных checkpoint страниц", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Количество вытеснённых (buffers_backend) страниц", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Статистику по CPU", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_stat_statements определяет «медленные» запросы?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "По общему времени выполнения (total_time) и среднему времени (mean_time)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "По количеству строк в результатах", "IsCorrect": false, "NumericValue": null },
+        { "Text": "По количеству вызовов (calls)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "По размеру результата", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть, какие индексы не используются?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "SELECT indexrelname FROM pg_stat_user_indexes WHERE idx_scan = 0;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_unused_indexes;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_index WHERE used = false;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW UNUSED INDEXES;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое lock_timeout и как он влияет на мониторинг?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Параметр, ограничивающий время ожидания блокировки; превышение вызывает ошибку", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Параметр, определяющий время жизни блокировки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Параметр для мониторинга количества блокировок", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Параметр для автоматического разрешенияdeadlocks", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть общее время простоя (idle) всех подключений?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "SELECT count(*) FROM pg_stat_activity WHERE state = 'idle';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT idle_connections();", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW IDLE CONNECTIONS;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT pg_idle_connections();", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_stat_replication показывает статус репликации?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Показывает отставание (lag) каждой реплики по времени и байтам (write_lag, flush_lag, replay_lag)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Показывает только статус online/offline", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Показывает количество реплик", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Показывает только общую статистику", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как настроить ротацию логов PostgreSQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Через log_filename, log_rotation_age, log_rotation_size", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через logrotate файл PostgreSQL автоматически", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Через параметр log_rotate", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Ротация не поддерживается", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

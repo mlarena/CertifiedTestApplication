@@ -1,0 +1,118 @@
+{
+  "Title": "Организация данных Низкий уровень - Middle",
+  "Description": "Тест для среднего уровня администраторов PostgreSQL по страницам, кортежам, visibility map и free space map",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Из чего состоит заголовок страницы (page header) в PostgreSQL (выберите все верные)?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        { "Text": "pd_lsn — LSN последней модификации страницы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pd_checksum — контрольная сумма страницы (опционально)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pd_lower и pd_upper — границы свободного пространства", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pd_rowid — уникальный ID страницы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое line pointer (ItemId) в структуре страницы PostgreSQL?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Массив указателей в начале страницы,指向 отдельных кортежей (строк) внутри страницы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Указатель на следующую свободную страницу", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Индекс для быстрого поиска по первичному ключу", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Указатель на TOAST-таблицу", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL определяет, что строка была удалена (dead tuple) и может быть очищена?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        { "Text": "xmin кортежа помечен как committed", "IsCorrect": true, "NumericValue": null },
+        { "Text": "xmax кортежа помечен как committed", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Нет активных транзакций, которые могли бы видеть этот кортеж", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Кортеж помечен флагом DELETED в заголовке", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pgstatinfo (расширение pgstattuple) показывает распределение свободного пространства в таблице?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Создаёт гистограмму заполнения страниц (tuple percent, free percent)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Показывает только общий размер таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Возвращает список пустых страниц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Показывает только количество удалённых строк", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое HOT (Heap Only Tuple) update в PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Обновление строки без изменения индексов (строка остаётся на той же странице или в链 link)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Обновление строки с пересозданием всех индексов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Обновление с использованием временной таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Принудительное обновление всех версий строки", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как visibility map используется при VACUUM?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Позволяет VACUUM пропускать страницы, где все строки видимы всем транзакциям", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Определяет, сколько свободного пространства на странице", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Хранит список удалённых строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Используется для определения порядка чтения страниц", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_freespacemap показывает свободное пространство в страницах?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Хранит приблизительный процент заполнения каждой страницы в отдельном файле", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Хранит точный размер свободного пространства", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Показывает только общую статистику по всей таблице", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Работает только для индексов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое расширение позволяет увидеть структуру кортежей (строк) на конкретной странице?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "pageinspect (функция heap_page_items)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgstattuple", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_buffercache", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_stat_statements", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что происходит при обновлении строки, если она не помещается на той же странице (no-HOT update)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Создаётся новая версия строки на другой странице, обновляются все индексы, указывающие на эту строку", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Строка обрезается до размера страницы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Строка перемещается в TOAST, а на странице остаётся ссылка", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Операция завершается с ошибкой", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_buffercache показывает содержимое общего буферного кеша?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Показывает, какие страницы каких таблиц находятся в shared_buffers и их состояние", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Показывает содержимое страниц в оперативной памяти ОС", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Показывает только статистику по использованию кеша", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Показывает содержимое буферов WAL", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "Title": "Системный каталог - Junior",
+  "Description": "Тест для начинающих администраторов PostgreSQL по теме системного каталога и базовых системных представлений",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое pg_catalog в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Встроенная схема, содержащая системные таблицы и функции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Отдельная база данных для метаданных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Конфигурационный файл PostgreSQL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Файловая система для хранения данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое представление (view) показывает информацию о всех таблицах в базе данных?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "pg_tables", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_indexes", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_columns", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_database", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое information_schema в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Стандартная схема SQL с представлениями метаданных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Схема, созданная администратором", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Временная схема для отладки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Схема для хранения логов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое представление показывает все базы данных в кластере PostgreSQL?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "pg_database", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_tables", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_roles", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_settings", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое представление показывает всех пользователей (ролей) в кластере?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "pg_roles", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_users", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_accounts", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_authors", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как получить список всех расширений, установленных в текущей базе данных?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "SELECT * FROM pg_extension;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_extensions;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM information_schema.extensions;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW extensions;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "К какому типу схем относится pg_catalog?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "К системным (встроенным) схемам", "IsCorrect": true, "NumericValue": null },
+        { "Text": "К пользовательским схемам", "IsCorrect": false, "NumericValue": null },
+        { "Text": "К временным схемам", "IsCorrect": false, "NumericValue": null },
+        { "Text": "К схемам по умолчанию", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда покажет структуру (столбцы) системной таблицы pg_class?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "\\d pg_class", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\dt pg_class", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\di pg_class", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\ds pg_class", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое представление information_schema содержит информацию о столбцах всех таблиц?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "information_schema.columns", "IsCorrect": true, "NumericValue": null },
+        { "Text": "information_schema.attributes", "IsCorrect": false, "NumericValue": null },
+        { "Text": "information_schema.fields", "IsCorrect": false, "NumericValue": null },
+        { "Text": "information_schema.columns_info", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть текущие настройки конфигурации PostgreSQL через SQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "SELECT * FROM pg_settings;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_config;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_options;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW ALL;", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "Title": "Конфигурирование сервера - Middle",
+  "Description": "Тест на знание ALTER SYSTEM, иерархии конфигурации и управления параметрами",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Как сохранить изменения параметра персистентно (между перезапусками)?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "ALTER SYSTEM SET parameter_name = value;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SET GLOBAL parameter_name = value;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE postgresql.conf SET value;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "MODIFY SYSTEM SET parameter_name = value;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "В какой файл записываются изменения, сделанные через ALTER SYSTEM?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "postgresql.auto.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "postgresql.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.system.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql_override.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как отменить действие ALTER SYSTEM для конкретного параметра?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "ALTER SYSTEM RESET parameter_name;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ALTER SYSTEM UNSET parameter_name;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DELETE FROM postgresql.auto.conf WHERE ...", "IsCorrect": false, "NumericValue": null },
+        { "Text": "RESET SYSTEM parameter_name;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как применить изменения postgresql.conf без перезапуска сервера?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "SELECT pg_reload_conf();", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT reload();", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT reconfigure();", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT refresh_config();", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда сбросит все сессионные настройки на значения по умолчанию?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "RESET ALL;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "RESET SETTINGS;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CLEAR ALL;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UNSET ALL;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие уровни контекста параметров конфигурации существуют в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "postmaster", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sighup", "IsCorrect": true, "NumericValue": null },
+        { "Text": "user", "IsCorrect": true, "NumericValue": null },
+        { "Text": "backend", "IsCorrect": true, "NumericValue": null },
+        { "Text": "global", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно посмотреть все доступные параметры и их текущие значения?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "SHOW ALL;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "LIST PARAMETERS;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_settings;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DESCRIBE PARAMETERS;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет параметр shared_buffers?",
+      "Type": 3,
+      "Order": 8,
+      "Answers": [
+        { "Text": "32 MB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "64 MB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "128 MB", "IsCorrect": true, "NumericValue": null },
+        { "Text": "256 MB", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл содержит пароли пользователей для аутентификации (если используется)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "pg_ident.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_hba.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_passwd.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет максимальный размер оперативной памяти для сортировки и хеширования?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "maintenance_work_mem", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sort_buffer_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hash_buffer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "op_mem", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

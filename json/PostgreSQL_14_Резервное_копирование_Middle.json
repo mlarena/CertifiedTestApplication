@@ -1,0 +1,118 @@
+{
+  "Title": "Резервное копирование - Middle",
+  "Description": "Продвинутые знания: опции pg_dump, pg_basebackup, архивация WAL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой ключ pg_dump позволяет создать кастомную архивную копию с возможностью сжатия?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "-Fc (--format=custom)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "-Fp (--format=plain)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-Fd (--format=directory)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-Ft (--format=tar)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие опции pg_dump позволяют контролировать уровень параллелизма?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "-j (--jobs)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "-p (--parallel)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-c (--compress)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-F (--format)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр pg_basebackup задаёт максимальное время ожидания завершения?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "-R (--write-recovery-conf)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-X (--wal-method)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-P (--progress)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_basebackup не имеет такого параметра", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой метод WAL (Write-Ahead Log) рекомендуется использовать для pg_basebackup?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "stream", "IsCorrect": true, "NumericValue": null },
+        { "Text": "fetch", "IsCorrect": false, "NumericValue": null },
+        { "Text": "archive", "IsCorrect": false, "NumericValue": null },
+        { "Text": "none", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр конфигурации включает архивирование WAL файлов?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "archive_mode = on", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_level = replica", "IsCorrect": false, "NumericValue": null },
+        { "Text": "archive_command", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_wal_senders", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой ключ pg_dumpall создаёт резервную копию всех ролей и таблиц空间?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "--globals-only", "IsCorrect": true, "NumericValue": null },
+        { "Text": "--all", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--roles-only", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--tablespaces-only", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно создать физическую резервную копию с включённым восстановлением?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "pg_basebackup -R", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_basebackup -X", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_dump -Fp", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_archivecleanup", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл создаётся при использовании pg_basebackup с опцией -R?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "standby.signal", "IsCorrect": true, "NumericValue": null },
+        { "Text": "backup_label", "IsCorrect": false, "NumericValue": null },
+        { "Text": "recovery.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр pg_dump позволяет включить данные только определённых таблиц?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "-t (--table)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "-T (--exclude-table)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-s (--schema)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "-n (--namespace)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько параметров конфигурации необходимо установить для включения архивации WAL?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

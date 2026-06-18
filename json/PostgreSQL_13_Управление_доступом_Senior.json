@@ -1,0 +1,118 @@
+{
+  "Title": "Управление доступом - Senior",
+  "Description": "Экспертные знания: безопасность на уровне строк, pg_audit, лучшие практики безопасности",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой расширение PostgreSQL позволяет вести аудит действий пользователей?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "pgAudit", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgAuditLog", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_security", "IsCorrect": false, "NumericValue": null },
+        { "Text": "audit_log", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из следующих опций доступны для расширения pgAudit?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "object", "IsCorrect": true, "NumericValue": null },
+        { "Text": "function", "IsCorrect": true, "NumericValue": null },
+        { "Text": "statement", "IsCorrect": true, "NumericValue": null },
+        { "Text": "table", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой уровень безопасности предоставляет Row-Level Security (RLS) в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Позволяет ограничивать доступ к строкам таблиц на основе политики", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Шифрует данные на уровне строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Автоматически шифрует соединения", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Ограничивает доступ только к определённым столбцам", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько типов политик Row-Level Security supported в PostgreSQL?",
+      "Type": 3,
+      "Order": 4,
+      "Answers": [
+        { "Text": "2 (PERMISSIVE и RESTRICTIVE)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда включает Row-Level Security для таблицы?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "ALTER TABLE ... ENABLE ROW LEVEL SECURITY", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SET ROW LEVEL SECURITY ON", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ENABLE SECURITY ON TABLE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ACTIVATE RLS", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из следующих являются лучшими практиками безопасности PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Использовать scram-sha-256 вместо md5", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Ограничивать использование суперпользователей", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Включать SSL для удалённых подключений", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Использовать trust для всех подключений", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой уровень аудита pgAudit используется для логирования всех операций DML?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "FUNCTION", "IsCorrect": true, "NumericValue": null },
+        { "Text": "OBJECT", "IsCorrect": false, "NumericValue": null },
+        { "Text": "STATEMENT", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALL", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'привилегии по умолчанию' (DEFAULT PRIVILEGES) в PostgreSQL?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Привилегии, автоматически назначаемые новым объектам, создаваемым指定 ролью", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Привилегии, которые невозможно изменить", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Привилегии для системных таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Привилегии, действующие только при запуске сервера", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр pg_hba.conf позволяет ограничить количество попыток аутентификации?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "В PostgreSQL нет встроенного параметра для ограничения попыток", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_auth_attempts", "IsCorrect": false, "NumericValue": null },
+        { "Text": "auth_limit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "login_attempts", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой метод аутентификации позволяет использовать внешние системы идентификации (LDAP, RADIUS)?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "ldap, radius, gss, sspi, cert, pam,bsd", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Только ldap", "IsCorrect": false, "NumericValue": null },
+        { "Text": "external", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pam", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

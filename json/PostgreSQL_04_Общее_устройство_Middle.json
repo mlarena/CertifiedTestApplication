@@ -1,0 +1,119 @@
+{
+  "Title": "Общее устройство PostgreSQL - Middle",
+  "Description": "Тест на знание процессной модели, контекстов памяти и разделяемых буферов",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Сколько процессов-обработчиков (backend) создаётся на каждое клиентское подключение?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Один", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Два", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Несколько", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Зависит от настроек", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое Memory Context в PostgreSQL?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Структура управления памятью для каждого процесса", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Область разделяемой памяти", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кеш запросов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Буфер для сортировки", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что делает процесс Background Writer (BGWriter)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Сбрасывает грязные страницы на диск", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Пишет WAL логи", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Очищает таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кеширует запросы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что делает процесс Checkpointer?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Создаёт чекпоинты и сбрасывает данные на диск", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Проверяет целостность данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Управляет WAL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Очищает старые данные", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет размер разделяемых буферов?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "shared_buffers", "IsCorrect": true, "NumericValue": null },
+        { "Text": "cache_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "buffer_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "memory_size", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных процессов являются фоновыми (background) в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Autovacuum Launcher", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Autovacuum Worker", "IsCorrect": true, "NumericValue": null },
+        { "Text": "WAL Writer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Query Executor", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Parser", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое соотношение shared_buffers к RAM рекомендуется для большинства серверов?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "5-10%", "IsCorrect": false, "NumericValue": null },
+        { "Text": "15-25%", "IsCorrect": true, "NumericValue": null },
+        { "Text": "50-75%", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100%", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое dirty pages в контексте shared buffers?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Страницы, изменённые в памяти, но не записанные на диск", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Страницы с ошибками", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Устаревшие страницы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Страницы в очереди на удаление", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс выполняет запись WAL буферов на диск?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "WAL Writer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "BGWriter", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Archiver", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое ring buffer в PostgreSQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Буфер для сканирования больших таблиц", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Кольцевой буфер для WAL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Буфер для сортировки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Буфер для индексов", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

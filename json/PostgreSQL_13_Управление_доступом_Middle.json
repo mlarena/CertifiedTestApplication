@@ -1,0 +1,118 @@
+{
+  "Title": "Управление доступом - Middle",
+  "Description": "Продвинутые знания об управлении доступом: атрибуты ролей, pg_hba.conf, шифрование паролей",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой атрибут роли позволяет пользователю создавать новые роли в системе?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "CREATEROLE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATEUSER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SUPERUSER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ADMIN", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие атрибуты могут быть назначены роли PostgreSQL?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "LOGIN", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SUPERUSER", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATEDB", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ADMIN", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "В каком формате хранятся пароли по умолчанию в системном каталоге pg_authid?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "MD5-хеш", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Открытым текстом", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHA-256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Base64", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой формат записи строки в pg_hba.conf определяет метод аутентификации?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "TYPE DATABASE USER ADDRESS METHOD", "IsCorrect": true, "NumericValue": null },
+        { "Text": "HOST DATABASE USER PASSWORD", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CONNECTION DATABASE USER AUTH", "IsCorrect": false, "NumericValue": null },
+        { "Text": "RULE DATABASE USER METHOD", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько уровней проверки в pg_hba.conf выполняется до успешной аутентификации?",
+      "Type": 3,
+      "Order": 5,
+      "Answers": [
+        { "Text": "1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Зависит от количества записей", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр конфигурации управляет алгоритмом хеширования паролей?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "password_encryption", "IsCorrect": true, "NumericValue": null },
+        { "Text": "auth_method", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hash_algorithm", "IsCorrect": false, "NumericValue": null },
+        { "Text": "crypt_method", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие значения может принимать параметр password_encryption?",
+      "Type": 2,
+      "Order": 7,
+      "Answers": [
+        { "Text": "md5", "IsCorrect": true, "NumericValue": null },
+        { "Text": "scram-sha-256", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sha256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "bcrypt", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое ' групповая роль ' в PostgreSQL?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Роль, которая может использоваться для управления привилегиями нескольких пользователей", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Роль с дополнительными атрибутами", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Системная роль для администрирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Роль, созданная автоматически системой", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда позволяет изменить атрибуты существующей роли?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "ALTER ROLE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "MODIFY ROLE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE ROLE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CHANGE ROLE", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой способ аутентификации считается наиболее безопасным для удалённых подключений?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "scram-sha-256", "IsCorrect": true, "NumericValue": null },
+        { "Text": "md5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "password", "IsCorrect": false, "NumericValue": null },
+        { "Text": "trust", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

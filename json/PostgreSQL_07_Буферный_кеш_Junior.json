@@ -1,0 +1,118 @@
+{
+  "Title": "Буферный кеш и журнал - Junior",
+  "Description": "Тест для начинающих администраторов PostgreSQL по теме буферного кеша и журнала предзаписи",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой параметр конфигурации определяет размер общего буферного кеша в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "shared_buffers", "IsCorrect": true, "NumericValue": null },
+        { "Text": "work_mem", "IsCorrect": false, "NumericValue": null },
+        { "Text": "maintenance_work_mem", "IsCorrect": false, "NumericValue": null },
+        { "Text": "effective_cache_size", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой минимальный размер по умолчанию у shared_buffers при инициализации кластера с утилитой initdb (в мегабайтах)?",
+      "Type": 3,
+      "Order": 2,
+      "Answers": [
+        { "Text": "16", "IsCorrect": true, "NumericValue": null },
+        { "Text": "128", "IsCorrect": false, "NumericValue": null },
+        { "Text": "64", "IsCorrect": false, "NumericValue": null },
+        { "Text": "32", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое WAL в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Write-Ahead Logging — журнал предзаписи", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Write-After Logging — журнал постзаписи", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Weighted Average Length — средняя длина", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Work Assignment Layer — слой назначения задач", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой из перечисленных параметров относится к настройке памяти для сортировок и хеш-таблиц?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "work_mem", "IsCorrect": true, "NumericValue": null },
+        { "Text": "shared_buffers", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hash_mem_multiplier", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_buffers", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс выполняет запись.dirty страниц из буферного кеша на диск в фоновом режиме?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Background Writer (bgwriter)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "WAL Writer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Autovacuum Launcher", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс отвечает за создание контрольных точек (checkpoints) в PostgreSQL?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Checkpointer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Background Writer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "WAL Writer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Startup process", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "В какой директории по умолчанию хранятся сегменты WAL-журнала (в стандартной установке)?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "pg_wal", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_data", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_xlog", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_log", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'checkpoint' в контексте работы PostgreSQL?",
+      "Type": 2,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Момент, когда все.dirty страниц записаны на диск", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Удаление старых версий строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Момент, когда WAL-журнал может быть очищен", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Перезапуск сервера", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт интервал времени в секундах между автоматическими контрольными точками (checkpoints)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "checkpoint_timeout", "IsCorrect": true, "NumericValue": null },
+        { "Text": "checkpoint_completion_target", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_writer_delay", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_wal_size", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой размер по умолчанию имеет страница данных (block size) в PostgreSQL, если он не был изменён при компиляции?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "8192", "IsCorrect": true, "NumericValue": null },
+        { "Text": "4096", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16384", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2048", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

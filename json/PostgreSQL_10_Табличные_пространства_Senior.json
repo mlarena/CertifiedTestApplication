@@ -1,0 +1,118 @@
+{
+  "Title": "Табличные пространства - Senior",
+  "Description": "Тест для опытных администраторов PostgreSQL по внутренностям табличных пространств, перемещению данных и pg_resetwal",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Как PostgreSQL отслеживает, какие OID принадлежат какому табличному пространству (выберите все верные)?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Через pg_class.reltablespace — OID табличного пространства для каждого отношения", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через pg_tablespace.oid", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через отдельный файл tablespace_map в PGDATA", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через файл /etc/postgresql.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое tablespace_map и зачем он нужен?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Файл, отображающий OID табличных пространств на файловые пути, используется при восстановлении", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Кэш оперативной памяти для ускорения доступа к пространствам", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Конфигурационный файл для автоматического управления пространствами", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Файл журнала всех операций с табличными пространствами", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие риски связаны с перемещением таблиц между табличными пространствами на больших таблицах (выберите все верные)?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Высокое потребление дискового пространства (данные дублируются временно)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Длительная блокировка таблицы на время операции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Повреждение WAL-журнала", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Потеря данных при отключении питания", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое pg_resetwal и как он связан с табличными пространствами?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Утилита для сброса WAL-журнала; после её использования необходимо перемещённые табличные пространства правильно переопределить", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Утилита для очистки табличных пространств от мусора", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для резервного копирования табличных пространств", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для изменения размера табличного пространства", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "При переносе кластера на другой сервер, как нужно обращаться с табличными пространствами (выберите все верные)?",
+      "Type": 2,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Скопировать файлы из директорий табличных пространств на новый сервер", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Создать табличные пространства с теми же OID на новом сервере", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Указать --tablespace-mapping в pg_basebackup при восстановлении", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Перемещение табличных пространств не требуется при переносе", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое symlink approach при переносе табличных пространств и почему он небезопасен?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Создание символических ссылок на старые директории — PostgreSQL может потерять целостность данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Это рекомендуемый способ переноса пространств", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Symlink подход ускоряет работу с табличными пространствами", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Symlink подход работает только для pg_default", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое backup_label и как он используется при восстановлении с учётом табличных пространств?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Файл, создаваемый при pg_basebackup, содержащий LSN начала бэкапа и информацию о табличных пространствах", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Конфигурационный файл с указанием путей к табличным пространствам", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Метаданные для автоматического размещения таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Файл с инструкциями по восстановлению", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Можно ли использовать табличные пространства на разных физических устройствах для балансировки нагрузки I/O?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Да, это одна из основных целей использования табличных пространств", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Нет, PostgreSQL всегда использует только одно устройство", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только если включить special I/O balance параметр", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, но только для индексов, не для таблиц", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что произойдёт при ALTER DATABASE ... SET TABLESPACE для базы данных с активными подключениями?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Будет выдана ошибка; нужно использовать онлайн-перенос через pg_basebackup", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Операция выполнится, все клиенты будут автоматически переподключены", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Операция выполнится после завершения всех активных транзакций", "IsCorrect": false, "NumericValue": null },
+        { "Text": "PostgreSQL разорвёт все соединения принудительно", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_tablespace_size() определяет размер табличного пространства?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Суммирует размеры всех файлов, принадлежащих OID табличного пространства (включая TOAST и WAL)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Читает метаданные из конфигурационного файла", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использует системный вызов statvfs", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Считает только основные файлы, без TOAST", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

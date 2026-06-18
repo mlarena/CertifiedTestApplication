@@ -1,0 +1,118 @@
+{
+  "Title": "Базы данных и схемы - Junior",
+  "Description": "Тест для начинающих администраторов PostgreSQL по теме управления базами данных и схемами",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какая команда SQL используется для создания новой базы данных в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "CREATE DATABASE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE SCHEMA", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE TABLE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE DB", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая схема создаётся по умолчанию для каждого нового пользователя в базе данных?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "public", "IsCorrect": true, "NumericValue": null },
+        { "Text": "main", "IsCorrect": false, "NumericValue": null },
+        { "Text": "default", "IsCorrect": false, "NumericValue": null },
+        { "Text": "system", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое схема (schema) в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Именованное пространство объектов (таблиц, функций и т.д.)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Отдельная база данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Тип данных для хранения структуры", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Пользователь с набором привилегий", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие типы объектов могут храниться в схемах PostgreSQL (выберите все верные)?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Таблицы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Функции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Индексы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Файлы операционной системы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как удалить базу данных с именем testdb?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "DROP DATABASE testdb;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "DELETE DATABASE testdb;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "REMOVE DATABASE testdb;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DESTROY DATABASE testdb;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Можно ли создавать объекты в схеме public без явного указания имени схемы?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Да, если public входит в search_path", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Нет, всегда нужно указывать схему явно", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, но только для таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только если схема создана с параметром DEFAULT", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Кто может создавать новую базу данных в PostgreSQL по умолчанию?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Пользователи с привилегией CREATEDB или суперпользователи", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Любой подключённый пользователь", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только суперпользователь", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только владелец (owner) кластера", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое расширение (template) используется по умолчанию при создании новой базы данных?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "template1", "IsCorrect": true, "NumericValue": null },
+        { "Text": "template0", "IsCorrect": false, "NumericValue": null },
+        { "Text": "template_default", "IsCorrect": false, "NumericValue": null },
+        { "Text": "template_master", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое максимальное количество баз данных можно создать в одном кластере PostgreSQL?",
+      "Type": 3,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Теоретически без жёсткого лимита (ограничение ресурсами ОС)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1024", "IsCorrect": false, "NumericValue": null },
+        { "Text": "64", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Чем отличается схема от базы данных в PostgreSQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "База данных — отдельный набор данных с каталогом; схема — именованное пространство объектов внутри базы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Это одно и то же, просто разные названия", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Схема — это виртуальное представление, база данных — физическое хранилище", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Схема создаёт отдельный процесс, база данных — нет", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

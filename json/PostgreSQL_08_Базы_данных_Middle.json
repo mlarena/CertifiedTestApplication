@@ -1,0 +1,118 @@
+{
+  "Title": "Базы данных и схемы - Middle",
+  "Description": "Тест для среднего уровня администраторов PostgreSQL по шаблонам баз данных, search_path и привилегиям схем",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой шаблон базы данных содержит начальную конфигурацию и не должен изменяться (используется как основа для template1)?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "template0", "IsCorrect": true, "NumericValue": null },
+        { "Text": "template1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "template_master", "IsCorrect": false, "NumericValue": null },
+        { "Text": "template_default", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое search_path в PostgreSQL и зачем он нужен?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Параметр, определяющий порядок поиска имён в схемах", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Путь к файлам данных на диске", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Определяет, какие схемы PostgreSQL ищет при разрешении имён объектов", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Каталог функций, доступных пользователю", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как запретить всем обычным пользователям создавать объекты в схеме public?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "REVOKE CREATE ON SCHEMA public FROM PUBLIC;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ALTER SCHEMA public DISABLE;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DROP SCHEMA public;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SET search_path TO NONE;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие привилегии схемы определяют, кто может создавать объекты в ней?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "CREATE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "USAGE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALL", "IsCorrect": true, "NumericValue": null },
+        { "Text": "TEMPORARY", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Чем template0 отличается от template1?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "template0 имеет строго фиксированную кодировку и локаль, template1 можно изменять", "IsCorrect": true, "NumericValue": null },
+        { "Text": "template0 быстрее, template1 медленнее", "IsCorrect": false, "NumericValue": null },
+        { "Text": "template0 не поддерживает расширения, template1 поддерживает", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Шаблоны одинаковы, различие только в названии", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как указать при создании базы данных, что она должна быть создана из конкретного шаблона?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "CREATE DATABASE mydb TEMPLATE mytemplate;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE DATABASE mydb WITH TEMPLATE mytemplate;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE DATABASE mydb FROM mytemplate;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE DATABASE mydb CLONE mytemplate;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что произойдёт, если в search_path указана схема, которой не существует?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "PostgreSQL проигнорирует несуществующую схему при поиске имён", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Выдаст ошибку при каждом запросе", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Автоматически создаст схему", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Заблокирует все операции в базе данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда показывает текущее значение search_path для сессии?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "SHOW search_path;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT search_path;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "GET search_path;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DISPLAY search_path;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Каким образом можно разрешить пользователю использовать схему, но запретить создание объектов?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "GRANT USAGE ON SCHEMA myschema TO myuser;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "GRANT SELECT ON SCHEMA myschema TO myuser;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "GRANT CONNECT ON SCHEMA myschema TO myuser;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "GRANT ACCESS ON SCHEMA myschema TO myuser;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько баз данных может быть в кластере PostgreSQL, если каждая создаётся из template0 с разной кодировкой?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Неограниченное количество (ограничение только ресурсами)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Столько, сколько кодировок поддерживает PostgreSQL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Максимум 256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Максимум 1024", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "Title": "Репликация логическая - Senior",
+  "Description": "Экспертные знания: внутренности логической репликации, фильтрация, мониторинг",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое 'logical decoding' в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Процесс декодирования WAL файлов в логические изменения", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Декодирование SQL-запросов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Декодирование данных на уровне блоков", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Декодирование схемы базы данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой интерфейс используется для создания собственных плагинов декодирования?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Output plugin API", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Decoding API", "IsCorrect": false, "NumericValue": null },
+        { "Text": "WAL API", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Replication API", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно создать собственный плагин декодирования?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "CREATE DECODING PLUGIN", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE OUTPUT PLUGIN", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Создание shared library с функциями плагина", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE LOGICAL PLUGIN", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие фильтры можно применять к публикации?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Фильтр по таблицам (FOR TABLE)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Фильтр по схемам (FOR SCHEMA)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Фильтр по условиям (WHERE)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Фильтр по колонкам", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно добавить фильтр WHERE к публикации?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "ALTER PUBLICATION ... FOR TABLE ... WHERE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE PUBLICATION ... WHERE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SET PUBLICATION ... FILTER", "IsCorrect": false, "NumericValue": null },
+        { "Text": "MODIFY PUBLICATION ... CONDITION", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой представление показывает состояние логической репликации?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "pg_stat_subscription", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_replication_status", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_subscription_stats", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_logical_status", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой столбец в pg_stat_subscription показывает задачу репликации?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "replay_lag", "IsCorrect": true, "NumericValue": null },
+        { "Text": "receive_lag", "IsCorrect": false, "NumericValue": null },
+        { "Text": "write_lag", "IsCorrect": false, "NumericValue": null },
+        { "Text": "flush_lag", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'origin filtering' в логической репликации?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Механизм предотвращения репликации изменений обратно к источнику", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Фильтрация изменений по источнику", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Определение начальной точки репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Маркировка изменений с указанием источника", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр подписки отключает origin filtering?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "origin = none", "IsCorrect": true, "NumericValue": null },
+        { "Text": "origin_filter = false", "IsCorrect": false, "NumericValue": null },
+        { "Text": "disable_origin", "IsCorrect": false, "NumericValue": null },
+        { "Text": "skip_origin", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько плагинов декодирования доступно в PostgreSQL по умолчанию?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "2 (pgoutput, test_decoding)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

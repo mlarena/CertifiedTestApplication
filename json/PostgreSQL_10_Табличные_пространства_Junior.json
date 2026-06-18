@@ -1,0 +1,118 @@
+{
+  "Title": "Табличные пространства - Junior",
+  "Description": "Тест для начинающих администраторов PostgreSQL по теме табличных пространств",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое табличное пространство (tablespace) в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Именованное место на файловой системе для хранения файлов данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Отдельная база данных для хранения таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Схема для группировки таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Логическое пространство в памяти сервера", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое имя носит табличное пространство по умолчанию для пользовательских объектов?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "pg_default", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_global", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_main", "IsCorrect": false, "NumericValue": null },
+        { "Text": "default_tablespace", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Для хранения каких объектов используется табличное пространство pg_global?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Для общих системных каталогов (pg_database, pg_authid)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Для пользовательских таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Для временных таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Для индексов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда создает новое табличное пространство?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "CREATE TABLESPACE myts LOCATION '/path/to/dir';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE TABLESPACE myts PATH '/path/to/dir';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE DISK myts '/path/to/dir';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER TABLESPACE myts CREATE '/path/to/dir';", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Кто может создавать новые табличные пространства в PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Только суперпользователи", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Любой пользователь с привилегией CREATE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Пользователи с привилегией CREATEDB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Все подключённые пользователи", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как указать табличное пространство при создании таблицы?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "CREATE TABLE mytable (...) TABLESPACE myts;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE TABLE mytable (...) IN myts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE TABLE mytable (...) ON myts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CREATE TABLE mytable (...) STORAGE myts;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Где физически расположены файлы данных pg_default?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "В подкаталоге base базы данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "В подкаталоге global", "IsCorrect": false, "NumericValue": null },
+        { "Text": "В подкаталоге pg_default", "IsCorrect": false, "NumericValue": null },
+        { "Text": "В корне PGDATA", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Можно ли переместить существующее табличное пространство из одного места на диске в другое без пересоздания?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Нет, нужно создать новое и переместить данные вручную", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Да, командой ALTER TABLESPACE MOVE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, с помощью pg_tablespace_move()", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, PostgreSQL автоматически перемещает при изменении LOCATION", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое temp_tablespace и для чего он используется?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Табличное пространство, используемое для временных файлов (сортировки, хеширования, temp-таблицы)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Табличное пространство, которое удаляется после перезапуска", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Табличное пространство для резервных копий", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Табличное пространство для WAL-файлов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как показать все табличные пространства в кластере?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "SELECT * FROM pg_tablespace;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SHOW TABLESPACES;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_space;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "LIST TABLESPACES;", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

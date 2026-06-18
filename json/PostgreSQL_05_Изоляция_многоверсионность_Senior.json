@@ -1,0 +1,119 @@
+{
+  "Title": "Изоляция и многоверсионность - Senior",
+  "Description": "Тест на углублённые знания изоляции, predicate locking и wraparound транзакций",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое XID wraparound в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Переполнение счётчика транзакций и перезапуск нумерации", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Зацикливание транзакций", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Блокировка всех транзакций", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Потеря данных из-за переполнения", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой максимальный XID используется в PostgreSQL перед wraparound?",
+      "Type": 3,
+      "Order": 2,
+      "Answers": [
+        { "Text": "2^31 (2147483647)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2^32 (4294967296)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "2^64", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2^48", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое Serialization failure в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Ошибка при попытке зафиксировать транзакцию на уровне SERIALIZABLE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Ошибка при записи на диск", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Ошибка подключения", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Ошибка синтаксиса SQL", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL реализует SERIALIZABLE без использования 2PL?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "SSI (Serializable Snapshot Isolation)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Two-Phase Locking (2PL)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Strict 2PL", "IsCorrect": false, "NumericValue": null },
+        { "Text": ".Timestamp ordering", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое predicate lock в контексте SERIALIZABLE?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Логическая блокировка на основе условий запроса", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Физическая блокировка строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Блокировка на время транзакции", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Блокировка на чтение", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие типы блокировок используются в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Row-level locks", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Table-level locks", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Advisory locks", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Predicate locks", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Page locks", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой предел предупреждения о wraparound устанавливается по умолчанию?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "1000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2000000", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "10000000", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое tuple visibility map?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Битовая карта для быстрой проверки видимости кортежей", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Карта расположения кортежей", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Карта использования кортежей", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Карта версий кортежей", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое frozen XID в PostgreSQL?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Специальная XID, обозначающая, что кортеж был заморожен (freeze)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "XID для заброшенных транзакций", "IsCorrect": false, "NumericValue": null },
+        { "Text": "XID для архивных транзакций", "IsCorrect": false, "NumericValue": null },
+        { "Text": "XID для резервных копий", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс отвечает за предотвращение XID wraparound?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Autovacuum", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "BGWriter", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Archiver", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

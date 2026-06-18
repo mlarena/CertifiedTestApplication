@@ -1,0 +1,118 @@
+{
+  "Title": "Репликация логическая - Middle",
+  "Description": "Продвинутые знания: настройка логической репликации, разрешение конфликтов",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой параметр подписки определяет, как обрабатывать конфликты?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "copy_data", "IsCorrect": false, "NumericValue": null },
+        { "Text": "create_slot", "IsCorrect": false, "NumericValue": null },
+        { "Text": "disable_on_error", "IsCorrect": false, "NumericValue": null },
+        { "Text": "В PostgreSQL нет встроенного параметра для разрешения конфликтов", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие виды данных могут быть включены в публикацию?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Все данные (DATA)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Только операции (OPERATIONS)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только DDL изменения", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Все данные и операции", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет интервал синхронизации для подписки?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "refresh_interval", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sync_interval", "IsCorrect": false, "NumericValue": null },
+        { "Text": "update_interval", "IsCorrect": false, "NumericValue": null },
+        { "Text": "poll_interval", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно обновить список таблиц в подписке?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "ALTER SUBSCRIPTION ... REFRESH PUBLICATION", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ALTER SUBSCRIPTION ... UPDATE", "IsCorrect": false, "NumericValue": null },
+        { "Text": "REFRESH SUBSCRIPTION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SYNC SUBSCRIPTION", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'origin' в контексте логической репликации?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Идентификатор источника изменений", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Точка восстановления", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Местоположение сервера", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Начальная позиция репликации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет, должно ли включаться первоначальное копирование данных при создании подписки?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "copy_data", "IsCorrect": true, "NumericValue": null },
+        { "Text": "initial_data", "IsCorrect": false, "NumericValue": null },
+        { "Text": "first_sync", "IsCorrect": false, "NumericValue": null },
+        { "Text": "start_copy", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет, должна ли подписка автоматически переподключаться при ошибках?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "disable_on_error", "IsCorrect": true, "NumericValue": null },
+        { "Text": "auto_reconnect", "IsCorrect": false, "NumericValue": null },
+        { "Text": "retry_on_error", "IsCorrect": false, "NumericValue": null },
+        { "Text": "error_handling", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно удалить публикацию?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "DROP PUBLICATION", "IsCorrect": true, "NumericValue": null },
+        { "Text": "DELETE PUBLICATION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "REMOVE PUBLICATION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DESTROY PUBLICATION", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет, должна ли подписка создавать replication slot автоматически?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "create_slot", "IsCorrect": true, "NumericValue": null },
+        { "Text": "auto_slot", "IsCorrect": false, "NumericValue": null },
+        { "Text": "slot_creation", "IsCorrect": false, "NumericValue": null },
+        { "Text": "slot_auto", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько типов данных может содержать публикация по умолчанию?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "1 (DATA)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

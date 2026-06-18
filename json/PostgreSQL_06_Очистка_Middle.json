@@ -1,0 +1,119 @@
+{
+  "Title": "Очистка - Middle",
+  "Description": "Тест на знание тюнинга autovacuum, определения bloat и ручной очистки",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой параметр определяет порог для запуска автоочистки (в долях от таблицы)?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "autovacuum_vacuum_scale_factor", "IsCorrect": true, "NumericValue": null },
+        { "Text": "autovacuum_vacuum_threshold", "IsCorrect": false, "NumericValue": null },
+        { "Text": "autovacuum_vacuum_limit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "vacuum_scale", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет минимальное количество мёртвых строк для запуска автоочистки?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "autovacuum_vacuum_threshold", "IsCorrect": true, "NumericValue": null },
+        { "Text": "autovacuum_vacuum_scale_factor", "IsCorrect": false, "NumericValue": null },
+        { "Text": "autovacuum_vacuum_min", "IsCorrect": false, "NumericValue": null },
+        { "Text": "vacuum_threshold", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет autovacuum_vacuum_scale_factor?",
+      "Type": 3,
+      "Order": 3,
+      "Answers": [
+        { "Text": "0.05 (5%)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "0.1 (10%)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "0.2 (20%)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "0.5 (50%)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет autovacuum_vacuum_threshold?",
+      "Type": 3,
+      "Order": 4,
+      "Answers": [
+        { "Text": "50", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100", "IsCorrect": false, "NumericValue": null },
+        { "Text": "500", "IsCorrect": true, "NumericValue": null },
+        { "Text": "1000", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как проверить bloat таблицы с помощью расширения pgstattuple?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "SELECT * FROM pgstattuple('tablename');", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT bloat FROM pg_table_info('tablename');", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW bloat tablename;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\bloat tablename", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие функции доступны в расширении pgstattuple?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "pgstattuple()", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgstatindex()", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgstatcheck()", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgstattuple_approx()", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgstatanalyze()", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет параметр autovacuum_max_workers?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "10", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как изменить настройки autovacuum для конкретной таблицы?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "ALTER TABLE ... SET (autovacuum_vacuum_scale_factor = 0.05);", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SET autovacuum FOR tablename;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE pg_settings SET value WHERE ...", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER SYSTEM SET autovacuum ...", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое мёртвые ссылки (dead links) в индексах?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Указатели на мёртвые кортежи", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Сломанные индексы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Дублирующиеся записи", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Пустые страницы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет интервал между запусками autovacuum?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "autovacuum_naptime", "IsCorrect": true, "NumericValue": null },
+        { "Text": "autovacuum_interval", "IsCorrect": false, "NumericValue": null },
+        { "Text": "autovacuum_delay", "IsCorrect": false, "NumericValue": null },
+        { "Text": "vacuum_interval", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

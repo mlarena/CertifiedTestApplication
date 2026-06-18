@@ -1,0 +1,118 @@
+{
+  "Title": "Системный каталог - Senior",
+  "Description": "Тест для опытных администраторов PostgreSQL по внутренностям системного каталога, системе OID и системным столбцам",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие неявные (system) столбцы доступны в каждой таблице PostgreSQL?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        { "Text": "ctid — физическое расположение строки (номер страницы и позиции)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "xmin — ID транзакции, создавшей строку", "IsCorrect": true, "NumericValue": null },
+        { "Text": "xmax — ID транзакции, удалившей или заблокировавшей строку", "IsCorrect": true, "NumericValue": null },
+        { "Text": "rowid — уникальный целочисленный идентификатор строки", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое TOAST в PostgreSQL и какую таблицу каталога он использует?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Механизм сжатия и хранения больших значений, использует pg_toast схему", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Механизм шифрования данных, использует pg_crypto", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Механизм репликации, использует pg_replication", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Механизм кэширования, использует pg_cache", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как определить, что таблица использует механизм наследования через системные каталоги?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Через pg_inherits (parent, child OIDs)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через pg_class.relkind = 'c' (дочерняя таблица)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через pg_attribute (столбец inherits)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Через pg_tables (столбец is_child)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL использует xmin и xmax для реализации MVCC?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "xmin показывает, какой транзакцией создана строка", "IsCorrect": true, "NumericValue": null },
+        { "Text": "xmax показывает, какой транзакцией строка была удалена/заблокирована", "IsCorrect": true, "NumericValue": null },
+        { "Text": "xmin и xmax определяют физическое положение строки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "xmax всегда равен 0 для активных строк", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое ctid в системном столбце каждой таблицы?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Пара (номер страницы, позиция внутри страницы), физическое расположение версии строки", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Уникальный целочисленный ID строки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Хеш от первичного ключа", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Логический адрес строки", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая системная таблица определяет типы данных, доступные в PostgreSQL?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "pg_type", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_types", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_datatypes", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_typedef", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как получить список всех индексов для таблицы через системные каталоги?",
+      "Type": 2,
+      "Order": 7,
+      "Answers": [
+        { "Text": "SELECT indexrelid::regclass FROM pg_index WHERE indrelid = 'mytable'::regclass;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_indexes WHERE tablename = 'mytable';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_index WHERE tablename = 'mytable';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_class WHERE relname = 'mytable';", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL обрабатывает системные столбцы (ctid, xmin, xmax) — могут ли они быть индексированы?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Да, ctid может быть проиндексирован, но xmin/xmax — нет", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Все системные столбцы можно индексировать", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Ни один системный столбец нельзя индексировать", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только xmin можно индексировать", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое pg_locks и какую информацию она содержит?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Представление, показывающее активные блокировки в кластере", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Системная таблица с историями блокировок", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Функция для блокировки таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Конфигурационный параметр блокировок", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть размер системных таблиц (pg_class, pg_attribute и т.д.) через pg_total_relation_size?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "SELECT pg_total_relation_size('pg_class'); — покажет общий размер в байтах", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Системные таблицы всегда в памяти, pg_total_relation_size вернёт 0", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_total_relation_size работает только для пользовательских таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT pg_tablespace_size('pg_catalog');", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

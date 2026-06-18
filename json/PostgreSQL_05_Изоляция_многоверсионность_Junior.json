@@ -1,0 +1,118 @@
+{
+  "Title": "Изоляция и многоверсионность - Junior",
+  "Description": "Тест на знание основ MVCC и уровней изоляции в PostgreSQL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое MVCC в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Многоверсионный контроль конкурентности", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Многопользовательский доступ к данным", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Многоканальная запись", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Многопоточная обработка", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой уровень изоляции используется в PostgreSQL по умолчанию?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "READ COMMITTED", "IsCorrect": true, "NumericValue": null },
+        { "Text": "READ UNCOMMITTED", "IsCorrect": false, "NumericValue": null },
+        { "Text": "REPEATABLE READ", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SERIALIZABLE", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое снимок данных (snapshot)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Фиксированное состояние данных в определённый момент времени", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Копия таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Резервная копия", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Лог изменений", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как изменить уровень изоляции для текущей сессии?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "SET TRANSACTION ISOLATION LEVEL ...", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ALTER SESSION ISOLATION ...", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SET ISOLATION ...", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CHANGE ISOLATION ...", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие уровни изоляции поддерживаются в PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Read Uncommitted, Read Committed, Repeatable Read, Serializable", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Read Committed, Repeatable Read", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Read Committed, Serializable", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Все стандартные SQL уровни", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие аномалии предотвращает READ COMMITTED?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Dirty reads", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Non-repeatable reads", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Phantom reads", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Lost updates", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько уровней изоляции определено в стандарте SQL?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": true, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое гонка данных (race condition)?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Ситуация, когда результат зависит от порядка выполнения транзакций", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Ошибка в коде программы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Нехватка памяти", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Блокировка таблицы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое заброшенная транзакция (aborted transaction)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Транзакция, которая была отменена (ROLLBACK)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Транзакция, которая зависла", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Транзакция, которая выполняется слишком долго", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Транзакция с ошибкой", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой уровень изоляции предотвращает все аномалии?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "SERIALIZABLE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "REPEATABLE READ", "IsCorrect": false, "NumericValue": null },
+        { "Text": "READ COMMITTED", "IsCorrect": false, "NumericValue": null },
+        { "Text": "READ UNCOMMITTED", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

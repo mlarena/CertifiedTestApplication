@@ -1,0 +1,118 @@
+{
+  "Title": "Очистка - Senior",
+  "Description": "Тест на углублённые знания VACUUM FULL, pg_repack, freeze и предотвращения wraparound",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Чем VACUUM FULL отличается от обычного VACUUM?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "VACUUM FULL перестраивает таблицу и освобождает место на диске", "IsCorrect": true, "NumericValue": null },
+        { "Text": "VACUUM FULL работает быстрее", "IsCorrect": false, "NumericValue": null },
+        { "Text": "VACUUM FULL не блокирует таблицу", "IsCorrect": false, "NumericValue": null },
+        { "Text": "VACUUM FULL обновляет статистику", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое freeze в PostgreSQL?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Замораживание XID кортежа для предотвращения wraparound", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Блокировка таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Шифрование данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Архивирование данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет возраст замораживания (freeze) по умолчанию?",
+      "Type": 3,
+      "Order": 3,
+      "Answers": [
+        { "Text": "50000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100000000", "IsCorrect": true, "NumericValue": null },
+        { "Text": "200000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "500000000", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое freeze_age в контексте VACUUM?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Возраст XID, при котором кортеж замораживается", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Время работы VACUUM", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Количество обработанных строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Размер таблицы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое pg_repack?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Утилита для дефрагментации таблиц без блокировки", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Утилита для резервного копирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для восстановления данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для мониторинга", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие преимущества pg_repack перед VACUUM FULL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Не блокирует таблицу на время работы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Работает быстрее", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использует меньше памяти", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Обновляет статистику", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет максимальный возраст XID для предупреждения о wraparound?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "100000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2000000000", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3000000000", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4000000000", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что произойдёт при wraparound без очистки?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "PostgreSQL откажется принимать новые транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Все данные будут удалены", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Сервер перезагрузится", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Индексы будут пересозданы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как предотвратить wraparound?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Регулярно выполнять VACUUM (включая autovacuum)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Увеличить размер shared_buffers", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Увеличить max_connections", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Отключить автосохранение", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет, когда autovacuum начинает freeze строки?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "autovacuum_freeze_max_age", "IsCorrect": true, "NumericValue": null },
+        { "Text": "autovacuum_freeze_threshold", "IsCorrect": false, "NumericValue": null },
+        { "Text": "vacuum_freeze_age", "IsCorrect": false, "NumericValue": null },
+        { "Text": "freeze_limit", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "Title": "Установка и управление сервером - Middle",
+  "Description": "Тест на знание установки PostgreSQL из исходников, конфигурации и управления сервером",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой флаг configure используется для включения поддержки ICU в PostgreSQL при сборке из исходников?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "--with-icu", "IsCorrect": true, "NumericValue": null },
+        { "Text": "--enable-icu", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--icu", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--with-international", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой pg_ctl можно запустить PostgreSQL сервер?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "pg_ctl -D /usr/local/pgsql/data start", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_ctl start -D /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl run -D /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl -start /usr/local/pgsql/data", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр postgresql.conf определяет размер общего буфера (shared_buffers)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "shared_buffers", "IsCorrect": true, "NumericValue": null },
+        { "Text": "buffer_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "cache_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "shared_memory", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл используется pg_ctl для управления процессом PostgreSQL?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "postmaster.pid", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg.pid", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server.pid", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgres.pid", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой путь по умолчанию используется для данных PostgreSQL в пакетной установке на Ubuntu?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "/var/lib/postgresql/", "IsCorrect": true, "NumericValue": null },
+        { "Text": "/usr/lib/postgresql/", "IsCorrect": false, "NumericValue": null },
+        { "Text": "/var/data/postgresql/", "IsCorrect": false, "NumericValue": null },
+        { "Text": "/opt/postgresql/", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие опции сборки PostgreSQL влияют на производительность?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "--with-blocksize", "IsCorrect": true, "NumericValue": null },
+        { "Text": "--with-wal-blocksize", "IsCorrect": true, "NumericValue": null },
+        { "Text": "--with-pgport", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--with-openssl", "IsCorrect": false, "NumericValue": null },
+        { "Text": "--with-segsize", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой дефолтный размер shared_buffers устанавливается при компиляции PostgreSQL?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "64 MB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "128 MB", "IsCorrect": true, "NumericValue": null },
+        { "Text": "256 MB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "512 MB", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой pg_ctl можно перезапустить PostgreSQL без остановки сервера?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "pg_ctl -D /path/to/data reload", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_ctl -D /path/to/data restart", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl -D /path/to/data refresh", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl -D /path/to/data reconfigure", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой каталог содержит конфигурационные файлы PostgreSQL при установке из исходников по умолчанию?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "/usr/local/pgsql/data/", "IsCorrect": true, "NumericValue": null },
+        { "Text": "/etc/postgresql/", "IsCorrect": false, "NumericValue": null },
+        { "Text": "/var/lib/postgresql/", "IsCorrect": false, "NumericValue": null },
+        { "Text": "/usr/share/postgresql/", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет максимальное количество процессов в PostgreSQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "max_connections", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_processes", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_workers", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_clients", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

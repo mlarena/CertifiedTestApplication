@@ -1,0 +1,118 @@
+{
+  "Title": "Изоляция и многоверсионность - Middle",
+  "Description": "Тест на знание mechanics снимков, сравнение уровней изоляции и блокировок",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Как часто создаётся новый снимок данных в READ COMMITTED?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Для каждого запроса", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Для каждой транзакции", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Для каждой операции DML", "IsCorrect": false, "NumericValue": null },
+        { "Text": "При начале сессии", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как часто создаётся новый снимок данных в REPEATABLE READ?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Для каждой транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Для каждого запроса", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Для каждой операции DML", "IsCorrect": false, "NumericValue": null },
+        { "Text": "При начале сессии", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое Non-repeatable read?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Повторное чтение одной строки даёт разные результаты", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Чтение незакоммиченных данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Появление новых строк при повторном запросе", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Потеря обновлений", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое Phantom read?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Появление или исчезновение строк при повторном выполнении запроса", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Чтение незакоммиченных данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Изменение значения строки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Дублирование строк", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как REPEATABLE READ предотвращает non-repeatable read?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Снимок фиксируется на время всей транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Используются блокировки на чтение", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Создаётся резервная копия", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кешируются результаты", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие аномалии предотвращает REPEATABLE READ в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Dirty reads", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Non-repeatable reads", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Phantom reads", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Serialization anomalies", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой тип блокировки используется в SERIALIZABLE для предотвращения аномалий?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Predicate locks", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Row locks", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Table locks", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Share locks", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое predicate locking?",
+      "Type": 3,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Блокировка строк", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Блокировка диапазона данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Блокировка таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Блокировка индекса", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое SSI (Serializable Snapshot Isolation)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Реализация SERIALIZABLE на основе снимков", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Протокол репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Механизм шифрования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Протокол кеширования", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "При каком уровне изоляции в PostgreSQL используются predicate locks?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "SERIALIZABLE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "REPEATABLE READ", "IsCorrect": false, "NumericValue": null },
+        { "Text": "READ COMMITTED", "IsCorrect": false, "NumericValue": null },
+        { "Text": "READ UNCOMMITTED", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

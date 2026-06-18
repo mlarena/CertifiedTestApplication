@@ -1,0 +1,118 @@
+{
+  "Title": "Организация данных Низкий уровень - Senior",
+  "Description": "Тест для опытных администраторов PostgreSQL по внутренностям TOAST, разметке страниц и line pointers",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие стратегии сжатия доступны для TOAST (выберите все верные)?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        { "Text": "pglz — сжатие на основе LZW", "IsCorrect": true, "NumericValue": null },
+        { "Text": "lz4 — быстрое сжатие (PostgreSQL 14+)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "zstd — сжатие на основе Zstandard", "IsCorrect": false, "NumericValue": null },
+        { "Text": "gzip — стандартное сжатие gzip", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой алгоритм определяет, будет ли значение сжато, разнесено (extended) или stored inline при CREATE TABLE?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "PostgreSQL автоматически оптимизирует размещение: inline если влезает, сжатие если экономит место, иначе external", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Данные всегда размещаются inline в основной таблице", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Данные всегда сжимаются перед записью", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Выбор стратегии определяется только параметром work_mem", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое line pointer (ItemId) и сколько их может быть в одной странице (при стандартном размере 8KB)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Максимум 292 line pointer'а (при размере ItemId = 4 байта, минус заголовок страницы)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Всегда ровно столько, сколько строк на странице", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Неограниченное количество", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Максимум 1024", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL отслеживает dead tuples для последующей очистки VACUUM (выберите все верные)?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "CLOG (Commit Log) — хранит статус (committed/aborted/in-progress) каждой транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "В заголовке кортежа хранятся xmin и xmax", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_stat_user_tables.n_dead_tup — приблизительный счётчик", "IsCorrect": true, "NumericValue": null },
+        { "Text": "В каждом кортеже хранится флаг deleted", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое TOAST table и как она связана с основной таблицей?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Внутренняя таблица (pg_toast.toast_XXXXX), хранящая разнесённые значения; связь через pg_class.reltoastrelid", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Отдельная пользовательская таблица, созданная вручную", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Файл на диске с расширением .toast", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кэш в оперативной памяти для больших значений", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_checksums проверяет целостность страниц на диске?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Вычисляет и сравнивает контрольную сумму (checksum) для каждой страницы; опция включается при initdb илиALTER SYSTEM", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Использует хеш-md5 для каждой строки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Работает только при включённом WAL archiving", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Проверяет только страницы, содержащие индексы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое pd_prune_xid в заголовке страницы и зачем он нужен?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "XID, до которой были очищены (pruned) dead tuples на странице; позволяет избежать повторной очистки", "IsCorrect": true, "NumericValue": null },
+        { "Text": "XID последней записи WAL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ID пользователя, последнего изменившего страницу", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Идентификатор табличного пространства", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как определить, что строка была обновлена (имеет несколько версий) через pageinspect?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Через lp_len (неиспользуемое пространство) и проверку ctid: если ctid указывает на другой (page, offset), это HOT chain", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Проверить флаг updated в заголовке строки", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Посмотреть поле version в кортеже", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Проверить количество записей в pg_stat_activity", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое HeapTupleHeaderData и какие основные поля он содержит (выберите все верные)?",
+      "Type": 2,
+      "Order": 9,
+      "Answers": [
+        { "Text": "t_xmin — XID создавшей транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "t_xmax — XID удалившей/заблокировавшей транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "t_ctid — физическое расположение текущей/следующей версии", "IsCorrect": true, "NumericValue": null },
+        { "Text": "t_oid — OID строки (устарело, всегда 0 с версии 12)", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL хранит массивы (array) данных — какой механизм используется для хранения элементов, превышающих размер страницы?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "TOAST используется для сжатия/разнесения значений столбцов массива, если они превышают размер страницы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Массивы всегда хранятся целиком в одной строке, без TOAST", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Каждый элемент массива хранится в отдельном кортеже", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Массивы хранятся в отдельном индексе", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

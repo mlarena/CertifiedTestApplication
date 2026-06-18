@@ -1,0 +1,118 @@
+{
+  "Title": "Репликация логическая - Junior",
+  "Description": "Базовые знания о логической репликации: публикации, подписки, основы",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое логическая репликация в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Репликация на уровне таблиц с помощью публикаций и подписок", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Репликация на уровне блоков данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация всей базы данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация только схемы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'публикация' (publication) в контексте логической репликации?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Набор изменений данных, которые доступны для подписки", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Подключение к источнику данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Конфигурация репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Отчёт о репликации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'подписка' (subscription) в контексте логической репликации?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Подключение к публикации для получения изменений", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Публикация данных для других серверов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Настройка репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Мониторинг репликации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр конфигурации включает логическую репликацию?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "wal_level = logical", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_level = replica", "IsCorrect": false, "NumericValue": null },
+        { "Text": "logical_replication = on", "IsCorrect": false, "NumericValue": null },
+        { "Text": "replication_mode = logical", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой создаётся публикация?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "CREATE PUBLICATION", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE SUBSCRIPTION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER PUBLICATION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DROP PUBLICATION", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой создаётся подписка?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "CREATE SUBSCRIPTION", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CREATE PUBLICATION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER SUBSCRIPTION", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DROP SUBSCRIPTION", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие данные реплицируются при логической репликации?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "INSERT, UPDATE, DELETE операции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Только INSERT операции", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Все операции DDL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Данные на уровне блоков", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое ' replication slot ' в контексте логической репликации?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Механизм для отслеживания позиции репликации", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Коннектор для подключения к базе данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Очередь для обработки изменений", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кэш для ускорения репликации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно проверить состояние подписки?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "SELECT * FROM pg_stat_subscription;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SHOW subscription_status;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_replication_status();", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT subscription_info();", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько основных компонентов участвует в логической репликации?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "3 (publishing, subscribing, replication slot)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

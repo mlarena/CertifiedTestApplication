@@ -1,0 +1,118 @@
+{
+  "Title": "Системный каталог - Middle",
+  "Description": "Тест для среднего уровня администраторов PostgreSQL по структуре системных таблиц, pg_class и pg_attribute",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое OID (Object Identifier) в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Целочисленный идентификатор, присваиваемый каждому объекту в системе", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Строковый идентификатор, уникальный для каждой таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Хеш-сумма имени объекта", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Идентификатор сессии пользователя", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая системная таблица хранит информацию обо всех отношениях (таблицах, представлениях, индексах)?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "pg_class", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_table", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_relation", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_objects", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая системная таблица хранит информацию о столбцах (атрибутах) всех отношений?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "pg_attribute", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_column", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_field", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_columns", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как получить OID конкретной таблицы mytable?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "SELECT oid FROM pg_class WHERE relname = 'mytable';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через неявный столбец oid: SELECT oid, * FROM mytable;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT pg_table_oid('mytable');", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT object_id('mytable');", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая колонка в pg_class показывает тип отношения (r=таблица, i=индекс, v=представление и т.д.)?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "relkind", "IsCorrect": true, "NumericValue": null },
+        { "Text": "reltype", "IsCorrect": false, "NumericValue": null },
+        { "Text": "relkind_id", "IsCorrect": false, "NumericValue": null },
+        { "Text": "rel_class", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть все столбцы таблицы mytable через системные таблицы?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "SELECT attname FROM pg_attribute WHERE attrelid = 'mytable'::regclass AND attnum > 0 AND NOT attisdropped;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT column_name FROM pg_columns WHERE table_name = 'mytable';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_attribute WHERE relname = 'mytable';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT fields FROM pg_class WHERE relname = 'mytable';", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое regclass в контексте работы с pg_attribute?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Тип данных, представляющий OID отношения (таблицы) по имени", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Функция для получения класса таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Системная таблица с описанием классов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Расширение для работы с классами объектов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая системная таблица показывает связи между объектами (например, какие столбцы используют типы данных)?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "pg_depend", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_links", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_references", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_constraints", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть количество записей (строк) в таблице через pg_class?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Через столбец reltuples в pg_class (приблизительное значение)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "reltuples всегда точен", "IsCorrect": false, "NumericValue": null },
+        { "Text": "relcount в pg_class", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_class не содержит такой информации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая системная таблица хранит информацию о наследовании таблиц?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "pg_inherits", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_inheritance", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_children", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_parents", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

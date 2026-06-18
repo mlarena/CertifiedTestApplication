@@ -1,0 +1,118 @@
+{
+  "Title": "Табличные пространства - Middle",
+  "Description": "Тест для среднего уровня администраторов PostgreSQL по созданию и управлению табличными пространствами",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие параметры можно задать при создании табличного пространства (выберите все верные)?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        { "Text": "LOCATION — путь к директории на файловой системе", "IsCorrect": true, "NumericValue": null },
+        { "Text": "OWNER — владелец табличного пространства", "IsCorrect": true, "NumericValue": null },
+        { "Text": "OPTIONS — специальные параметры хранения (например, for PG 16+)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SIZE — максимальный размер табличного пространства", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как назначить табличное пространство по умолчанию для базы данных?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "ALTER DATABASE mydb SET TABLESPACE myts;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ALTER DATABASE mydb DEFAULT TABLESPACE myts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SET default_tablespace = 'myts';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE pg_database SET tablespace = 'myts';", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как переместить таблицу из одного табличного пространства в другое?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "ALTER TABLE mytable SET TABLESPACE newts;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "MOVE TABLE mytable TO newts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER TABLE mytable MOVE newts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE pg_class SET reltablespace = (SELECT oid FROM pg_tablespace WHERE spcname = 'newts') WHERE relname = 'mytable';", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие операции выполняются при ALTER TABLE ... SET TABLESPACE (выберите все верные)?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Создаются новые файлы в новом табличном пространстве", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Данные копируются из старого расположения в новое", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Старые файлы автоматически удаляются после переноса", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Данные перемещаются原子арно без блокировки таблицы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть размер табличного пространства на диске?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "SELECT pg_tablespace_size('myts');", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT pg_size_pretty(pg_tablespace_size('myts'));", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT size FROM pg_tablespace WHERE spcname = 'myts';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW TABLESPACE SIZE 'myts';", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как удалить табличное пространство из PostgreSQL?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "DROP TABLESPACE myts; (директория не удаляется автоматически)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "DROP TABLESPACE myts CASCADE; — удалит и файлы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DELETE TABLESPACE myts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER TABLESPACE myts DROP;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Можно ли назначить разные табличные пространства для таблицы и её индексов?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Да, через CREATE INDEX ... TABLESPACE или ALTER INDEX ... SET TABLESPACE", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Нет, индексы всегда хранятся в том же пространстве, что и таблица", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, но только суперпользователь может это сделать", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только если включить специальный параметр", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как задать табличное пространство по умолчанию для сессии пользователя?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "SET default_tablespace = 'myts';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SET TABLESPACE myts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "USE TABLESPACE myts;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT set_tablespace('myts');", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое temp_tablespaces в контексте табличных пространств?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Параметр, определяющий список пространств для временных файлов (выбирается Round Robin)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Временное табличное пространство, удаляемое после перезапуска", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Специальная схема для хранения временных таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кэш для ускорения работы с временными данными", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что будет, если директория табличного пространства будет удалена с файловой системы, ноDROP TABLESPACE не выполнен?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "PostgreSQL будет пытаться писать/читать и выдаст ошибки I/O", "IsCorrect": true, "NumericValue": null },
+        { "Text": "PostgreSQL автоматически восстановит директорию", "IsCorrect": false, "NumericValue": null },
+        { "Text": "PostgreSQL будет работать без данных этого пространства", "IsCorrect": false, "NumericValue": null },
+        { "Text": "PostgreSQL автоматически удалит запись из pg_tablespace", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

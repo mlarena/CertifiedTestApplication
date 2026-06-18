@@ -1,0 +1,119 @@
+{
+  "Title": "Конфигурирование сервера - Junior",
+  "Description": "Тест на знание основ конфигурации PostgreSQL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой файл является основным конфигурационным файлом PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "postgresql.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "my.cnf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "config.ini", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл отвечает за аутентификацию клиентов?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "pg_hba.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_auth.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hba.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "auth.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть текущее значение параметра в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "SHOW parameter_name;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "GET parameter_name;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT parameter_name;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DISPLAY parameter_name;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт максимальное количество одновременных подключений?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "max_connections", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_clients", "IsCorrect": false, "NumericValue": null },
+        { "Text": "connection_limit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_peers", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как изменить параметр на уровне сессии?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "SET parameter_name = value;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ALTER SET parameter_name = value;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "UPDATE parameter_name = value;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "MODIFY parameter_name = value;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие конфигурационные файлы используются в PostgreSQL?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "postgresql.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_hba.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_ident.conf", "IsCorrect": true, "NumericValue": null },
+        { "Text": "postgresql.ini", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server.xml", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет порт PostgreSQL?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "port", "IsCorrect": true, "NumericValue": null },
+        { "Text": "listen_port", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server_port", "IsCorrect": false, "NumericValue": null },
+        { "Text": "db_port", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет IP-адреса для прослушивания?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "listen_addresses", "IsCorrect": true, "NumericValue": null },
+        { "Text": "bind_address", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server_address", "IsCorrect": false, "NumericValue": null },
+        { "Text": "host", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет параметр max_connections?",
+      "Type": 3,
+      "Order": 9,
+      "Answers": [
+        { "Text": "50", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100", "IsCorrect": true, "NumericValue": null },
+        { "Text": "200", "IsCorrect": false, "NumericValue": null },
+        { "Text": "500", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет размер рабочей памяти для сортировки?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "work_mem", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sort_mem", "IsCorrect": false, "NumericValue": null },
+        { "Text": "memory_sort", "IsCorrect": false, "NumericValue": null },
+        { "Text": "buffer_size", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

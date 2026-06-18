@@ -1,0 +1,118 @@
+{
+  "Title": "Очистка - Junior",
+  "Description": "Тест на знание основ VACUUM и очистки в PostgreSQL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое VACUUM в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Команда для очистки мёртвых строк из таблицы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Команда для удаления таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Команда для резервного копирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Команда для оптимизации индексов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Зачем нужна очистка (VACUUM) в PostgreSQL?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Для освобождения места, занятого мёртвыми строками", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Для шифрования данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Для создания резервных копий", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Для ускорения запросов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое мёртвая строка (dead tuple) в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Строка, которая была удалена или обновлена, но ещё не очищена", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Строка с ошибкой", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Строка с нулевыми значениями", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Строка в архиве", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно запустить автоочистку для конкретной таблицы?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "VACUUM tablename;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "CLEAN tablename;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "PURGE tablename;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "DELETE tablename;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что делает VACUUM без параметров?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Освобождает место мёртвых строк для повторного использования", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Удаляет все данные из таблицы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Перестраивает индексы", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Обновляет статистику", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое autovacuum в PostgreSQL?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Автоматическая очистка мёртвых строк", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Автоматическое резервное копирование", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Автоматическое обновление индексов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Автоматическое создание таблиц", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет параметр autovacuum?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "off", "IsCorrect": false, "NumericValue": null },
+        { "Text": "on", "IsCorrect": true, "NumericValue": null },
+        { "Text": "auto", "IsCorrect": false, "NumericValue": null },
+        { "Text": "true", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как проверить количество мёртвых строк в таблице?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "SELECT n_dead_tup FROM pg_stat_user_tables WHERE relname = 'tablename';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT dead_rows FROM table_info;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW dead_tuples;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\dead tablename", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое bloat в PostgreSQL?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Разрастание таблиц из-за мёртвых строк", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Увеличение размера индекса", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Рост размера WAL файла", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Увеличение количества подключений", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр влияет на частоту автоочистки?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "autovacuum_vacuum_scale_factor", "IsCorrect": true, "NumericValue": null },
+        { "Text": "vacuum_frequency", "IsCorrect": false, "NumericValue": null },
+        { "Text": "clean_interval", "IsCorrect": false, "NumericValue": null },
+        { "Text": "purge_rate", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

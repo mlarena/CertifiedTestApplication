@@ -1,0 +1,118 @@
+{
+  "Title": "Базы данных и схемы - Senior",
+  "Description": "Тест для опытных администраторов PostgreSQL по изоляции схем, атакам через search_path и временным объектам",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое search_path injection и как PostgreSQL защищает от него?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Атака, при которой злоумышленник создаёт объект в схеме с более высоким приоритетом в search_path", "IsCorrect": true, "NumericValue": null },
+        { "Text": "PostgreSQL использует Qual для проверки владельца объекта", "IsCorrect": true, "NumericValue": null },
+        { "Text": "PostgreSQL автоматически блокирует создание объектов в схемах из search_path", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Это невозможно, search_path не влияет на безопасность", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL определяет, что вызываемая функция является той, которую вызывал пользователь, а не подменённой?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "По OID функции, зафиксированному при анализе запроса (plan time)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "По имени функции в search_path", "IsCorrect": false, "NumericValue": null },
+        { "Text": "По имени владельца функции", "IsCorrect": false, "NumericValue": null },
+        { "Text": "По времени создания функции", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое временные (temporary) таблицы в PostgreSQL и в какой схеме они создаются?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Видимы только в текущей сессии, хранятся в специальной temporary schema (pg_temp_N)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Видимы всем пользователям, хранятся в схеме public", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Существуют до конца транзакции, хранятся в памяти", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Хранятся в отдельной базе данных tempdb", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая схема автоматически добавляется в начало search_path для каждого пользователя?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "pg_temp_<номер> (временная схема пользователя)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "public", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_catalog", "IsCorrect": false, "NumericValue": null },
+        { "Text": "information_schema", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Каким образом можно защитить критические функции от подмены через search_path?",
+      "Type": 2,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Использовать полное квалифицированное имя при вызове (schema.function)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Запретить CREATE на схеме public", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Установить search_path = '' (пустая строка)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использовать только временные таблицы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Могут ли временные таблицы существовать параллельно с постоянными таблицами с тем же именем в разных схемах?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Да, временные таблицы в pg_temp_N не конфликтуют с постоянными в других схемах", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Нет, PostgreSQL не допускает дублирования имён объектов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Да, но только для суперпользователей", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Нет, temporary таблицы всегда в схеме public", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое ON COMMIT DROP для временных таблиц?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Таблица автоматически удаляется при завершении транзакции (COMMIT или ROLLBACK)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Таблица удаляется при завершении сессии", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Таблица удаляется при перезапуске сервера", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Таблица удаляется при первом INSERT", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL определяет, какую схему использовать для поиска объектов при разрешении имён?",
+      "Type": 2,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Ищет в order of schemas, указанных в search_path", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Проверяет temporary schema в первую очередь", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Всегда начинает с pg_catalog", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использует только схему public", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое SET LOCAL search_path и как оно отличается от SET search_path?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "SET LOCAL действует только до конца текущей транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SET LOCAL действует только для текущего пользователя", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SET LOCAL работает быстрее", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Разницы нет, это синонимы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое максимальное количество схем может существовать в одной базе данных PostgreSQL?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Теоретически без жёсткого лимита (ограничение ресурсами)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "256", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1024", "IsCorrect": false, "NumericValue": null },
+        { "Text": "65535", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

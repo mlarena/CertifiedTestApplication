@@ -1,0 +1,118 @@
+{
+  "Title": "Буферный кеш и журнал - Middle",
+  "Description": "Тест для среднего уровня администраторов PostgreSQL по теме управления буферным кешем и WAL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой алгоритм используется PostgreSQL для вытеснения страниц из буферного кеша?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Clock-sweep", "IsCorrect": true, "NumericValue": null },
+        { "Text": "LRU (Least Recently Used)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "FIFO", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Random eviction", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой размер по умолчанию имеет сегмент WAL-журнала в PostgreSQL (в мегабайтах)?",
+      "Type": 3,
+      "Order": 2,
+      "Answers": [
+        { "Text": "16", "IsCorrect": true, "NumericValue": null },
+        { "Text": "64", "IsCorrect": false, "NumericValue": null },
+        { "Text": "32", "IsCorrect": false, "NumericValue": null },
+        { "Text": "8", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр управляет тем, насколько контрольная точка распределяется по времени для снижения нагрузки на I/O?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "checkpoint_completion_target", "IsCorrect": true, "NumericValue": null },
+        { "Text": "checkpoint_timeout", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_wal_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_writer_delay", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных параметров влияют на частоту контрольных точек (выберите все верные)?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        { "Text": "max_wal_size", "IsCorrect": true, "NumericValue": null },
+        { "Text": "min_wal_size", "IsCorrect": true, "NumericValue": null },
+        { "Text": "shared_buffers", "IsCorrect": false, "NumericValue": null },
+        { "Text": "checkpoint_timeout", "IsCorrect": true, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс записывает WAL-данные из буфера в файлы на диске?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "WAL Writer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Background Writer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Archiver", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет параметр checkpoint_completion_target (в PostgreSQL 14+)?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "0.9", "IsCorrect": true, "NumericValue": null },
+        { "Text": "0.5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "0.8", "IsCorrect": false, "NumericValue": null },
+        { "Text": "1.0", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что произойдёт, если при восстановлении из backup обнаружено, что WAL-журнал не хватает?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "PostgreSQL не запустится до предоставления недостающих WAL-файлов", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Сервер запустится без восстановления", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Данные будут восстановлены до последнего checkpoint", "IsCorrect": false, "NumericValue": null },
+        { "Text": "WAL будет пересоздан автоматически", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой размер буфера для WAL по умолчанию определяется параметром wal_buffers?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Автоматически ≈1/32 от shared_buffers (минимум 64KB)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Фиксированные 8MB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Фиксированные 1MB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Равен размеру shared_buffers", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой алгоритм использует PostgreSQL для управления доступностью страниц в буферном кеше (установка и сброс битов «использования»)?",
+      "Type": 2,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Каждый раз при обращении к странице устанавливается бит usage_count", "IsCorrect": true, "NumericValue": null },
+        { "Text": "При чтении страницы с диска ставится usage_count = 5", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Бит usage_count уменьшается при каждом проходе clock-sweep", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Все страницы сразу считаются кандидатами на вытеснение", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет максимальный размер WAL-журнала до принудительного checkpoint?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "max_wal_size", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_keep_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "checkpoint_timeout", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_segment_size", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

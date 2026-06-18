@@ -1,0 +1,119 @@
+{
+  "Title": "Использование psql - Senior",
+  "Description": "Тест на углублённые знания psql: пользовательские промпты, скрипты и продвинутые возможности",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Как настроить пользовательский промпт в psql?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "\\set PROMPT1 '%/%R%# '", "IsCorrect": true, "NumericValue": null },
+        { "Text": "set prompt '%/ '", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\prompt '%/ '", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\set PROMPT '%/ '", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда позволяет выполнить SQL из переменной psql и вернуть результат?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "\\gexec", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\exec", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\eval", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\run", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно прочитать содержимое файла и выполнить его как SQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "\\i filename", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\read filename", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\load filename", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\exec filename", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какая команда psql используется для импорта данных из CSV файла?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "\\copy", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\import", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\csv", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\load", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как выполнить SQL-запрос, результат которого будет использован как параметры для следующего запроса?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "\\gexec", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\pipe", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\chain", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\next", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие специальные символы можно использовать в PROMPT1 для psql?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "%/ (имя базы данных)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "%R (состояние промпта)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "%U (имя пользователя)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "%# (привилегия)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "%D (текущая дата)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение имеет переменная ECHO в psql по умолчанию?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "none", "IsCorrect": false, "NumericValue": null },
+        { "Text": "queries", "IsCorrect": true, "NumericValue": null },
+        { "Text": "all", "IsCorrect": false, "NumericValue": null },
+        { "Text": "errors", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно вывести план выполнения запроса в psql?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "\\explain", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\plan", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\analyze", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\cost", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как вывести SQL-код мета-команды psql (для использования в скриптах)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "\\restrict", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\sql", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\codegen", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\show_sql", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно вывести размер всех таблиц в базе данных?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "\\dt+", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\tables_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\db_size", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "Title": "Задачи администрирования Мониторинг - Junior",
+  "Description": "Тест для начинающих администраторов PostgreSQL по основам мониторинга и средствам ОС",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой файл содержит сообщения журнала (log) PostgreSQL по умолчанию?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Зависит от настройки log_destination; по умолчанию stderr", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg.log", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.log", "IsCorrect": false, "NumericValue": null },
+        { "Text": "server.log", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр конфигурации определяет формат журнала сообщений?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "log_line_prefix", "IsCorrect": true, "NumericValue": null },
+        { "Text": "log_format", "IsCorrect": false, "NumericValue": null },
+        { "Text": "log_template", "IsCorrect": false, "NumericValue": null },
+        { "Text": "log_style", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какую команду ОС можно использовать для мониторинга использования CPU процессом PostgreSQL на Linux?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        { "Text": "top", "IsCorrect": true, "NumericValue": null },
+        { "Text": "htop", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ps aux | grep postgres", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_top", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что показывает pg_stat_activity?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Информацию о текущих подключениях и выполняемых запросах", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Статистику по использованию диска", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Список всех активных транзакций за всё время", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Размер баз данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть размер всех баз данных в кластере?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "SELECT datname, pg_size_pretty(pg_database_size(datname)) FROM pg_database;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_db_size;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW DATABASE SIZES;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_lsclusters --size", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое расширение PostgreSQL позволяет отслеживать самые частые и долгие запросы?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "pg_stat_statements", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_stat_activity", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_stat_stat", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_stat_query", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как включить логирование всех медленных запросов?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Установить log_min_duration_statement (например, 1000 для > 1 секунды)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Установить slow_query_log = on", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Установить log_slow_queries = on", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Установить query_timeout = 1000", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что показывает pg_stat_database?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Статистику по каждой базе данных: количество транзакций,冲突ов, убитых строк", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Статистику по конкретным запросам", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Статистику по использованию индексов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Статистику по буферному кешу", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как посмотреть, сколько подключений к каждой базе данных?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "SELECT datname, count(*) FROM pg_stat_activity GROUP BY datname;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_stat_connections;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW CONNECTIONS;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT pg_connections();", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно проверить конфигурацию PostgreSQL (текущие параметры)?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "SELECT * FROM pg_settings; или SHOW ALL;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "PG_CONFIG SHOW ALL;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.conf --show", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_settings --list", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "Title": "Репликация физическая - Junior",
+  "Description": "Базовые знания о физической репликации: что такое репликация, потоковая vs файловая",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое физическая репликация в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Копирование данных на уровне блоков с помощью WAL файлов", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Копирование SQL-запросов между серверами", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Синхронизация схемы между базами данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация на уровне логических операций", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой компонент PostgreSQL отвечает за репликацию?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "WAL (Write-Ahead Log)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "MVCC", "IsCorrect": false, "NumericValue": null },
+        { "Text": "VACUUM", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CHECKPOINT", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие виды физической репликации поддерживает PostgreSQL?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Синхронная", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Асинхронная", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Потоковая", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Логическая", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс на мастере отправляет WAL файлы репликам?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "WAL sender", "IsCorrect": true, "NumericValue": null },
+        { "Text": "WAL receiver", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Background writer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'master' (primary) в контексте репликации?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Основной сервер, принимающий записи", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Сервер для чтения данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Сервер резервного копирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Сервер мониторинга", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой файл на standby-сервере содержит информацию о восстановлении?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "standby.signal", "IsCorrect": true, "NumericValue": null },
+        { "Text": "recovery.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "backup_label", "IsCorrect": false, "NumericValue": null },
+        { "Text": "postgresql.conf", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр на мастере определяет максимальное количество подключений WAL sender?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "max_wal_senders", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_replication_slots", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_keep_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hot_standby", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'hot standby' в PostgreSQL?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Режим standby-сервера, разрешающий чтение во время восстановления", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Режим мастера с высокой нагрузкой", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Автоматическое переключение failover", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Режим резервного копирования", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно увидеть состояние репликации на мастере?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "SELECT * FROM pg_stat_replication;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SHOW replication;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_replication_status()", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT * FROM pg_replication;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько основных процессов участвует в физической репликации?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "2 (WAL sender и WAL receiver)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

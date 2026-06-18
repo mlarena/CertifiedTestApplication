@@ -1,0 +1,118 @@
+{
+  "Title": "Буферный кеш и журнал - Senior",
+  "Description": "Тест для опытных администраторов PostgreSQL по углублённому изучению буферного кеша, WAL и механизмов контрольных точек",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "В алгоритме clock-sweep какой максимальный value может иметь usage_count у каждой страницы в буферном кеше?",
+      "Type": 3,
+      "Order": 1,
+      "Answers": [
+        { "Text": "5", "IsCorrect": true, "NumericValue": null },
+        { "Text": "7", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": false, "NumericValue": null },
+        { "Text": "10", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое full page writes (fpw) в контексте WAL и какой параметр это управляет?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "full_page_writes — запись полной страницы при первом изменении после checkpoint", "IsCorrect": true, "NumericValue": null },
+        { "Text": "fpw защищает от partial page writes при сбое питания", "IsCorrect": true, "NumericValue": null },
+        { "Text": "fpw отключается параметром wal_full_page", "IsCorrect": false, "NumericValue": null },
+        { "Text": "fpw влияет только на размер WAL, не на целостность", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр управляет архивированием WAL-файлов и указывает команду для копирования?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "archive_command", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_archive_command", "IsCorrect": false, "NumericValue": null },
+        { "Text": "archive_mode", "IsCorrect": false, "NumericValue": null },
+        { "Text": "backup_command", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "При включённом full_page_writes, какой размер записи добавляется в WAL при первом изменении страницы после checkpoint?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Полный размер страницы (8192 байта по умолчанию)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Только заголовок страницы (24 байта)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только изменённая часть (Delta)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Размер зависит от процента заполнения", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое соотношение shared_buffers к объёму RAM рекомендуется для большинства серверов PostgreSQL?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "25% от объёма RAM", "IsCorrect": true, "NumericValue": null },
+        { "Text": "50% от объёма RAM", "IsCorrect": false, "NumericValue": null },
+        { "Text": "10% от объёма RAM", "IsCorrect": false, "NumericValue": null },
+        { "Text": "100% от объёма RAM", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой из параметров WAL определяет минимальное количество WAL, которое должно быть создано перед следующим checkpoint?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "min_wal_size", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_keep_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_threshold", "IsCorrect": false, "NumericValue": null },
+        { "Text": "checkpoint_min_wal", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как можно определить, сколько буферов в shared_buffers занято dirty-страницами (выберите все верные)?",
+      "Type": 2,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Через pg_stat_bgwriter (buffers_checkpoint, buffers_clean)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через pg_buffercache (расширение)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Через pg_stat_activity", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Через SELECT из pg_class", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой алгоритм используется при архивировании WAL для восстановления: Restore Command или Archive Command?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "restore_command используется при восстановлении (recovery), archive_command — при записи", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Это одно и то же, разница только в названии", "IsCorrect": false, "NumericValue": null },
+        { "Text": "archive_command используется только для pg_basebackup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "restore_command используется только для streaming replication", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "При checkpoint_timeout = 0 и max_wal_size = 1GB, как часто будет создаваться checkpoint?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "При заполнении WAL до max_wal_size (около 1GB WAL-данных)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Каждые 5 минут (значение по умолчанию)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Никогда, пока не заполнится диск", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Только при остановке сервера", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой размер LSN (Log Sequence Number) в байтах в PostgreSQL?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "8", "IsCorrect": true, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "16", "IsCorrect": false, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "Title": "Конфигурирование сервера - Senior",
+  "Description": "Тест на углублённые знания конфигурации PostgreSQL: контексты, перезагрузка и оптимизация",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой контекст параметра требует перезапуска сервера для применения изменений?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "postmaster", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sighup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "superuser", "IsCorrect": false, "NumericValue": null },
+        { "Text": "user", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой контекст параметра позволяет изменять его только в postgresql.conf?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "postmaster", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sighup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "superuser", "IsCorrect": false, "NumericValue": null },
+        { "Text": "backend", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно отключить запись в postgresql.auto.conf?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "ALTER SYSTEM SET auto_config_file = '';", "IsCorrect": false, "NumericValue": null },
+        { "Text": "# в postgresql.auto.conf", "IsCorrect": false, "NumericValue": null },
+        { "Text": "ALTER SYSTEM RESET ALL; (и удалить файл)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Файл postgresql.auto.conf нельзя отключить", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой приоритет имеют параметры из postgresql.auto.conf по сравнению с postgresql.conf?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Выше (перезаписывают)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Ниже (перезаписываются)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Одинаковый", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Зависит от порядка", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет, какой процесс применяет изменения конфигурации?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Контекст параметра", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Время суток", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Загрузка сервера", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Тип операционной системы", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие параметры требуют перезапуска для применения изменений?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        { "Text": "shared_buffers", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_connections", "IsCorrect": true, "NumericValue": null },
+        { "Text": "work_mem", "IsCorrect": false, "NumericValue": null },
+        { "Text": "max_worker_processes", "IsCorrect": true, "NumericValue": null },
+        { "Text": "statement_timeout", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно посмотреть контекст конкретного параметра?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "SELECT context FROM pg_settings WHERE name = 'param';", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SHOW context param;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\describe param", "IsCorrect": false, "NumericValue": null },
+        { "Text": "CONTEXT param;", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию имеет параметр effective_cache_size?",
+      "Type": 3,
+      "Order": 8,
+      "Answers": [
+        { "Text": "4 GB", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4194304", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4194304 (4GB в страницах)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "8 GB", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр влияет на выбор планировщиком использования индекса или seq scan?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "random_page_cost", "IsCorrect": true, "NumericValue": null },
+        { "Text": "cpu_cost", "IsCorrect": false, "NumericValue": null },
+        { "Text": "index_weight", "IsCorrect": false, "NumericValue": null },
+        { "Text": "scan_type", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет максимальный размер дисковой очереди для асинхронного ввода-вывода?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "effective_io_concurrency", "IsCorrect": true, "NumericValue": null },
+        { "Text": "io_queue_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "disk_queue", "IsCorrect": false, "NumericValue": null },
+        { "Text": "async_io_limit", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

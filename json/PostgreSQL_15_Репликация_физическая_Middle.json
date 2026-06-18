@@ -1,0 +1,118 @@
+{
+  "Title": "Репликация физическая - Middle",
+  "Description": "Продвинутые знания: настройка потоковой репликации, синхронная vs асинхронная",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой параметр мастера определяет уровень журнала для репликации?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "wal_level", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_wal_senders", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_keep_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "hot_standby", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие значения может принимать параметр wal_level?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "minimal", "IsCorrect": true, "NumericValue": null },
+        { "Text": "replica", "IsCorrect": true, "NumericValue": null },
+        { "Text": "logical", "IsCorrect": true, "NumericValue": null },
+        { "Text": "archive", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой на standby-сервере запускается процесс репликации?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "pg_ctl promote", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl start", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_basebackup", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_rewind", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр standby-сервера определяет primary_conninfo?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "primary_conninfo", "IsCorrect": true, "NumericValue": null },
+        { "Text": "master_conninfo", "IsCorrect": false, "NumericValue": null },
+        { "Text": "replication_source", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_source", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое синхронная репликация?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Коммит транзакции на мастере подтверждается после записи на реплику", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Реплика всегда содержит те же данные, что и мастер", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Данные копируются в реальном времени", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Репликация происходит без задержек", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр мастера включает синхронную репликацию?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "synchronous_standby_names", "IsCorrect": true, "NumericValue": null },
+        { "Text": "synchronous_commit", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_sync_method", "IsCorrect": false, "NumericValue": null },
+        { "Text": "replication_mode", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно превратить standby в primary?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "pg_ctl promote", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_ctl start", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl restart", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_ctl reload", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое replication slot в PostgreSQL?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Механизм, гарантирующий, что WAL файлы не будут удалены до их получения репликой", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Коннектор для подключения реплик", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Очередь для обработки WAL", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Кэш для репликации", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет размер WAL файлов, хранимых для репликации?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "wal_keep_size", "IsCorrect": true, "NumericValue": null },
+        { "Text": "max_wal_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "min_wal_size", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_keep_segments", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько параметров конфигурации необходимо настроить для базовой потоковой репликации?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "3 (wal_level, max_wal_senders, hot_standby)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "Title": "Задачи администрирования Мониторинг - Senior",
+  "Description": "Тест для опытных администраторов PostgreSQL по внешним системам мониторинга, базовым показателям и pgBadger",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое pgBadger и какую информацию он анализирует?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Генератор HTML-отчётов по PostgreSQL лог-файлам: распределение запросов по времени, ошибка, использование индексов", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Расширение для мониторинга в реальном времени", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Инструмент для автоматического оптимизации запросов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Утилита для резервного копирования логов", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие метрики являются базовыми (KPI) для мониторинга PostgreSQL (выберите все верные)?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Количество транзакций в секунду (TPS)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Среднее время отклика запросов", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Размер буферного кеша и hit ratio", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Количество CPU ядер", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как определить hit ratio буферного кеша (cache hit ratio)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "SELECT sum(blks_hit)*100.0/sum(blks_hit+blks_read) FROM pg_stat_database;", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT cache_hit_ratio FROM pg_stat_activity;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SHOW cache_hit_ratio;", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT pg_cache_hit();", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pgBadger определяет, что запрос использует seq scan вместо index scan?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Анализирует EXPLAIN ANALYZE output в логе, если log_min_duration_statement настроен", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Проверяет pg_stat_user_tables", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Проверяет pg_stat_user_indexes", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использует pgBadger探针 в shared_buffers", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие внешние системы можно интегрировать с PostgreSQL для мониторинга (выберите все верные)?",
+      "Type": 2,
+      "Order": 5,
+      "Answers": [
+        { "Text": "Prometheus + pg_stat_statements экспортёр", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Grafana (для визуализации метрик)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Zabbix с шаблонами PostgreSQL", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_top (клиентская утилита)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое log_min_duration_statement и как его рекомендуется использовать?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Порог времени (мс), при превышении которого запрос логируется; значение 0 логирует все запросы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Минимальная длительность транзакции для логирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Порог для автоматической оптимизации запросов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Время жизни соединения", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pg_stat_statements можно использовать для оптимизации нагрузки (выберите все верные)?",
+      "Type": 2,
+      "Order": 7,
+      "Answers": [
+        { "Text": "Найти запросы с наибольшим общим временем выполнения (total_time)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Найти запросы, которые вызываются наиболее часто (calls)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Найти запросы с наибольшим количеством строк (rows)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Найти все медленные запросы за последние 24 часа", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое «baseline» в контексте мониторинга PostgreSQL и как его создать?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Фиксация текущих метрик как ориентира для сравнения с будущими значениями; создаётся через pg_stat_statements или внешние инструменты", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Файл конфигурации по умолчанию", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Снимок всех таблиц перед оптимизацией", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Резервная копия pg_stat_statements", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как pgBadger определяет запросы, которые не могут использовать индексы?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Анализирует EXPLAIN ANALYZE output, определяя узлы Seq Scan вместо Index Scan", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Проверяет pg_indexes на наличие индексов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Использует pg_stat_user_indexes.idx_scan", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Проверяет plan_cache hits", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие настройки логирования наиболее важны для анализа с помощью pgBadger (выберите все верные)?",
+      "Type": 2,
+      "Order": 10,
+      "Answers": [
+        { "Text": "log_min_duration_statement (логирование долгих запросов)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "log_statement = 'all' (логирование всех запросов)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "log_duration = on", "IsCorrect": true, "NumericValue": null },
+        { "Text": "log_connections = on", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

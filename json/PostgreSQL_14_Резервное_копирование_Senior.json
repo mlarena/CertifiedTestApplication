@@ -1,0 +1,118 @@
+{
+  "Title": "Резервное копирование - Senior",
+  "Description": "Экспертные знания: PITR, pgBackRest, верификация резервных копий, стратегии восстановления",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое pgBackRest?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Мощный инструмент для резервного копирования PostgreSQL с поддержкой инкрементальных копий", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Встроенная утилита PostgreSQL для резервного копирования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Расширение для аудита резервных копий", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Сервис для облачного резервного копирования", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие типы резервных копий поддерживает pgBackRest?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Полная (full)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Инкрементальная (incremental)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Дифференциальная (differential)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Логическая (logical)", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой pgBackRest создаёт полную резервную копию?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "pgbackrest --stanza=mydb --type=full backup", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgbackrest backup --full", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_basebackup -Fp", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_dump --all", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое 'stanzа' в pgBackRest?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "Конфигурационная единица, определяющая группу серверов PostgreSQL для резервного копирования", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Тип резервной копии", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Каталог для хранения WAL файлов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Параметр сжатия", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Как проверить целостность резервной копии pgBackRest?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        { "Text": "pgbackrest --stanza=mydb check", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgbackrest --stanza=mydb verify", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgbackrest --stanza=mydb validate", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgbackrest --stanza=mydb integrity", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр pgBackRest определяет количество параллельных процессов для работы с файлами?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "process-max", "IsCorrect": true, "NumericValue": null },
+        { "Text": "parallel", "IsCorrect": false, "NumericValue": null },
+        { "Text": "thread-count", "IsCorrect": false, "NumericValue": null },
+        { "Text": "jobs", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой pgBackRest выполняет восстановление до конкретного момента времени (PITR)?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        { "Text": "pgbackrest --stanza=mydb --type=time restore", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pgbackrest --stanza=mydb --target=restore", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgbackrest --stanza=mydb --pitr restore", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pgbackrest --stanza=mydb --recovery restore", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой параметр postgresql.conf определяет уровень журнала для физической репликации?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "wal_level = replica", "IsCorrect": true, "NumericValue": null },
+        { "Text": "wal_level = minimal", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_level = logical", "IsCorrect": false, "NumericValue": null },
+        { "Text": "wal_level = archive", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой командой можно проверить архивные WAL файлы?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "pg_archivecleanup", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_archive", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_verify", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_check", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Сколько типов стратегий восстановления PostgreSQL поддерживает нативно?",
+      "Type": 3,
+      "Order": 10,
+      "Answers": [
+        { "Text": "2", "IsCorrect": false, "NumericValue": null },
+        { "Text": "3", "IsCorrect": true, "NumericValue": null },
+        { "Text": "4", "IsCorrect": false, "NumericValue": null },
+        { "Text": "5", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}

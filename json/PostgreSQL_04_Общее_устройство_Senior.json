@@ -1,0 +1,119 @@
+{
+  "Title": "Общее устройство PostgreSQL - Senior",
+  "Description": "Тест на углублённые знания внутреннего устройства PostgreSQL: WAL, видимость кортежей, каталоги",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое WAL (Write-Ahead Logging) в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        { "Text": "Протокол записи изменений перед фиксацией в основные файлы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Буфер для кеширования запросов", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Протокол репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Механизм сжатия данных", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое MVCC (Multi-Version Concurrency Control)?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        { "Text": "Механизм управления версиями данных для конкурентного доступа", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Протокол репликации", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Механизм шифрования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Протокол кеширования", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое tuple visibility в PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        { "Text": "Видимость кортежа для конкретной транзакции", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Физическое расположение кортежа", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Размер кортежа", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Жизненный цикл кортежа", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое xmin и xmax в заголовке кортежа?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        { "Text": "ID транзакций создания и удаления/обновления", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Минимальный и максимальный размер", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Координаты в файле", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Временные метки", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какие системные каталоги содержат метаданные о таблицах?",
+      "Type": 2,
+      "Order": 5,
+      "Answers": [
+        { "Text": "pg_class", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_attribute", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_namespace", "IsCorrect": true, "NumericValue": null },
+        { "Text": "pg_stat", "IsCorrect": false, "NumericValue": null },
+        { "Text": "pg_log", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс выполняет запись общих буферов на диск при чекпоинте?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        { "Text": "Checkpointer", "IsCorrect": true, "NumericValue": null },
+        { "Text": "BGWriter", "IsCorrect": false, "NumericValue": null },
+        { "Text": "WAL Writer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Autovacuum", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой размер имеет стандартный блок данных в PostgreSQL?",
+      "Type": 3,
+      "Order": 7,
+      "Answers": [
+        { "Text": "4096 байт", "IsCorrect": false, "NumericValue": null },
+        { "Text": "8192 байт", "IsCorrect": true, "NumericValue": null },
+        { "Text": "16384 байт", "IsCorrect": false, "NumericValue": null },
+        { "Text": "32768 байт", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое toast (The Oversized-Attribute Storage Technique)?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        { "Text": "Механизм хранения больших значений вне основной таблицы", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Протокол передачи данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Формат экспорта данных", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Тип данных для текста", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Какой процесс выполняет архивирование WAL файлов?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        { "Text": "Archiver", "IsCorrect": true, "NumericValue": null },
+        { "Text": "BGWriter", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Checkpointer", "IsCorrect": false, "NumericValue": null },
+        { "Text": "WAL Writer", "IsCorrect": false, "NumericValue": null }
+      ]
+    },
+    {
+      "Text": "Что такое hint bits в PostgreSQL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        { "Text": "Биты в заголовке кортежа для ускорения проверки видимости", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Подсказки для планировщика", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Индикаторы использования", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Флаги сжатия", "IsCorrect": false, "NumericValue": null }
+      ]
+    }
+  ]
+}
