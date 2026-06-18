@@ -16,14 +16,14 @@
       ]
     },
     {
-      "Text": "Какие из следующих действий выполняет команда REVOKE?",
-      "Type": 2,
+      "Text": "Что выполняет команда REVOKE в PostgreSQL?",
+      "Type": 1,
       "Order": 2,
       "Answers": [
-        { "Text": "Удаляет привилегии у роли", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Отключает роль", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Удаляет ранее выданные привилегии у роли", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Отключает роль от сервера", "IsCorrect": false, "NumericValue": null },
         { "Text": "Удаляет роль из системы", "IsCorrect": false, "NumericValue": null },
-        { "Text": "Восстанавливает привилегии по умолчанию", "IsCorrect": false, "NumericValue": null }
+        { "Text": "Создаёт новую роль без привилегий", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

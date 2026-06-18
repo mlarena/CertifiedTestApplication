@@ -33,9 +33,11 @@ public class TestEvaluationService : ITestEvaluationService
 
         foreach (var q in questions)
         {
-            var correctAnswers = await _context.Answers
-                .Where(a => a.QuestionId == q.Id && a.IsCorrect)
+            var allAnswers = await _context.Answers
+                .Where(a => a.QuestionId == q.Id)
                 .ToListAsync();
+
+            var correctAnswers = allAnswers.Where(a => a.IsCorrect).ToList();
 
             var userAnswers = await _context.UserAnswers
                 .Where(ua => ua.AttemptId == attemptId && ua.QuestionId == q.Id)
@@ -50,7 +52,8 @@ public class TestEvaluationService : ITestEvaluationService
                 Question = q,
                 IsCorrect = isCorrect,
                 UserAnswers = userAnswers,
-                CorrectAnswers = correctAnswers
+                CorrectAnswers = correctAnswers,
+                AllAnswers = allAnswers
             });
 
             foreach (var ua in userAnswers) ua.IsCorrect = isCorrect;

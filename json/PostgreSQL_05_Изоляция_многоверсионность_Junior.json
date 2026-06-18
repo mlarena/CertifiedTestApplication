@@ -60,14 +60,14 @@
       ]
     },
     {
-      "Text": "Какие аномалии предотвращает READ COMMITTED?",
-      "Type": 2,
+      "Text": "Какую аномалию предотвращает READ COMMITTED?",
+      "Type": 1,
       "Order": 6,
       "Answers": [
-        { "Text": "Dirty reads", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Non-repeatable reads", "IsCorrect": false, "NumericValue": null },
-        { "Text": "Phantom reads", "IsCorrect": false, "NumericValue": null },
-        { "Text": "Lost updates", "IsCorrect": false, "NumericValue": null }
+        { "Text": "Грязное чтение (dirty reads)", "IsCorrect": true, "NumericValue": null },
+        { "Text": "Неповторяемое чтение (non-repeatable reads)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Фантомное чтение (phantom reads)", "IsCorrect": false, "NumericValue": null },
+        { "Text": "Потерянное обновление (lost updates)", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

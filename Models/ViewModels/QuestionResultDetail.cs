@@ -8,4 +8,5 @@ public class QuestionResultDetail
     public bool IsCorrect { get; set; }
     public List<UserAnswer> UserAnswers { get; set; } = null!;
     public List<Answer> CorrectAnswers { get; set; } = null!;
+    public List<Answer> AllAnswers { get; set; } = null!;
 }

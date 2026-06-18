@@ -84,7 +84,7 @@
     },
     {
       "Text": "Какие файлы WAL (Write-Ahead Log) необходимы для восстановления после сбоя?",
-      "Type": 2,
+      "Type": 1,
       "Order": 8,
       "Answers": [
         { "Text": "Сегменты WAL от момента последнего pg_basebackup", "IsCorrect": true, "NumericValue": null },

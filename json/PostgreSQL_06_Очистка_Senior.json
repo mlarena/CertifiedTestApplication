@@ -60,14 +60,14 @@
       ]
     },
     {
-      "Text": "Какие преимущества pg_repack перед VACUUM FULL?",
-      "Type": 2,
+      "Text": "Какое главное преимущество pg_repack перед VACUUM FULL?",
+      "Type": 1,
       "Order": 6,
       "Answers": [
         { "Text": "Не блокирует таблицу на время работы", "IsCorrect": true, "NumericValue": null },
         { "Text": "Работает быстрее", "IsCorrect": false, "NumericValue": null },
         { "Text": "Использует меньше памяти", "IsCorrect": false, "NumericValue": null },
-        { "Text": "Обновляет статистику", "IsCorrect": false, "NumericValue": null }
+        { "Text": "Не требует дополнительного пространства на диске", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

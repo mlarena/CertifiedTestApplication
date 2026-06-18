@@ -145,53 +145,37 @@
                                 <span class="text-muted">Ответ не дан</span>
                             }
 
-                            @if (!qr.IsCorrect && qr.CorrectAnswers.Any())
+                            @if (!qr.IsCorrect && qr.AllAnswers.Where(a => a.IsCorrect).Any())
                             {
                                 <span class="text-muted ms-3">Правильный ответ:</span>
                                 <strong class="text-success ms-1">
-                                    @string.Join(", ", qr.CorrectAnswers.Where(a => a.IsCorrect).Select(a => a.Text))
+                                    @string.Join(", ", qr.AllAnswers.Where(a => a.IsCorrect).Select(a => a.Text))
                                 </strong>
                             }
                         </div>
                     }
                     else
                     {
-                        var allAnswers = qr.UserAnswers
-                            .Where(ua => ua.SelectedAnswerId.HasValue)
-                            .Select(ua => new { Answer = qr.CorrectAnswers.FirstOrDefault(c => c.Id == ua.SelectedAnswerId) ?? new Answer { Id = ua.SelectedAnswerId!.Value, Text = "???", IsCorrect = false }, IsSelected = true })
-                            .ToList();
-
-                        var notSelectedCorrect = qr.CorrectAnswers
-                            .Where(a => !userSelectedIds.Contains(a.Id))
-                            .Select(a => new { Answer = a, IsSelected = false });
-
-                        var displayItems = allAnswers
-                            .Concat(notSelectedCorrect)
-                            .GroupBy(x => x.Answer.Id)
-                            .Select(g => g.First())
-                            .OrderBy(x => x.Answer.Text)
-                            .ToList();
-
                         <div class="mt-2">
-                            @foreach (var item in displayItems)
+                            @foreach (var a in qr.AllAnswers)
                             {
-                                var isCorrect = item.Answer.IsCorrect;
-                                var isSelected = item.IsSelected;
-                                var cssClass = (isCorrect && isSelected) ? "ra-correct-selected"
-                                    : (isSelected && !isCorrect) ? "ra-incorrect-selected"
-                                    : (isCorrect && !isSelected) ? "ra-correct-not-selected"
+                                var isCorrectAnswer = a.IsCorrect;
+                                var isSelected = userSelectedIds.Contains(a.Id);
+                                var cssClass = (isCorrectAnswer && isSelected) ? "ra-correct-selected"
+                                    : (isSelected && !isCorrectAnswer) ? "ra-incorrect-selected"
+                                    : (isCorrectAnswer && !isSelected) ? "ra-correct-not-selected"
                                     : "ra-neutral";
 
                                 <div class="ra @cssClass">
-                                    @if (isSelected && isCorrect)
+                                    @if (isSelected && isCorrectAnswer)
                                     {
                                         <span class="me-1">&#10004;</span>
                                     }
-                                    else if (isSelected && !isCorrect)
+                                    else if (isSelected && !isCorrectAnswer)
                                     {
                                         <span class="me-1">&#10008;</span>
                                     }
-                                    else if (isCorrect)
+                                    else if (isCorrectAnswer)
                                     {
                                         <span class="me-1 text-success">&#8594;</span>
                                     }
@@ -199,7 +183,7 @@
                                     {
                                         <span class="me-1">&nbsp;&nbsp;&nbsp;</span>
                                     }
-                                    @item.Answer.Text
+                                    @a.Text
                                 </div>
                             }
                         </div>

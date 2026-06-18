@@ -64,11 +64,11 @@
       "Type": 2,
       "Order": 6,
       "Answers": [
-        { "Text": "\\l", "IsCorrect": true, "NumericValue": null },
-        { "Text": "\\c", "IsCorrect": true, "NumericValue": null },
-        { "Text": "\\dt", "IsCorrect": false, "NumericValue": null },
-        { "Text": "\\dn", "IsCorrect": true, "NumericValue": null },
-        { "Text": "\\du", "IsCorrect": false, "NumericValue": null }
+        { "Text": "\\l — список баз данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\c — подключение к базе данных", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\dt — список таблиц", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\dn — список схем", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\du — список ролей", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {
