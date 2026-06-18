@@ -43,8 +43,8 @@
       "Order": 4,
       "Answers": [
         { "Text": "SELECT oid FROM pg_class WHERE relname = 'mytable';", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Через неявный столбец oid: SELECT oid, * FROM mytable;", "IsCorrect": true, "NumericValue": null },
-        { "Text": "SELECT pg_table_oid('mytable');", "IsCorrect": false, "NumericValue": null },
+        { "Text": "SELECT pg_table_oid('mytable');", "IsCorrect": true, "NumericValue": null },
+        { "Text": "SELECT oid FROM pg_tables WHERE tablename = 'mytable';", "IsCorrect": false, "NumericValue": null },
         { "Text": "SELECT object_id('mytable');", "IsCorrect": false, "NumericValue": null }
       ]
     },

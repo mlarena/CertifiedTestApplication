@@ -53,8 +53,8 @@
       "Type": 1,
       "Order": 5,
       "Answers": [
-        { "Text": "shmget", "IsCorrect": true, "NumericValue": null },
-        { "Text": "mmap", "IsCorrect": false, "NumericValue": null },
+        { "Text": "shmget", "IsCorrect": false, "NumericValue": null },
+        { "Text": "mmap", "IsCorrect": true, "NumericValue": null },
         { "Text": "malloc", "IsCorrect": false, "NumericValue": null },
         { "Text": "brk", "IsCorrect": false, "NumericValue": null }
       ]

@@ -1,6 +1,6 @@
 {
   "Title": "Репликация логическая - Senior",
-  "Description": "Экспертные знания: внутренности логической репликации, фильтрация, мониторинг",
+  "Description": "Экспертные знания: внутренности логической репликации, фильтрация по таблицам/схемам/колонкам/условиям, мониторинг",
   "TimeLimit": 600,
   "CanReturnToQuestion": true,
   "Questions": [
@@ -45,7 +45,7 @@
         { "Text": "Фильтр по таблицам (FOR TABLE)", "IsCorrect": true, "NumericValue": null },
         { "Text": "Фильтр по схемам (FOR TABLES IN SCHEMA)", "IsCorrect": true, "NumericValue": null },
         { "Text": "Фильтр по условиям (WHERE)", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Фильтр по колонкам", "IsCorrect": false, "NumericValue": null }
+        { "Text": "Фильтр по колонкам (INCLUDE с PG15)", "IsCorrect": true, "NumericValue": null }
       ]
     },
     {
@@ -71,14 +71,14 @@
       ]
     },
     {
-      "Text": "Какой столбец в pg_stat_subscription показывает задачу репликации?",
-      "Type": 1,
+      "Text": "Какие новые столбцы были добавлены в pg_stat_subscription в PostgreSQL 16?",
+      "Type": 2,
       "Order": 7,
       "Answers": [
-        { "Text": "replay_lag", "IsCorrect": true, "NumericValue": null },
-        { "Text": "receive_lag", "IsCorrect": false, "NumericValue": null },
-        { "Text": "write_lag", "IsCorrect": false, "NumericValue": null },
-        { "Text": "flush_lag", "IsCorrect": false, "NumericValue": null }
+        { "Text": "apply_error_count", "IsCorrect": true, "NumericValue": null },
+        { "Text": "sync_error_count", "IsCorrect": true, "NumericValue": null },
+        { "Text": "replay_lag", "IsCorrect": false, "NumericValue": null },
+        { "Text": "receive_lag", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {

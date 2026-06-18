@@ -67,7 +67,7 @@
         { "Text": "Пароль (password)", "IsCorrect": true, "NumericValue": null },
         { "Text": "Trust (без проверки)", "IsCorrect": true, "NumericValue": null },
         { "Text": "LDAP", "IsCorrect": true, "NumericValue": null },
-        { "Text": "Windows Authentication", "IsCorrect": false, "NumericValue": null }
+        { "Text": "SSPI", "IsCorrect": true, "NumericValue": null }
       ]
     },
     {

@@ -108,7 +108,7 @@
       "Type": 1,
       "Order": 10,
       "Answers": [
-        { "Text": "ldap, radius, gss, sspi, cert, pam,bsd", "IsCorrect": true, "NumericValue": null },
+        { "Text": "ldap, radius, gss, sspi, cert, pam", "IsCorrect": true, "NumericValue": null },
         { "Text": "Только ldap", "IsCorrect": false, "NumericValue": null },
         { "Text": "external", "IsCorrect": false, "NumericValue": null },
         { "Text": "pam", "IsCorrect": false, "NumericValue": null }
