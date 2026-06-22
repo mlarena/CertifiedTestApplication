@@ -24,6 +24,7 @@ bld/
 logs/
 BurstroyMonitoring.TCM/wwwroot/snapshots
 BurstroyMonitoring.TCMV2/
+.mimocode/
 
 # Visual Studio 2015 cache/options directory
 .vs/
