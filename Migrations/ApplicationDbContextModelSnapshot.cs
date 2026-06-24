@@ -272,18 +272,6 @@ namespace CertifiedTestApplication.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            FullName = "System Administrator",
-                            IsBlocked = false,
-                            Login = "sa",
-                            PasswordHash = "sa",
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("CertifiedTestApplication.Models.Entities.UserAnswer", b =>

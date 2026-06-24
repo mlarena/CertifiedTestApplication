@@ -26,10 +26,6 @@ public class UserService : IUserService
 
     public async Task<bool> ValidatePasswordAsync(string password, string passwordHash)
     {
-        // For the default "sa" user with plain text password
-        if (passwordHash == "sa" && password == "sa")
-            return true;
-
         try
         {
             return BCrypt.Net.BCrypt.Verify(password, passwordHash);

@@ -1,0 +1,7 @@
+--- CertifiedTestApplication
+
+# Linux x64
+dotnet publish "C:\git\CertifiedTestApplication\CertifiedTestApplication.csproj" -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -o "C:\git\CertifiedTestApplication\release\linux-x64\"
+
+# Windows x64
+dotnet publish "C:\git\CertifiedTestApplication\CertifiedTestApplication.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -o "C:\git\CertifiedTestApplication\release\win-x64\"

@@ -1,2 +1,4 @@
 dotnet ef migrations add ИмяМиграции
 dotnet ef migrations add InitialCreate
+
+CertifiedTestApplication

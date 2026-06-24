@@ -37,6 +37,27 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+
+    if (!db.Users.Any())
+    {
+        db.Users.Add(new CertifiedTestApplication.Models.Entities.User
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            Login = "sa",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("sa"),
+            FullName = "System Administrator",
+            RoleId = 1,
+            IsBlocked = false,
+            CreatedAt = DateTime.UtcNow
+        });
+        db.SaveChanges();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

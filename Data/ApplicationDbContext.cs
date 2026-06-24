@@ -54,20 +54,5 @@ public class ApplicationDbContext : DbContext
             new Role { Id = 2, Name = "Engineer" },
             new Role { Id = 3, Name = "User" }
         );
-
-        // Начальный администратор: sa / sa
-        // Хэш пароля "sa" (упрощенно для начала, потом заменим на BCrypt)
-        modelBuilder.Entity<User>().HasData(
-            new User
-            {
-                Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                Login = "sa",
-                PasswordHash = "sa", // Временно в открытом виде для первого входа, заменим при реализации Auth
-                FullName = "System Administrator",
-                RoleId = 1,
-                IsBlocked = false,
-                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-            }
-        );
     }
 }
