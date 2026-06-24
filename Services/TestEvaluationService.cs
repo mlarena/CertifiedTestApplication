@@ -77,16 +77,31 @@ public class TestEvaluationService : ITestEvaluationService
         var correctAnswer = correctAnswers.FirstOrDefault();
         var userVal = userAnswers.FirstOrDefault()?.RawValue;
 
-        if (correctAnswer?.NumericValue == null || userVal == null)
+        if (correctAnswer == null || userVal == null)
             return false;
 
-        if (double.TryParse(userVal.Replace(",", "."), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out double val))
+        var invariantVal = userVal.Replace(",", ".").Trim();
+        var correctText = correctAnswer.Text?.Replace(",", ".").Trim();
+
+        if (correctAnswer.NumericValue.HasValue)
         {
-            return Math.Abs(val - correctAnswer.NumericValue.Value) < 0.01;
+            if (double.TryParse(invariantVal, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out double val))
+            {
+                return Math.Abs(val - correctAnswer.NumericValue.Value) < 0.01;
+            }
+            return false;
         }
 
-        return false;
+        if (double.TryParse(invariantVal, System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture, out double parsedUser) &&
+            double.TryParse(correctText, System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture, out double parsedCorrect))
+        {
+            return Math.Abs(parsedUser - parsedCorrect) < 0.01;
+        }
+
+        return string.Equals(invariantVal, correctText, System.StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool EvaluateChoiceQuestion(List<Answer> correctAnswers, List<UserAnswer> userAnswers)
