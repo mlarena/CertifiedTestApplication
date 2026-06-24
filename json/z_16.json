@@ -1,0 +1,1358 @@
+﻿{
+    "CanReturnToQuestion":  true,
+    "Title":  "Вопросы по мониторингу PostgreSQL: ОС, статистика, логи и внешние системы",
+    "Description":  "",
+    "TimeLimit":  600,
+    "Questions":  [
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "df",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "du",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "iostat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vmstat",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая утилита командной строки в Linux позволяет отслеживать использование диска PostgreSQL?",
+                          "Order":  1
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_database",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_database_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_db_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_db",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит накопительную статистику по базам данных?",
+                          "Order":  2
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_destination",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_directory",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_file",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "logging_collector",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет, куда записываются логи сервера PostgreSQL?",
+                          "Order":  3
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Prometheus",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Nagios",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Zabbix",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая внешняя система мониторинга часто используется с PostgreSQL?",
+                          "Order":  4
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "top",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ps",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "free",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vmstat",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС позволяет мониторить использование памяти процессами?",
+                          "Order":  5
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_statements",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_query_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_statement_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_sql_stats",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление показывает статистику по запросам?",
+                          "Order":  6
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "shared_preload_libraries = \u0027pg_stat_statements\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "enable_statistics = on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_queries = on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "collect_query_stats = on",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает сбор статистики по запросам?",
+                          "Order":  7
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "netstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ss",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "lsof",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая команда ОС показывает активные подключения к PostgreSQL?",
+                          "Order":  8
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_activity",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_activity",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_current_queries",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_running_processes",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит информацию о текущих активностях?",
+                          "Order":  9
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "CSV",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "JSON",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "XML",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Любой из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой формат логов позволяет легче парсить их автоматически?",
+                          "Order":  10
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "iostat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vmstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "mpstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "netstat",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС мониторит ввод-вывод на диске?",
+                          "Order":  11
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_all_tables",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_table_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_tables",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление показывает статистику по таблицам?",
+                          "Order":  12
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_min_duration_statement",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "slow_query_log",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_slow_queries",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_slow_queries",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает логирование медленных запросов?",
+                          "Order":  13
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pgMonitor",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pgDash",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pgAdmin",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая утилита собирает и визуализирует метрики PostgreSQL?",
+                          "Order":  14
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pidstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "top",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "htop",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любой из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС показывает использование CPU по процессам?",
+                          "Order":  15
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_all_indexes",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_index_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_index_usage",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_indexes",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит статистику по индексам?",
+                          "Order":  16
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_min_messages",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_level",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "logging_level",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "message_level",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет уровень детализации логов?",
+                          "Order":  17
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Grafana",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Kibana",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Tableau",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Power BI",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой дашборд популярен для визуализации метрик PostgreSQL?",
+                          "Order":  18
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "free",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vmstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "swapon",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая команда ОС показывает использование swap?",
+                          "Order":  19
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_locks",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_blocks",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_lock_info",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_current_locks",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление показывает информацию о блокировках?",
+                          "Order":  20
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_lock_waits",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "lock_wait_logging",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_deadlocks",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_lock_waits",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает логирование ожидания блокировок?",
+                          "Order":  21
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pgwatch2",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Prometheus",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Nagios",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Zabbix",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая система мониторинга использует SQL-запросы для сбора метрик?",
+                          "Order":  22
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "netstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ss",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "iftop",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любой из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС показывает сетевую активность?",
+                          "Order":  23
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_replication",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_replication_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_slave_status",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_streaming_stats",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит статистику по репликации?",
+                          "Order":  24
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "track_io_timing",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "io_statistics",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_io_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "collect_io_timing",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает сбор статистики по вводу-выводу?",
+                          "Order":  25
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "postgres_exporter",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_exporter",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "postgresql_exporter",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Любой из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой экспортер метрик для Prometheus используется для PostgreSQL?",
+                          "Order":  26
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pidstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vmstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "mpstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая команда ОС показывает контекстные переключения?",
+                          "Order":  27
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_progress_vacuum",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_vacuum_progress",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_cleanup_status",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vacuum_progress_info",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление показывает прогресс выполнения VACUUM?",
+                          "Order":  28
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_rotation_age",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_rotation_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Оба параметра",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_retention",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет частоту ротации логов?",
+                          "Order":  29
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "TimescaleDB + Grafana",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "TimescaleDB + Prometheus",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "TimescaleDB + Nagios",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "TimescaleDB + Zabbix",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая система мониторинга входит в состав Stack от Timescale?",
+                          "Order":  30
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "lsof",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "fuser",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "lsfd",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "filetop",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС показывает использование файловых дескрипторов?",
+                          "Order":  31
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_user_functions",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_function_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_proc_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_functions",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит статистику по функциям?",
+                          "Order":  32
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_temp_files",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "temp_file_logging",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_temp_files",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_temporary_files",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает логирование временных файлов?",
+                          "Order":  33
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Amazon CloudWatch",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Google Cloud Monitoring",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Azure Monitor",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой облачный сервис предлагает мониторинг PostgreSQL?",
+                          "Order":  34
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "uptime",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "top",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "htop",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая команда ОС показывает нагрузку на систему?",
+                          "Order":  35
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_stat_wal",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_wal_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_xlog_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_transaction_log_stats",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление показывает статистику по WAL?",
+                          "Order":  36
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_checkpoints",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "checkpoint_log",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_checkpoint_events",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "checkpoint_debug",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает ведение лога контрольных точек?",
+                          "Order":  37
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pgbadger",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pgfouine",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_log_analyzer",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая утилита анализирует логи PostgreSQL?",
+                          "Order":  38
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ipcs",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pmap",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "smem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любой из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС показывает использование shared memory?",
+                          "Order":  39
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_prepared_xacts",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_prepared_transactions",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_transaction_status",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_transactions",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит информацию о подготовленных транзакциях?",
+                          "Order":  40
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_statement",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "statement_logging",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_statements",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_sql",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет, какие операторы логируются?",
+                          "Order":  41
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Zabbix",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Nagios",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Prometheus",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая система мониторинга использует агенты на каждом сервере?",
+                          "Order":  42
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "netstat -s",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ss -s",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "nstat",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Любая из перечисленных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая команда ОС показывает статистику по сети?",
+                          "Order":  43
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_bgwriter",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_buffercache",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_buffer_stats",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_cache_stats",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление показывает статистику по буферному кешу?",
+                          "Order":  44
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_activities",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_counts",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_functions",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает сбор статистики по планировщику?",
+                          "Order":  45
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Amazon RDS",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Google Cloud SQL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Azure Database for PostgreSQL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой облачный провайдер предлагает managed PostgreSQL с мониторингом?",
+                          "Order":  46
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pmap",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ps aux",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "top",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "htop",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой инструмент ОС показывает распределение памяти процесса?",
+                          "Order":  47
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_relation_size() функции",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_table_size() функции",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_total_relation_size() функции",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какое представление содержит информацию о размерах объектов?",
+                          "Order":  48
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_line_prefix",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_timestamp_format",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "timestamp_format",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "time_format",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет формат временных меток в логах?",
+                          "Order":  49
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Graphite",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "InfluxDB",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Prometheus",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Все перечисленные",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая система мониторинга использует push-модель сбора метрик?",
+                          "Order":  50
+                      }
+                  ]
+}

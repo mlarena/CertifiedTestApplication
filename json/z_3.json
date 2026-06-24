@@ -1,0 +1,1358 @@
+﻿{
+    "CanReturnToQuestion":  true,
+    "Title":  "Вопросы по утилите psql",
+    "Description":  "",
+    "TimeLimit":  600,
+    "Questions":  [
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "psql -d myuser -u mydb",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "psql mydb myuser",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "psql -U myuser -d mydb",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "psql connect myuser/mydb",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как подключиться к базе данных mydb под пользователем myuser через psql?",
+                          "Order":  1
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\db",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dn",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\l",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\list",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой метакоманда используется для вывода списка всех баз данных?",
+                          "Order":  2
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\d customers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dt customers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\d+ customers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\describe customers",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести подробную информацию о структуре таблицы customers?",
+                          "Order":  3
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\run script.sql",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\execute script.sql",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\i script.sql",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\f script.sql",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как выполнить SQL-команду из файла script.sql в psql?",
+                          "Order":  4
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\use new_db",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\connect new_db",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\c new_db",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\switch new_db",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как переключиться на базу данных new_db внутри psql?",
+                          "Order":  5
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\t",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dt",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\lt",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\list tables",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех таблиц в текущей базе данных?",
+                          "Order":  6
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\timing",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\time",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\timing on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\set timing on",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как включить отображение времени выполнения каждого запроса?",
+                          "Order":  7
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\exit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\q",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\quit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ctrl+D",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как выйти из psql?",
+                          "Order":  8
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\history",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\h",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\s",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\hist",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать историю выполненных команд в текущей сессии psql?",
+                          "Order":  9
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\ds",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dn",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dl",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\db",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех схем в текущей базе данных?",
+                          "Order":  10
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\o output.csv",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\f output.csv",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\export output.csv",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\copy output.csv",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как сохранить результат выполнения запроса в файл output.csv?",
+                          "Order":  11
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dv",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dw",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dviews",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dsv",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как отобразить список всех представлений (views) в текущей базе данных?",
+                          "Order":  12
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\sys",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\sh",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\!",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\os",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как выполнить команду операционной системы, не выходя из psql?",
+                          "Order":  13
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\ds",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dS",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\seq",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dsequences",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать список всех последовательностей (sequences) в текущей базе данных?",
+                          "Order":  14
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\set myvar test",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\var myvar test",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SET myvar = \u0027test\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\assign myvar test",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как установить переменную myvar в значение test внутри psql?",
+                          "Order":  15
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\df",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\df+",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dfn",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dfunctions",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех функций в текущей базе данных?",
+                          "Order":  16
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\x on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\a",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\x auto",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\format aligned",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как включить расширенный вывод с выравниванием для результатов запроса?",
+                          "Order":  17
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\repeat 2",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\watch 2",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\loop 2",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\every 2",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как выполнить команду повторно каждые 2 секунды?",
+                          "Order":  18
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\di products",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\d products (индексы показываются в общем описании)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\indexes products",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dI products",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как отобразить список всех индексов для таблицы products?",
+                          "Order":  19
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\? SELECT",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\h SELECT",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\help SELECT",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\syntax SELECT",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести подсказку по синтаксису SQL-команды SELECT?",
+                          "Order":  20
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\settings",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\show all",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\config",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SHOW ALL;",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать текущие настройки параметров конфигурации",
+                          "Order":  21
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\copy users TO \u0027C:\\test\\users.csv\u0027 WITH CSV",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\copy users TO \u0027users.csv\u0027 DELIMITER \u0027,\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "COPY users TO \u0027users.csv\u0027 WITH CSV",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\export users TO \u0027users.csv\u0027 CSV",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как скопировать содержимое таблицы users в файл users.csv с разделителем-запятой?",
+                          "Order":  22
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SELECT count(*) FROM pg_stat_activity WHERE datname = current_database();",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\connections",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\whoami",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dbinfo",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как отобразить список всех подключений к текущей базе данных?",
+                          "Order":  23
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\format html",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\H",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\html on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "psql не поддерживает прямой вывод в HTML",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как изменить формат вывода результата на HTML?",
+                          "Order":  24
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\conninfo",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\status",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\info",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\connectinfo",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать информацию о текущем подключении (пользователь, база данных, хост)?",
+                          "Order":  25
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\do",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dO",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\operators",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dop",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех операторов (operators) в базе данных?",
+                          "Order":  26
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\set ECHO all",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\echo on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\verbose on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\debug on",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как включить режим отладки с выводом выполняемых запросов?",
+                          "Order":  27
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\limit 10",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\g 10",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\head 10",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Добавить LIMIT 10 в сам SQL-запрос",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как отобразить только первые 10 строк результата запроса?",
+                          "Order":  28
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\explain",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\plan",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\show plan",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Такой метакоманды нет",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать план выполнения последнего выполненного запроса?",
+                          "Order":  29
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\db",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dtablespaces",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dT",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\tablespaces",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех табличных пространств (tablespaces)?",
+                          "Order":  30
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\begin ... \\commit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "START TRANSACTION; ... COMMIT; (обычными SQL-командами)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\transaction begin ... \\transaction commit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\tx begin ... \\tx commit",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как выполнить транзакцию с началом, несколькими командами и коммитом в psql?",
+                          "Order":  31
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dc",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dC",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\constraints",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Нет прямой метакоманды, смотреть через \\d+ таблицы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать список всех ограничений (constraints) в текущей базе данных?",
+                          "Order":  32
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\set delimiter \u0027;\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\pset fieldsep \u0027;\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\f ;",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\separator ;",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как изменить разделитель полей в выводе на точку с запятой?",
+                          "Order":  33
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\size orders",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dt+ orders",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\table_size orders",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\ds orders",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести информацию о размере таблицы orders?",
+                          "Order":  34
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\du",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dr",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dU",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\users",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как отобразить список всех ролей (пользователей) в кластере?",
+                          "Order":  35
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\linenumbers on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\pset linenumber on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\set linenumber",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\pset linestyle numbered",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как включить вывод номера строки в результатах запроса?",
+                          "Order":  36
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\show search_path",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SHOW search_path;",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\path",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\get search_path",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать текущую схему поиска (search_path)?",
+                          "Order":  37
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dE",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\det",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dft",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\foreign",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех внешних таблиц (foreign tables)?",
+                          "Order":  38
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\clear",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\cls",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\! clear (зависит от ОС)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\clean",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как очистить экран в psql?",
+                          "Order":  39
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dm",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dM",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dmv",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dmatviews",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать список всех материализованных представлений?",
+                          "Order":  40
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\set datestyle to \u0027ISO\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\pset dateformat \u0027ISO\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SET datestyle = \u0027ISO, DMY\u0027;",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dateformat ISO",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как изменить формат вывода даты и времени?",
+                          "Order":  41
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\de",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dx",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dX",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\extensions",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести информацию о расширениях (extensions) в текущей базе данных?",
+                          "Order":  42
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dl",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\languages",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\pl",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать список всех языков (procedural languages) в базе данных?",
+                          "Order":  43
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  ":myvar",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "{{myvar}}",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "$(myvar)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\u0026myvar",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как использовать значение переменной myvar в SQL-запросе?",
+                          "Order":  44
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dC",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dc",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\casts",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dcasts",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести список всех преобразований типов (casts)?",
+                          "Order":  45
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\show work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SHOW work_mem;",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\config work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\get work_mem",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать текущие настройки рабочей памяти (work_mem)?",
+                          "Order":  46
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dd",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dD",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\domains",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\d domains",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как отобразить список всех доменов (domains) в текущей базе данных?",
+                          "Order":  47
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\headers on/off",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\pset tuples_only on/off",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\pset header on/off",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\column_names on/off",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как включить/выключить вывод названий столбцов в результатах запроса?",
+                          "Order":  48
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\l+",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\db+",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\databases+",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\size all",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как вывести информацию о размере всех баз данных в кластере?",
+                          "Order":  49
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "\\dF",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dFd",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dFt",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "\\dFp",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как показать список всех текстовых поисковых конфигураций (text search configurations)?",
+                          "Order":  50
+                      }
+                  ]
+}

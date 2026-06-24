@@ -1,0 +1,1358 @@
+﻿{
+    "CanReturnToQuestion":  true,
+    "Title":  "Вопросы по конфигурированию PostgreSQL",
+    "Description":  "",
+    "TimeLimit":  600,
+    "Questions":  [
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "shared_buffers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "maintenance_work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "effective_cache_size",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет максимальный объем памяти для кэширования часто используемых данных?",
+                          "Order":  1
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Производительность значительно улучшится",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "PostgreSQL будет использовать всю доступную память",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Может возникнуть двойное кэширование с OS cache",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Автоматически включится Huge Pages",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что произойдет при установке shared_buffers в значение более 40% от общей памяти?",
+                          "Order":  2
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_log",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "wal_level",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_segment_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_compression",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр контролирует уровень журналирования WAL?",
+                          "Order":  3
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "minimal",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "replica",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "logical",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "archive",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "При каком значении wal_level возможна логическая репликация?",
+                          "Order":  4
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_replication_slots",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "max_wal_senders",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_connections",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_worker_processes",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет максимальное количество одновременных репликационных подключений?",
+                          "Order":  5
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ждет подтверждения от одной синхронной реплики",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Ждет применения WAL на реплике",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ждет записи WAL на диск мастера",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Отключает синхронную репликацию",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр synchronous_commit = remote_apply?",
+                          "Order":  6
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "checkpoint_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "max_wal_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_keep_segments",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "checkpoint_completion_target",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр ограничивает максимальный размер WAL перед запуском контрольной точки?",
+                          "Order":  7
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "90% времени между контрольными точками будет использовано для записи грязных страниц",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "90% всех страниц должны быть записаны",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Контрольная точка завершится за 90% от timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "90% памяти будет использовано для контрольной точки",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает checkpoint_completion_target = 0.9?",
+                          "Order":  8
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "sort_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "maintenance_work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "temp_buffers",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр управляет объемом памяти для операций сортировки в одном запросе?",
+                          "Order":  9
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запрос будет прерван с ошибкой",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Данные будут записаны во временные файлы на диск",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "PostgreSQL автоматически увеличит лимит",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запрос перейдет в режим медленного выполнения",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что произойдет при превышении work_mem во время выполнения запроса?",
+                          "Order":  10
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_replication_streams",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "max_replication_slots",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_wal_senders",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_keep_segments",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет максимальное количество слотов репликации?",
+                          "Order":  11
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Включает архивирование WAL-файлов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Определяет метод архивирования",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задает команду архивирования",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включает сжатие WAL",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр archive_mode?",
+                          "Order":  12
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "archive_library",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "archive_command",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_archive",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "archive_script",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр задает команду для архивирования WAL-файлов?",
+                          "Order":  13
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Реплика работает в горячем режиме",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "На реплике разрешены запросы на чтение",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Реплика автоматически переключается на мастер",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "WAL-файлы доставляются в реальном времени",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает hot_standby = on?",
+                          "Order":  14
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "recovery_min_apply_delay",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_receiver_delay",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "hot_standby_delay",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "replication_lag",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр управляет задержкой репликации на standby-сервере?",
+                          "Order":  15
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задержка между операциями VACUUM",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Задержка при превышении лимита стоимости VACUUM",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Максимальная задержка для autovacuum",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задержка перед началом VACUUM",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр vacuum_cost_delay?",
+                          "Order":  16
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "autovacuum_vacuum_threshold",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_scale_factor",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_naptime",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_analyze_threshold",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет порог для запуска autovacuum?",
+                          "Order":  17
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Autovacuum запустится при 20% мертвых кортежей",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Autovacuum обработает 20% таблицы за раз",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Autovacuum будет работать 20% времени",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Autovacuum использует 20% от work_mem",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает autovacuum_vacuum_scale_factor = 0.2?",
+                          "Order":  18
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "query_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "statement_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "lock_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "idle_in_transaction_session_timeout",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр ограничивает время выполнения запроса?",
+                          "Order":  19
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Завершает долгие транзакции",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Завершает idle-сессии с открытой транзакцией",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ограничивает время ожидания блокировок",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Завершает долгие запросы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр idle_in_transaction_session_timeout?",
+                          "Order":  20
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "log_statement = \u0027all\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_min_duration_statement = 0",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "logging_collector = on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "log_destination = \u0027stderr\u0027",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает логирование всех выполняемых запросов?",
+                          "Order":  21
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Логируются запросы, выполняющиеся более 1 секунды",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логируются запросы, выполняющиеся менее 1 секунды",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Минимальное время логирования - 1 секунда",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запросы логируются с задержкой 1 секунда",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает log_min_duration_statement = 1000?",
+                          "Order":  22
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "track_activities",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_counts",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_io_timing",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_functions",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр управляет сбором статистики по запросам?",
+                          "Order":  23
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Определяет стоимость случайного доступа к диску",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задает стоимость последовательного доступа",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Определяет стоимость операций в памяти",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Управляет стоимостью индексного сканирования",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр random_page_cost?",
+                          "Order":  24
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "seq_page_cost",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "random_page_cost",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "cpu_tuple_cost",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "cpu_index_tuple_cost",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр рекомендуется уменьшить для SSD-дисков?",
+                          "Order":  25
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "PostgreSQL будет использовать 4GB кэша",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Планировщик предполагает наличие 4GB OS cache",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ограничивает кэш до 4GB",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Резервирует 4GB для кэширования",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает effective_cache_size = 4GB?",
+                          "Order":  26
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "jit = on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_enabled = true",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_compilation = on",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "enable_jit = true",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает JIT-компиляцию?",
+                          "Order":  27
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_cost_threshold",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "jit_above_cost",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_optimize_above_cost",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_inline_above_cost",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что управляет порогом стоимости для JIT-компиляции?",
+                          "Order":  28
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "jit_buffer_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_memory",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "work_mem",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет размер памяти для JIT-операций?",
+                          "Order":  29
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Определяет максимальное количество параллельных процессов на запрос",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задает общее количество параллельных воркеров",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Определяет количество воркеров на сборку",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ограничивает параллелизм для конкретной таблицы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр max_parallel_workers_per_gather?",
+                          "Order":  30
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_connections",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "max_worker_processes",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_parallel_workers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_parallel_workers_per_gather",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет общее количество фоновых процессов?",
+                          "Order":  31
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Все транзакции выполняются последовательно",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Включается уровень изоляции serializable по умолчанию",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запрещаются параллельные транзакции",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включается строгая сериализация",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает default_transaction_isolation = \u0027serializable\u0027?",
+                          "Order":  32
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "deadlock_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "lock_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "deadlock_detection",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "lock_wait_timeout",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр управляет поведением при обнаружении взаимоблокировки?",
+                          "Order":  33
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логирует все операции с блокировками",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Логирует ожидания блокировок дольше deadlock_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логирует взаимоблокировки",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логирует снятие блокировок",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр log_lock_waits?",
+                          "Order":  34
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "wal_compression",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "full_page_writes",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_log_hints",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_buffers",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает сжатие полных страниц в WAL?",
+                          "Order":  35
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Записываются полные страницы при первой изменении после checkpoint",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Все страницы записываются полностью в WAL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "WAL-файлы сжимаются",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включается полное журналирование",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает full_page_writes = on?",
+                          "Order":  36
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "wal_buffers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_segment_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_writer_delay",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_writer_flush_after",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет размер буферов для WAL?",
+                          "Order":  37
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Задержка между сбросами WAL буферов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задержка записи WAL на диск",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задержка доставки WAL на реплику",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задержка перед архивированием WAL",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр wal_writer_delay?",
+                          "Order":  38
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "autovacuum_naptime",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_vacuum_threshold",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_analyze_threshold",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_vacuum_cost_delay",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр управляет временем между запусками autovacuum?",
+                          "Order":  39
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Максимум 3 процесса autovacuum одновременно",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Autovacuum использует 3 ядра CPU",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Каждый autovacuum использует 3 воркера",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Autovacuum работает 3 раза в день",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает autovacuum_max_workers = 3?",
+                          "Order":  40
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "temp_file_limit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "temp_buffers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "maintenance_work_mem",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр ограничивает размер временных файлов?",
+                          "Order":  41
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логирует использование временных файлов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Логирует создание временных файлов больше указанного размера",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сохраняет временные файлы для отладки",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ограничивает размер лог-файлов",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр log_temp_files?",
+                          "Order":  42
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "track_io_timing",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_activities",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_counts",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "track_wal_io",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает сбор статистики по вводу/выводу?",
+                          "Order":  43
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Библиотека загружается при старте сервера",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Библиотека загружается по требованию",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Библиотека доступна для всех сессий",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Библиотека кэшируется в памяти",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает shared_preload_libraries = \u0027pg_stat_statements\u0027?",
+                          "Order":  44
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "max_locks_per_transaction",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_connections",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "max_prepared_transactions",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "deadlock_timeout",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр управляет количеством блокировок в системе?",
+                          "Order":  45
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Возраст таблицы для принудительного VACUUM FREEZE",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Время заморозки транзакций",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Порог для агрессивного VACUUM",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Максимальный возраст frozen XID",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр vacuum_freeze_table_age?",
+                          "Order":  46
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "autovacuum_freeze_max_age",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vacuum_freeze_min_age",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vacuum_freeze_table_age",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "xid_stop_limit",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр определяет максимальный возраст транзакции перед принудительным autovacuum?",
+                          "Order":  47
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Хранить 100 сегментов WAL для репликации",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Архивировать каждые 100 сегментов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сжимать каждые 100 сегментов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ограничивать WAL 100 сегментами",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что означает wal_keep_segments = 100?",
+                          "Order":  48
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "default_toast_compression",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "toast_compression",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "data_compression",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "wal_compression",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр включает сжатие TOAST-данных по умолчанию?",
+                          "Order":  49
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Включает шифрование паролей методом SCRAM-SHA-256",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Шифрует все передаваемые данные",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включает шифрование соединений",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Шифрует WAL-файлы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр password_encryption = scram-sha-256?",
+                          "Order":  50
+                      }
+                  ]
+}

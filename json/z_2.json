@@ -1,0 +1,1358 @@
+﻿{
+    "CanReturnToQuestion":  true,
+    "Title":  "Экспертные вопросы по администрированию PostgreSQL",
+    "Description":  "",
+    "TimeLimit":  600,
+    "Questions":  [
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SET LOCAL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SET SESSION",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_set_transaction_config()",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SET TRANSACTION PARAMETER",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая системная функция позволяет безопасно изменять значения параметров конфигурации только для текущей транзакции?",
+                          "Order":  1
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Это ускорит обычную очистку",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Это предотвратит wraparound для всей таблицы",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Это вызовет ошибку, так параметр нельзя отключить",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Это приведет к принудительному autovacuum",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что произойдет, если выполнить VACUUM FREEZE на таблице с отключенным autovacuum_freeze_max_age?",
+                          "Order":  2
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "MVCC (Multi-Version Concurrency Control)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SSI (Serializable Snapshot Isolation)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Two-Phase Locking",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "OCC (Optimistic Concurrency Control)",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой механизм обеспечивает сериализацию транзакций в PostgreSQL?",
+                          "Order":  3
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "PostgreSQL автоматически увеличивает лимит",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Новые фоновые процессы становятся в очередь",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Запросы получают ошибку \"out of background workers\"",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сервер переходит в режим read-only",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при достижении max_worker_processes в системе с интенсивной параллельной обработкой?",
+                          "Order":  4
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SELECT pg_stat_all_indexes.idx_bloat_ratio",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "EXPLAIN (ANALYZE, BUFFERS)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Сравнение pg_class.relpages с ожидаемым размером",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "VACUUM (VERBOSE) table_name",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно обнаружить \"bloat\" (раздувание) индексов без использования расширений?",
+                          "Order":  5
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "jit_above_cost должен быть равен 0",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использование work_mem для JIT-операций",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Отдельное выделение памяти через jit_buffer_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "JIT не использует дополнительную память",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая особенность JIT-компиляции в PostgreSQL требует особого внимания при настройке памяти?",
+                          "Order":  6
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запускает экстренный VACUUM при нехватке памяти",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Активирует аварийную очистку при приближении к wraparound",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Останавливает autovacuum при частых ошибках",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включает резервный режим VACUUM",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр vacuum_failsafe_age?",
+                          "Order":  7
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Репликация через SSL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Использование COPY данных перед созданием подписки",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Увеличение max_replication_slots",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настройка synchronous_commit = remote_apply",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой метод обеспечивает наименьшую вероятность конфликта при логической репликации больших таблиц?",
+                          "Order":  8
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "База данных создается неполностью и требует ручного вмешательства",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Транзакция откатывается автоматически",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Процесс завершается аварийно, требуется pg_resetwal",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Создается база-заглушка для последующего восстановления",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при сбое диска во время выполнения CREATE DATABASE с параметром STRATEGY = WAL_LOG?",
+                          "Order":  9
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ALTER SYSTEM SET primary_conninfo = \u0027\u0027",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_ctl promote",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SELECT pg_stop_replication()",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "DROP_REPLICATION_SLOT",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая команда позволяет безопасно остановить репликацию без потери данных?",
+                          "Order":  10
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через ALTER DATABASE SET cpu_limit = ...",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Средствами операционной системы (cgroups)",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через pg_resource_manager",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "В PostgreSQL нет встроенного ограничения CPU",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить ограничение на использование CPU для конкретной базы данных?",
+                          "Order":  11
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Репликация переключается в асинхронный режим",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Слот репликации автоматически удаляется",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "WAL-файлы начинают циклически перезаписываться",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Репликация останавливается до ручного вмешательства",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при достижении max_slot_wal_keep_size?",
+                          "Order":  12
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "autovacuum_naptime = 1",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "old_snapshot_threshold",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "vacuum_defer_cleanup_age",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "idle_in_transaction_session_timeout",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой параметр критически важен для предотвращения паники при wraparound в системах с долгими транзакциями?",
+                          "Order":  13
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Автоматически загружает все индексы в кэш",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Сохраняет состояние кэша между перезагрузками",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Предзагружает данные при первом обращении",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Автоматически определяет \"горячие\" таблицы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает расширение pg_prewarm в режиме auto?",
+                          "Order":  14
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ANALYZE NONBLOCKING table_name",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Увеличить default_statistics_target и запустить ANALYZE",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать CREATE STATISTICS с большей выборкой",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Нет неблокирующего способа, только увеличение скорости через параллелизм",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно обновить статистику для большой таблицы без блокировки?",
+                          "Order":  15
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Создание временной копии индекса",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использование дополнительной work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Блокировка таблицы на финальной стадии",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Удвоенное место на диске и нагрузка на I/O",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какая особенность работы REINDEX CONCURRENTLY может привести к деградации производительности?",
+                          "Order":  16
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Операция завершается ошибкой",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Внешние ключи автоматически отключаются",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Таблица очищается, а связанные таблицы помечаются для VACUUM",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Создается точка сохранения для возможного отката",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при выполнении TRUNCATE на таблице с внешними ключами без CASCADE?",
+                          "Order":  17
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "ALTER USER SET work_mem = ...",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SET ROLE work_mem = ...",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через параметры в pg_hba.conf",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "В postgresql.conf с условиями",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить разные значения work_mem для разных пользователей?",
+                          "Order":  18
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Обновление без изменения индексов, не работает при изменении индексируемых полей",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Быстрое обновление через кэш, не работает при нехватке памяти",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Параллельное обновление, не работает в репликах",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Атомарное обновление, не работает в транзакциях",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что такое \"HOT update\" (Heap-Only Tuple) и когда он не работает?",
+                          "Order":  19
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_rewind",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ручное копирование WAL-файлов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Полное пересоздание реплики через pg_basebackup",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использование rsync для дифференциального копирования",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой метод обеспечивает наиболее надежное восстановление после сбоя реплики?",
+                          "Order":  20
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Транзакции автоматически откатываются",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Новые prepared transactions получают ошибку",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Система переходит к однофазным коммитам",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Лимит автоматически увеличивается",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при достижении max_prepared_transactions в системе с двухфазными коммитами?",
+                          "Order":  21
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SELECT * FROM pg_stat_progress_create_index",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через лог-файлы с включенным log_lock_waits",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_stat_activity с фильтром по команде",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Напрямую через системные вызовы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно мониторить прогресс выполнения CREATE INDEX CONCURRENTLY?",
+                          "Order":  22
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сжимает WAL-файлы, всегда включать для экономии места",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Сжимает полные страницы в WAL, включать при частых обновлениях одних и тех же страниц",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сжимает архивные WAL-файлы, включать при медленном сетевом соединении",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сжимает данные в репликации, включать при ограниченной пропускной способности",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр wal_compression и когда его стоит включать?",
+                          "Order":  23
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "SET TRANSACTION ISOLATION LEVEL ...",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ALTER DATABASE SET default_transaction_isolation = ...",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через параметры в connection string",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "В postgresql.conf для конкретной базы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить разные уровни изоляции для разных транзакций в одном соединении?",
+                          "Order":  24
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "База данных помечается для удаления при следующем запуске",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Транзакция откатывается, база сохраняется",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Создается резервная копия автоматически",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Требуется ручное восстановление из WAL",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при сбое во выполнения DROP DATABASE?",
+                          "Order":  25
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "MVCC с версионированием строк",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Tid scan вместо последовательного сканирования",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Использование CTID для отслеживания перемещений",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Автоматическое создание временных таблиц",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Какой механизм обеспечивает защиту от \"halloween problem\" в PostgreSQL?",
+                          "Order":  26
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Задержка коммита для группировки WAL-записей, при высокой нагрузке на I/O",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Отложенный коммит для отладки, в тестовых средах",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Задержка для синхронной репликации, при медленных репликах",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ожидание освобождения блокировок, при конкурентных транзакциях",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр commit_delay и когда его использование оправдано?",
+                          "Order":  27
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать UPDATE ... FROM с подзапросом",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Разбить на пакеты с LIMIT и ctid",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Создать новую таблицу и заменить через ALTER TABLE ... RENAME",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать логическую репликацию для обновления на реплике",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно обновить большую таблицу с минимальной блокировкой?",
+                          "Order":  28
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Операция блокируется до завершения транзакций",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "VACUUM FULL выполняется в неблокирующем режиме",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Активные транзакции принудительно завершаются",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Создается временная копия таблицы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при выполнении VACUUM FULL на таблице с активными транзакциями?",
+                          "Order":  29
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Включить pg_stat_statements и настроить track_activity_query_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать auto_explain с log_min_duration_statement",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настроить логирование через log_statement = all",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запускать периодически EXPLAIN ANALYZE для частых запросов",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить мониторинг самых медленных запросов в реальном времени?",
+                          "Order":  30
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Нехватка памяти для снимков, увеличить work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Долгие транзакции блокируют очистку, настроить old_snapshot_threshold",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Переполнение WAL, увеличить max_wal_size",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Конфликт версий, запустить VACUUM FREEZE",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что такое \"snapshot too old\" ошибка и как ее предотвратить?",
+                          "Order":  31
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать INSERT ... VALUES с множественными строками",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "COPY с отключением autovacuum и индексов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_bulkload расширение",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логическая репликация из временной базы",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно выполнить массовую загрузку данных с минимальным impact на производительность?",
+                          "Order":  32
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Транзакция получает ошибку \"out of locks\"",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "PostgreSQL автоматически увеличивает лимит",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Начинается принудительный VACUUM",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Система переходит в режим read-only",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при достижении max_locks_per_transaction?",
+                          "Order":  33
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать синхронную репликацию с synchronous_commit = remote_apply",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Увеличить wal_sender_timeout и wal_receiver_timeout",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Настроить логическую репликацию с компрессией",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать каскадную репликацию через промежуточный узел",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить географически распределенную репликацию с минимальной задержкой?",
+                          "Order":  34
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Включает объединение по партициям, при одинаковой структуре партиций",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Разрешает JOIN между партициями, всегда включать",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Оптимизирует JOIN для партиционированных таблиц, при большом количестве партиций",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включает параллельные JOIN, для систем с множеством CPU",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр enable_partitionwise_join и когда его включать?",
+                          "Order":  35
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Увеличить autovacuum_freeze_max_age и запустить VACUUM FREEZE вручную",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настроить агрессивный autovacuum для всех таблиц",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Отключить autovacuum и выполнять VACUUM по расписанию",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Увеличить vacuum_freeze_min_age для редких freeze",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно обнаружить и устранить \"freeze storm\"?",
+                          "Order":  36
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Реплика автоматически перезапускается с последней контрольной точки",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Требуется ручное вмешательство для восстановления",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Реплика переходит в режим \"catchup\" и догоняет мастер",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Зависит от настроек wal_receiver_status_interval",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при сбое реплики во время применения WAL?",
+                          "Order":  37
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "ALTER USER user_name CONNECTION LIMIT N",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через pg_hba.conf с параметром connlimit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "В postgresql.conf с условиями",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Средствами пулера соединений (pgbouncer)",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить ограничение на количество соединений для конкретного пользователя?",
+                          "Order":  38
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сброс кэша планов при изменении статистики, после ANALYZE",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Очистка кэша при нехватке памяти, при достижении shared_buffers",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Принудительный пересчет планов при изменении схемы, после DDL",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Автоматическая оптимизация планов, при изменении данных",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что такое \"plan cache invalidation\" и когда оно происходит?",
+                          "Order":  39
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "pg_dump / pg_restore",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Логическая репликация",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "pg_upgrade с параметром --link",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Файловое копирование с pg_resetwal",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно выполнить миграцию с обновлением мажорной версии PostgreSQL?",
+                          "Order":  40
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Параллельные запросы выполняются последовательно",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Новые параллельные workers становятся в очередь",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Запросы получают ошибку \"out of parallel workers\"",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Система автоматически увеличивает лимит",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при достижении max_parallel_workers?",
+                          "Order":  41
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Использовать pg_locks с JOIN к pg_stat_activity",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включить deadlock_timeout с логированием",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настроить log_lock_waits с log_min_duration_statement",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать расширение pg_blocking_pids",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить мониторинг блокировок в реальном времени с идентификацией блокирующих запросов?",
+                          "Order":  42
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Выбор алгоритма сжатия TOAST, для оптимизации места на диске",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включение сжатия по умолчанию, всегда использовать LZ4",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настройка уровня сжатия, для баланса между CPU и I/O",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Управление сжатием в репликации, для экономии трафика",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что делает параметр default_toast_compression и когда его менять?",
+                          "Order":  43
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "REINDEX CONCURRENTLY с параметром gin_pending_list_limit",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "VACUUM с полным сканированием",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "ANALYZE для обновления статистики",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использование gin_clean_pending_list()",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно выполнить обслуживание индексов GIN для полнотекстового поиска?",
+                          "Order":  44
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Таблица переписывается полностью, длительная блокировка",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Добавляется системный столбец, обновление при обращении",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Создается новая таблица с копированием данных",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Изменение применяется только к метаданным",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при выполнении ALTER TABLE ... ADD COLUMN с значением по умолчанию для большой таблицы?",
+                          "Order":  45
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Средствами PostgreSQL без дополнительных инструментов",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Использовать pg_auto_failover или Patroni",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настроить trigger_file в recovery.conf",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Через каскадную репликацию с автопромоутом",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить автоматическое переключение на реплику при сбое мастера?",
+                          "Order":  46
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Постепенная сортировка при наличии префикса индекса, для оптимизации с LIMIT",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Сортировка небольшими порциями, при нехватке work_mem",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Параллельная сортировка, при включенном parallel_leader_participation",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Ленивая сортировка, для экономии CPU",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что такое \"incremental sort\" и когда он используется?",
+                          "Order":  47
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "SELECT * FROM pg_stat_database WHERE datname = ...",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Включить log_temp_files и анализировать логи",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Мониторинг pg_stat_activity.temp_files и temp_bytes",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать pg_stat_statements с временными файлами",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как эффективно мониторить использование временных файлов?",
+                          "Order":  48
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Процесс PostgreSQL завершается аварийно",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Новые файлы открываются в режиме read-only",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Операции с файлами получают ошибку \"too many open files\"",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "PostgreSQL автоматически увеличивает лимит через ulimit",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Что происходит при достижении max_files_per_process?",
+                          "Order":  49
+                      },
+                      {
+                          "Answers":  [
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Использовать pg_cryptolog расширение",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Настроить wal_log_hints = off",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  false,
+                                              "Text":  "Включить wal_compression для шифрования",
+                                              "NumericValue":  null
+                                          },
+                                          {
+                                              "IsCorrect":  true,
+                                              "Text":  "Невозможно, требуется использование внешнего шифрования",
+                                              "NumericValue":  null
+                                          }
+                                      ],
+                          "Type":  1,
+                          "Text":  "Как настроить безопасное удаление чувствительных данных из WAL-файлов?",
+                          "Order":  50
+                      }
+                  ]
+}
