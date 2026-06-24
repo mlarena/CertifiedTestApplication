@@ -170,6 +170,7 @@
 
 @section Scripts {
     <script>
+        const STORAGE_KEY = 'testsFilters';
         const searchInput = document.getElementById('searchInput');
         const autocompleteList = document.getElementById('autocompleteList');
         const filterCategory = document.getElementById('filterCategory');
@@ -180,6 +181,28 @@
         const rows = Array.from(tbody.querySelectorAll('tr'));
         const noResults = document.getElementById('noResults');
         const titles = [...new Set(rows.map(r => r.dataset.title))];
+
+        function saveFilters() {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+                search: searchInput.value,
+                category: filterCategory.value,
+                status: filterStatus.value,
+                questions: filterQuestions.value
+            }));
+        }
+
+        function restoreFilters() {
+            try {
+                const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY));
+                if (!saved) return;
+                searchInput.value = saved.search || '';
+                filterCategory.value = saved.category || '';
+                filterStatus.value = saved.status || '';
+                filterQuestions.value = saved.questions || '';
+            } catch {}
+        }
+
+        restoreFilters();
 
         // --- Autocomplete ---
         searchInput.addEventListener('input', function () {
@@ -219,6 +242,7 @@
             filterCategory.value = '';
             filterStatus.value = '';
             filterQuestions.value = '';
+            sessionStorage.removeItem(STORAGE_KEY);
             applyFilters();
         });
 
@@ -250,6 +274,11 @@
             });
 
             noResults.style.display = visible === 0 ? 'block' : 'none';
+            saveFilters();
+        }
+
+        if (searchInput.value || filterCategory.value || filterStatus.value || filterQuestions.value) {
+            applyFilters();
         }
 
         // --- Sorting ---
