@@ -39,8 +39,8 @@ rsync -av --delete \
     --exclude='appsettings.*.json' \
     "$TMP_EXTRACT/" "$INSTALL_DIR/"
 
-# Set permissions
-chmod +x "$INSTALL_DIR/$APP_NAME"
+# Set permissions for all files
+chmod -R +x "$INSTALL_DIR"
 chown -R "$USER_NAME:$USER_NAME" "$INSTALL_DIR"
 
 # Cleanup

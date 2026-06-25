@@ -41,8 +41,8 @@ fi
 echo "Unpacking $APP_NAME.zip..."
 unzip -o "$APP_NAME.zip" -d "$INSTALL_DIR"
 
-# Set permissions
-chmod +x "$INSTALL_DIR/$APP_NAME"
+# Set permissions for all files
+chmod -R +x "$INSTALL_DIR"
 chown -R "$USER_NAME:$USER_NAME" "$INSTALL_DIR"
 
 # Verify
@@ -51,4 +51,4 @@ file "$INSTALL_DIR/$APP_NAME"
 
 echo ""
 echo "✅ Installation complete."
-echo "Next step: Create the service with: sudo bash create-service.sh --port $DEFAULT_PORT"
+echo "Next step: Create the service with: sudo bash 6_create_service.sh --port $DEFAULT_PORT"

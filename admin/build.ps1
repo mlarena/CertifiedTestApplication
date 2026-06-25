@@ -23,7 +23,7 @@ if ($runAll -or $Clean) {
     Write-Host "`n=== CLEAN ===" -ForegroundColor Cyan
     $cleanPaths = @(
         "$basePath\release"
-        "$basePath\admin\CertifiedTestApplication.zip"
+        "$basePath\admin\cta.zip"
     )
 
     foreach ($path in $cleanPaths) {
@@ -57,6 +57,7 @@ if ($runAll -or $Build) {
         if (Test-Path $appName) { $filesToZip += $appName }
         if (Test-Path "appsettings.json") { $filesToZip += "appsettings.json" }
         if (Test-Path "wwwroot") { $filesToZip += "wwwroot" }
+        Get-ChildItem "$appName.staticwebassets.endpoints.json" -ErrorAction SilentlyContinue | ForEach-Object { $filesToZip += $_.Name }
 
         Add-Type -AssemblyName "System.IO.Compression.FileSystem"
         $zipArchive = [System.IO.Compression.ZipFile]::Open($appZip, "Create")
@@ -83,11 +84,11 @@ if ($runAll -or $Build) {
     Write-Host "Done: $appZip" -ForegroundColor Green
 }
 
-# --- 3. Bundle (server scripts) ---
+# --- 3. Bundle (scripts + app files) ---
 if ($runAll -or $Bundle) {
     Write-Host "`n=== CREATE DEPLOY BUNDLE ===" -ForegroundColor Cyan
 
-    $bundlePath = Join-Path $basePath "admin\$appName.zip"
+    $bundlePath = Join-Path $basePath "admin\cta.zip"
 
     $filesToInclude = @(
         "$basePath\admin\bash\1_install_system.sh",
@@ -96,6 +97,8 @@ if ($runAll -or $Bundle) {
         "$basePath\admin\bash\4_status_services.sh",
         "$basePath\admin\bash\5_stop_services.sh"
         "$basePath\admin\bash\6_create_service.sh"
+        "$basePath\admin\bash\7_setup_postgresqll.sh"
+        "$basePath\admin\bash\8_check-dependencies.sh"
     )
 
     if (Test-Path $bundlePath) { Remove-Item $bundlePath }
@@ -112,6 +115,14 @@ if ($runAll -or $Bundle) {
             } else {
                 Write-Warning "File not found, skipping: $filePath"
             }
+        }
+
+        $appZip = Join-Path $releaseDir "$appName.zip"
+        if (Test-Path $appZip) {
+            Write-Host "Adding: $appName.zip" -ForegroundColor Yellow
+            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipArchive, $appZip, "$appName.zip")
+        } else {
+            Write-Warning "App zip not found, skipping: $appZip"
         }
     }
     finally {
