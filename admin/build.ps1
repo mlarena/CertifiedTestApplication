@@ -91,6 +91,7 @@ if ($runAll -or $Bundle) {
     $bundlePath = Join-Path $basePath "admin\cta.zip"
 
     $filesToInclude = @(
+        "$basePath\admin\bash\install.sh",
         "$basePath\admin\bash\1_install_system.sh",
         "$basePath\admin\bash\2_update_system.sh",
         "$basePath\admin\bash\3_start_services.sh",
@@ -123,6 +124,18 @@ if ($runAll -or $Bundle) {
             [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipArchive, $appZip, "$appName.zip")
         } else {
             Write-Warning "App zip not found, skipping: $appZip"
+        }
+
+        $jsonDir = Join-Path $basePath "json"
+        if (Test-Path $jsonDir) {
+            $tmpJsonZip = Join-Path $env:TEMP "json.zip"
+            if (Test-Path $tmpJsonZip) { Remove-Item $tmpJsonZip }
+            [System.IO.Compression.ZipFile]::CreateFromDirectory($jsonDir, $tmpJsonZip)
+            Write-Host "Adding: json.zip" -ForegroundColor Yellow
+            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zipArchive, $tmpJsonZip, "json.zip")
+            Remove-Item $tmpJsonZip
+        } else {
+            Write-Warning "json folder not found, skipping"
         }
     }
     finally {

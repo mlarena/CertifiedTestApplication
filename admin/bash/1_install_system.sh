@@ -41,6 +41,12 @@ fi
 echo "Unpacking $APP_NAME.zip..."
 unzip -o "$APP_NAME.zip" -d "$INSTALL_DIR"
 
+# Unpack json tests if present
+if [ -f "$INSTALL_DIR/json.zip" ]; then
+    echo "Unpacking json.zip..."
+    unzip -o "$INSTALL_DIR/json.zip" -d "$INSTALL_DIR/json"
+fi
+
 # Set permissions for all files
 chmod -R +x "$INSTALL_DIR"
 chown -R "$USER_NAME:$USER_NAME" "$INSTALL_DIR"
