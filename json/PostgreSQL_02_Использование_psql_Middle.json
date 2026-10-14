@@ -9,9 +9,9 @@
       "Type": 1,
       "Order": 1,
       "Answers": [
-        { "Text": "\\set VARNAME value", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\set VARNAME value", "IsCorrect": false, "NumericValue": null },
         { "Text": "set VARNAME value", "IsCorrect": false, "NumericValue": null },
-        { "Text": "\\setenv VARNAME value", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\setenv VARNAME value", "IsCorrect": true, "NumericValue": null },
         { "Text": "$VARNAME = value", "IsCorrect": false, "NumericValue": null }
       ]
     },
