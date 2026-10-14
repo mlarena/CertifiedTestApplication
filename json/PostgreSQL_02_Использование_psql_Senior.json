@@ -94,14 +94,14 @@
       ]
     },
     {
-      "Text": "Как вывести SQL-код мета-команды psql (для использования в скриптах)?",
+      "Text": "Какая настройка позволяет выводить SQL-код, генерируемый мета-командами psql?",
       "Type": 1,
       "Order": 9,
       "Answers": [
-        { "Text": "\\restrict", "IsCorrect": false, "NumericValue": null },
-        { "Text": "\\sql", "IsCorrect": true, "NumericValue": null },
-        { "Text": "\\codegen", "IsCorrect": false, "NumericValue": null },
-        { "Text": "\\show_sql", "IsCorrect": false, "NumericValue": null }
+        { "Text": "\\set ECHO_HIDDEN 1", "IsCorrect": true, "NumericValue": null },
+        { "Text": "\\set SHOW_SQL 1", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\set QUERY_LOG on", "IsCorrect": false, "NumericValue": null },
+        { "Text": "\\set META_SQL on", "IsCorrect": false, "NumericValue": null }
       ]
     },
     {
