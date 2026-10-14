@@ -1,0 +1,1635 @@
+
+
+Репликация
+Логическая репликация
+16
+
+2
+Темы
+Сравнение логической и физической репликации
+Публикации и подписки
+Начальная синхронизация
+Идентификация и фильтрация строк
+Логическое декодирование
+Большие транзакции
+Конфликты
+Источники репликации
+3
+Сравнение
+Физическая
+мастер-реплика: поток данных только в одну сторону
+передача потока журнальных записей или файлов журнала
+требуется двоичная совместимость серверов
+реплицируется только весь кластер
+Логическая
+публикация-подписки: у сервера нет выделенной роли
+передача изменений табличных строк
+требуется совместимость на уровне протокола
+возможна выборочная репликация отдельных таблиц
+При физической репликации серверы имеют назначенные роли: мастер
+и реплика. Мастер передает журнальные записи на реплику, которая
+применяет эти записи к своим файлам данных. Применение происходит
+чисто механически, без «понимания смысла» изменений, поэтому
+важна двоичная совместимость между серверами (одинаковые
+платформы и основные версии PostgreSQL). Поскольку журнал общий
+для всего кластера, то и реплицировать можно только кластер целиком.
+При логической репликации на одном сервере создается публикация,
+другие серверы могут на нее подписаться. У сервера нет выделенной
+роли: один и тот же сервер может как публиковать изменения, так и
+подписываться на другие (или даже свои) публикации.
+По умолчанию информация об изменениях строк в таблицах
+передается подписке в текстовом, независимом от платформы виде,
+в котором двоичная совместимость не требуется.
+https://postgrespro.ru/docs/postgresql/16/logical-replication
+4
+max_wal_senders = 10 max_logical_replication_workers = 4
+max_replication_slots = 10 max_worker_processes = 8
+Схема репликации
+публикующий
+сервер
+select, insert
+update, delete
+подписчик
+wal sender
+сегменты WAL
+select, insert
+update, delete
+сегменты WAL
+logical
+replication
+apply worker
+logical
+replication
+launcher
+Логическая репликация использует модель «публикация–подписка».
+При старте экземпляра запускается фоновый процесс logical
+replication launcher, периодически проверяющий таблицу
+pg_subscription системного каталога на предмет появления новой
+подписки. Как только подписка появляется, для нее запускается
+фоновый процесс logical replication apply worker. Он соединяется
+с сервером публикации, на котором, как при любом подключении по
+протоколу репликации, запускается процесс wal sender. Этот процесс
+читает журнал предзаписи, отбирает нужные и преобразует их
+в платформонезависимые сообщения протокола. При этом обязательно
+используется слот логической репликации.
+На стороне подписки рабочий процесс принимает сообщения и
+применяет изменения. В это же время сервер-подписчик может
+принимать обычные запросы на чтение и запись.
+Обратите внимание, что на публикующем сервере может быть
+запущено много процессов wal sender — по одному на каждую
+подписку. Значения параметров max_wal_senders и
+max_replication_slots должны быть не меньше этого количества.
+На сервере подписки необходимо установить параметры
+max_logical_replication_workers (для процессов, принимающих
+изменения по подписке) и в целом max_worker_processes (как минимум
+на единицу больше, учитывая logical replication launcher, но этот пул
+используется и для других нужд).
+https://postgrespro.ru/docs/postgresql/16/logical-replication-architecture
+5
+Публикация
+Объект базы данных
+выдает изменения данных построчно в порядке фиксации транзакций
+только базовые и секционированные таблицы
+wal_level = logical
+Публикуются операции
+insert, update, delete, truncate
+Права
+создать публикацию — привилегия CREATE на базу данных
+добавить таблицу — владелец или суперпользователь
+добавить все таблицы схемы или базы данных — суперпользователь
+На одном сервере создается публикация, выделяющая изменения
+в одной или нескольких таблицах (базовых или секционированных)
+одной базы данных. Чтобы создать публикацию, нужна привилегия
+CREATE на базу данных. Для репликации из нескольких баз данных
+потребуется создать несколько публикаций.
+Включить в публикацию одну или несколько таблиц может их владелец
+или суперпользователь. Все таблицы схемы или базы данных может
+опубликовать только суперпользователь.
+Для работы логической репликации в журнале публикующего сервера
+необходима дополнительная информация (параметр wal_level = logical).
+Публикация включает в себя изменения строк, происходящие в
+таблицах в результате выполнения команд DML. Команда MERGE,
+выполненная на публикующем сервере, применяется как INSERT,
+UPDATE или DELETE.
+По умолчанию изменения передаются не сразу, а только при фиксации
+транзакции.
+https://postgrespro.ru/docs/postgresql/16/logical-replication-publication
+https://postgrespro.ru/docs/postgresql/16/sql-createpublication
+6
+Подписка
+Объект базы данных
+получает сообщения от одной или нескольких публикаций
+возможна подписка в двоичном формате
+применяет изменения построчно
+таблицы и столбцы сопоставляются по полным именам
+Права
+создание подписки — роль pg_create_subscription и суперпользователи
+Определив в базе данных подписку на публикации, можно получать
+и применять изменения. По сути, подписка — это подключение
+к публикующему серверу, созданное для репликации данных.
+Создавать подписки могут члены роли pg_create_subscription и
+суперпользователи.
+Применение изменений всегда происходит построчно. Хотя каждое
+изменение не требует разбора и планирования запроса, массовые
+изменения из-за этого могут выполняться медленно.
+Таблицы идентифицируются по полным именам (включая схему),
+столбцы также идентифицируются по именам. Это позволяет подписке
+использовать отличающуюся схему данных (например, иметь в таблице
+дополнительные столбцы).
+При создании подписки можно указать параметр binary,
+устанавливающий передачу данных в двоичном формате. Двоичный
+формат может ускорить обработку если определены функции двоичного
+получения и отправки для требуемых типов данных. Однако при
+использовании двоичного формата важна совместимость машинного
+представления данных на разных платформах.
+https://postgrespro.ru/docs/postgresql/16/logical-replication-subscription
+7
+S2
+S1
+P2
+P1
+P2
+P1
+Публикации и подписки
+публикующий
+сервер
+подписчик
+wal sender
+logical repl.
+apply worker
+S1
+P2
+P1
+подписчик
+wal sender
+logical repl.
+apply worker
+wal sender
+logical repl.
+apply worker
+pg_stat_replication
+pg_replication_slots
+pg_stat_subscription
+pg_stat_subscription_stats
+На публикующем сервере можно распределять объекты по
+публикациям любым образом. Можно включить все таблицы в одну
+публикацию, можно разделить их между несколькими публикациями —
+это не влияет на производительность.
+Однако каждая подписка создает отдельное подключение
+к публикующему серверу, нагружая его лишней работой. На
+публикующем сервере в таком случае будет запущено несколько
+процессов wal sender, каждый из которых будет самостоятельно читать
+WAL и выполнять логическое декодирование (рассматривается ниже)
+в своей локальной памяти. Поэтому если необходимо подписаться на
+несколько публикаций, это лучше сделать в одной общей подписке.
+Напомним, что публикации и подписки — объекты базы данных,
+поэтому для каждой базы потребуется отдельное соединение.
+Мониторинг логической репликации на публикующем сервере
+идентичен мониторингу физической репликации. Здесь важнейшие
+инструменты — представления pg_stat_replication и pg_replication_slots.
+Информация о состоянии подписок находится в pg_subscription.
+https://postgrespro.ru/docs/postgresql/16/catalog-pg-subscription#CATALO
+G-PG-SUBSCRIPTION
+Данные о применении изменений в представлении pg_stat_subscription.
+https://postgrespro.ru/docs/postgresql/16/monitoring-stats#MONITORING-P
+G-STAT-SUBSCRIPTION
+Данные об ошибках в процессе репликации в pg_stat_subscription_stats.
+https://postgrespro.ru/docs/postgresql/16/monitoring-stats#MONITORING-P
+G-STAT-SUBSCRIPTION-STATS
+Логическая репликация
+Мы собираемся настроить логическую репликацию таблицы test с сервера alpha на сервер beta.
+Для начала создадим базу данных.
+α=> CREATE DATABASE replica_logical;
+CREATE DATABASE
+α=> \c replica_logical
+You are now connected to database "replica_logical" as user "student".
+Для работы логической репликации понадобится изменить уровень журнала.
+α=> ALTER SYSTEM SET wal_level = logical;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+Второй кластер изначально будет копией первого, поэтому выполним резервное копирование в каталог PGDATA второго
+сервера.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ pg_basebackup --checkpoint=fast --pgdata=/var/lib/postgresql/16/beta
+student$ sudo pg_ctlcluster 16 beta start
+student$ psql -d replica_logical
+Теперь на первом сервере создадим таблицу и заполним ее данными.
+α=> CREATE TABLE test(
+id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+descr text,
+cluster_name text DEFAULT 'alpha'
+);
+CREATE TABLE
+На втором сервере таблицы test нет. Поскольку команды DDL не реплицируются, таблицу необходимо создать вручную.
+Структура ее может отличаться, но таблица должна содержать все публикуемые столбцы.
+student$ psql -p 5433 -d replica_logical
+β=> CREATE TABLE test(
+id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+descr text,
+cluster_name text DEFAULT 'beta',
+additional text
+);
+CREATE TABLE
+На первом сервере создаем публикацию.
+α=> CREATE PUBLICATION test_pub;
+CREATE PUBLICATION
+α=> \dRp+
+Publication test_pub
+Owner | All tables | Inserts | Updates | Deletes | Truncates | Via root
+---------+------------+---------+---------+---------+-----------+----------
+student | f | t | t | t | t | f
+(1 row)
+Заметьте, что публикация создана, хотя в ней нет ни одной таблицы. Обычно публикацию создают, указав:
+список таблиц, причем в этом случае можно указать публикуемые столбцы;
+все таблицы в заданных схемах (требует прав суперпользователя);
+все таблицы базы данных (требует прав суперпользователя).
+Добавим в публикацию таблицу.
+α=> ALTER PUBLICATION test_pub ADD TABLE test;
+ALTER PUBLICATION
+α=> \dRp+
+Publication test_pub
+Owner | All tables | Inserts | Updates | Deletes | Truncates | Via root
+---------+------------+---------+---------+---------+-----------+----------
+student | f | t | t | t | t | f
+Tables:
+"public.test"
+На втором сервере подписываемся на публикацию.
+β=> CREATE SUBSCRIPTION test_sub
+CONNECTION 'host=localhost port=5432 user=student password=student dbname=replica_logical'
+PUBLICATION test_pub;
+NOTICE: created replication slot "test_sub" on publisher
+CREATE SUBSCRIPTION
+β=> \dRs
+List of subscriptions
+Name | Owner | Enabled | Publication
+----------+---------+---------+-------------
+test_sub | student | t | {test_pub}
+(1 row)
+Проверим созданную подписку.
+α=> INSERT INTO test(descr) VALUES ('Раз');
+INSERT 0 1
+β=> SELECT * FROM test;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+1 | Раз | alpha |
+(1 row)
+Значения столбцов id, descr и cluster_name были получены из публикации.
+Начиная с PostgreSQL 15, можно публиковать не все, а только некоторые столбцы:
+α=> ALTER PUBLICATION test_pub SET TABLE test (id, descr);
+ALTER PUBLICATION
+α=> \dRp+
+Publication test_pub
+Owner | All tables | Inserts | Updates | Deletes | Truncates | Via root
+---------+------------+---------+---------+---------+-----------+----------
+student | f | t | t | t | t | f
+Tables:
+"public.test" (id, descr)
+Проверим:
+α=> INSERT INTO test(descr) VALUES ('Два');
+INSERT 0 1
+β=> SELECT * FROM test;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+1 | Раз | alpha |
+2 | Два | beta |
+(2 rows)
+Обратите внимание на столбец cluster_name — теперь он получил значение по умолчанию (beta) на подписчике.
+Состояние подписки можно посмотреть в представлении:
+β=> SELECT * FROM pg_stat_subscription \gx
+-[ RECORD 1 ]---------+------------------------------
+subid | 16419
+subname | test_sub
+pid | 78025
+leader_pid |
+relid |
+received_lsn | 0/3084B70
+last_msg_send_time | 2026-04-10 18:09:10.378621+03
+last_msg_receipt_time | 2026-04-10 18:09:10.379748+03
+latest_end_lsn | 0/3084B70
+latest_end_time | 2026-04-10 18:09:10.378621+03
+received_lsn — позиция в журнале, до которой получены изменения;
+latest_end_lsn — позиция в журнале, подтвержденная процессу wal sender.
+К процессам сервера добавился logical replication worker (его номер указан в pg_stat_subscription.pid):
+student$ ps f -C postgres -o pid,command | grep beta
+77670 /usr/lib/postgresql/16/bin/postgres -D /var/lib/postgresql/16/beta -c
+config_file=/etc/postgresql/16/beta/postgresql.conf
+77671 \_ postgres: 16/beta: checkpointer
+77672 \_ postgres: 16/beta: background writer
+77674 \_ postgres: 16/beta: walwriter
+77675 \_ postgres: 16/beta: autovacuum launcher
+77676 \_ postgres: 16/beta: logical replication launcher
+77796 \_ postgres: 16/beta: student replica_logical [local] idle
+78025 \_ postgres: 16/beta: logical replication apply worker for subscription 16419
+9
+Ограничения
+Не реплицируются
+последовательности
+материализованные представления
+временные и нежурналируемые таблицы
+внешние таблицы
+большие объекты
+DDL
+Требование к TRUNCATE
+таблицы, связанные внешними ключами, должны быть в одной
+подписке
+Реплицируются только изменения содержимого базовых и
+секционированных таблиц, вызванные командами DML.
+Не реплицируются содержимое остальных объектов, объединяемых
+термином «отношение»: последовательностей, материализованных
+представлений, временных и нежурналируемых таблиц, внешних
+таблиц. Не реплицируются большие объекты.
+Команды DDL также не реплицируются, поэтому нужно предварительно
+создать таблицы на стороне подписки.
+Команда TRUNCATE реплицируется успешно только в случае, если все
+таблицы подписчика, внешние ключи которых ссылаются на
+опустошаемые таблицы, включены в подписку.
+https://postgrespro.ru/docs/postgresql/16/logical-replication-restrictions
+10
+Один процесс синхронизации для каждой таблицы
+но не более max_sync_workers_per_subscription = 2
+Начальная синхронизация
+публикующий
+сервер
+select, insert
+update, delete
+подписчик
+wal sender
+сегменты WAL
+select, insert
+update, delete
+сегменты WAL
+T1 sync
+worker
+T2 sync
+worker
+logical repl.
+apply worker
+logical
+replication
+launcher
+pg_subscription_rel
+По умолчанию (если не задано значение параметра copy_data = false)
+при создании подписки выполняется начальная синхронизация
+содержимого таблиц. Она происходит бесшовно благодаря
+использованию механизма экспорта снимка данных.
+Начальную синхронизацию желательно завершить как можно скорее,
+чтобы не удерживать открытым снимком горизонт очистки дольше
+необходимого. Поэтому синхронизация распараллеливается: процесс
+apply worker просматривает список реплицируемых таблиц и запускает
+дополнительные рабочие процессы, которые и выполняют
+синхронизацию. Синхронизация одной таблицы всегда выполняется
+одним процессом.
+Максимальное количество параллельных процессов синхронизации
+ограничено параметром max_sync_workers_per_subscription
+(по умолчанию — два процесса).
+Состояние репликации для каждой таблицы в подписке показывает
+представление pg_subscription_rel.
+https://postgrespro.ru/docs/postgresql/16/catalog-pg-subscription-rel#CATAL
+OG-PG-SUBSCRIPTION-REL
+Если для подписки указать параметр binary, то в двоичном формате
+будет выполняться не только репликация, но и начальная
+синхронизация.
+Начальная синхронизация
+По умолчанию подписчик сначала получает содержимое таблиц, и только после этого запускается процесс репликации.
+Это выполняется бесшовно с гарантией того, что никакие изменения не будут потеряны.
+Создадим три таблицы с большим количеством строк и публикацию:
+α=> CREATE TABLE t1 AS
+SELECT id, 'Это строка номер '||id descr FROM generate_series(1,1_000_000) id;
+SELECT 1000000
+α=> CREATE TABLE t2 AS
+SELECT id, 'Это строка номер '||id descr FROM generate_series(1,1_000_000) id;
+SELECT 1000000
+α=> CREATE TABLE t3 AS
+SELECT id, 'Это строка номер '||id descr FROM generate_series(1,1_000_000) id;
+SELECT 1000000
+α=> CREATE PUBLICATION t123_pub FOR TABLE t1, TABLE t2, TABLE t3;
+CREATE PUBLICATION
+На подписчике создадим пустые таблицы той же структуры:
+β=> CREATE TABLE t1( id integer, descr text );
+CREATE TABLE
+β=> CREATE TABLE t2( id integer, descr text );
+CREATE TABLE
+β=> CREATE TABLE t3( id integer, descr text );
+CREATE TABLE
+Подпишемся на публикацию и сразу же заглянем в системную таблицу, показывающую состояние репликации каждой
+таблицы, и в список процессов.
+β=> CREATE SUBSCRIPTION t123_sub
+CONNECTION 'host=localhost port=5432 user=student password=student dbname=replica_logical'
+PUBLICATION t123_pub;
+NOTICE: created replication slot "t123_sub" on publisher
+CREATE SUBSCRIPTION
+β=> SELECT *, srrelid::regclass::text tablename FROM pg_subscription_rel;
+srsubid | srrelid | srsubstate | srsublsn | tablename
+---------+---------+------------+-----------+-----------
+16419 | 16411 | r | 0/3084058 | test
+16435 | 16430 | i | | t3
+16435 | 16420 | i | | t1
+16435 | 16425 | i | | t2
+(4 rows)
+Здесь мы видим, что таблица test реплицируется (r), а три новые таблицы пока еще синхронизируются (i).
+student$ ps f -C postgres -o pid,command | grep beta
+77670 /usr/lib/postgresql/16/bin/postgres -D /var/lib/postgresql/16/beta -c
+config_file=/etc/postgresql/16/beta/postgresql.conf
+77671 \_ postgres: 16/beta: checkpointer
+77672 \_ postgres: 16/beta: background writer
+77674 \_ postgres: 16/beta: walwriter
+77675 \_ postgres: 16/beta: autovacuum launcher
+77676 \_ postgres: 16/beta: logical replication launcher
+77796 \_ postgres: 16/beta: student replica_logical [local] idle
+78025 \_ postgres: 16/beta: logical replication apply worker for subscription 16419
+78721 \_ postgres: 16/beta: logical replication apply worker for subscription 16435
+78739 \_ postgres: 16/beta: logical replication worker for subscription 16435 sync
+16430
+78740 \_ postgres: 16/beta: logical replication worker for subscription 16435 sync
+16420
+Добавился процесс apply worker для новой подписки и два процесса синхронизации. Таблиц три, но количество
+одновременно работающих процессов ограничено параметром:
+β=> SHOW max_sync_workers_per_subscription;
+max_sync_workers_per_subscription
+-----------------------------------
+2
+(1 row)
+Дождемся окончания синхронизации.
+Теперь все таблицы реплицируются:
+β=> SELECT * FROM pg_subscription_rel;
+srsubid | srrelid | srsubstate | srsublsn
+---------+---------+------------+------------
+16419 | 16411 | r | 0/3084058
+16435 | 16430 | r | 0/158C0760
+16435 | 16420 | r | 0/158C0760
+16435 | 16425 | r | 0/158C07D0
+(4 rows)
+β=> SELECT count(*) FROM t1;
+count
+---------
+1000000
+(1 row)
+Удалим публикацию и подписку, они нам больше не нужны:
+β=> DROP SUBSCRIPTION t123_sub;
+NOTICE: dropped replication slot "t123_sub" on publisher
+DROP SUBSCRIPTION
+α=> DROP PUBLICATION t123_pub;
+DROP PUBLICATION
+12
+Идентификация строк
+Для операций изменения и удаления необходимо выбрать
+подходящую строку
+Логический идентификатор строк
+ALTER TABLE ... REPLICA IDENTITY ...
+DEFAULT столбцы первичного ключа (по умолчанию)
+USING INDEX столбцы уникального индекса с ограничением NOT NULL
+FULL все столбцы
+NOTHING без идентификации
+(по умолчанию для системного каталога)
+Вставка новых строк на стороне подписки происходит однозначно.
+Сложнее при изменениях и удалениях — в этих случаях надо
+определить, к какой строке на подписчике применять операцию.
+Поэтому для каждой таблицы определяется логический
+идентификатор строк. По умолчанию строки идентифицируются
+столбцами первичного ключа, но идентификатор можно изменить
+командой ALTER TABLE … REPLICA IDENTITY.
+Строки можно идентифицировать по другому уникальному индексу,
+в котором все столбцы имеют ограничение NOT NULL.
+Еще один вариант — идентификация по всем столбцам. Начиная
+с версии 16, для поиска строк в этом случае может использоваться
+полный индекс на основе B-дерева, первое поле которого должно быть
+столбцом из публикации. Версии 17+ могут использовать и хеш-
+индексы. Если подходящего индекса нет, выполняется полное
+сканирование, что крайне неэффективно для больших таблиц.
+Можно вообще отказаться от поддержки репликации для некоторых
+таблиц (по умолчанию так настроены таблицы системного каталога).
+При изменении или удалении в WAL уровня replica не попадают
+значения столбцов удаляемой версии строки — это одна из причин, по
+которой на публикующем сервере необходим уровень журнала logical.
+На этом уровне в журнал дополнительно записываются старые
+значения столбцов, входящих в логический идентификатор. По этой
+причине при идентификации по всем столбцам объем журнала может
+существенно увеличиться по сравнению с уровнем replica.
+https://postgrespro.ru/docs/postgresql/16/sql-altertable#SQL-ALTERTABLEREPLICA-
+IDENTITY
+13
+Фильтрация строк
+Фильтр в публикации
+Возможна фильтрация
+insert по любым публикуемым столбцам
+delete по столбцам логического идентификатора
+update по столбцам логического идентификатора;
+в результате может получиться insert или delete
+truncate фильтр игнорируется
+Только простые выражения
+По умолчанию публикующий сервер отправляет все строки
+опубликованных таблиц.
+В PostgreSQL 15 появилась возможность указать выражение фильтра;
+строки, для которых выражение имеет значение false или NULL,
+опубликованы не будут.
+Фильтрация не распространяется на операцию truncate. Для операций
+insert в выражение фильтра можно включать любые публикуемые
+столбцы, а для update и delete — только столбцы, входящие в
+логический идентификатор строк.
+Для операции update выражение фильтра вычисляется и для старой,
+и для новой версий строки. Если для обеих версий выражение фильтра
+дает false или NULL, строка не реплицируется. Если старая строка не
+соответствует фильтру, а новая — соответствует, то выполняется
+вставка новой строки. Если, наоборот, старая версия соответствует,
+а новая — нет, строка удаляется. Если обе соответствуют условию
+фильтра, выполняется обновление.
+Фильтровать можно лишь с помощью простых выражений: запрещены
+пользовательские функции, операторы, типы и правила сортировки;
+нельзя ссылаться на системные столбцы; нельзя обращаться
+ко встроенным функциям с категориями изменчивости volatile и stable.
+https://postgrespro.ru/docs/postgresql/16/logical-replication-row-filter.html
+Идентификация и фильтрация
+По умолчанию логический идентификатор строк определяется столбцами первичного ключа:
+α=> SELECT relreplident FROM pg_class WHERE relname = 'test';
+relreplident
+--------------
+d
+(1 row)
+d — по умолчанию (первичный ключ, если есть);
+i — индекс;
+f — все столбцы;
+n — никакие.
+Допустим, нужно реплицировать только те строки, у которых в поле cluster_name находится значение alpha. Столбец
+cluster_name участвует в выражении фильтра, поэтому его нужно опубликовать (сейчас он не опубликован). Публикуем
+все столбцы, не указывая их список.
+α=> ALTER PUBLICATION test_pub SET TABLE test WHERE (cluster_name = 'alpha');
+ALTER PUBLICATION
+α=> \dRp+
+Publication test_pub
+Owner | All tables | Inserts | Updates | Deletes | Truncates | Via root
+---------+------------+---------+---------+---------+-----------+----------
+student | f | t | t | t | t | f
+Tables:
+"public.test" WHERE (cluster_name = 'alpha'::text)
+Проверим, как работает репликация изменений.
+α=> INSERT INTO test(descr) VALUES ('Три');
+INSERT 0 1
+α=> INSERT INTO test(descr, cluster_name) VALUES ('Четыре', 'gamma');
+INSERT 0 1
+α=> SELECT * FROM test;
+id | descr | cluster_name
+----+--------+--------------
+1 | Раз | alpha
+2 | Два | alpha
+3 | Три | alpha
+4 | Четыре | gamma
+(4 rows)
+β=> SELECT * FROM test;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+1 | Раз | alpha |
+2 | Два | beta |
+3 | Три | alpha |
+(3 rows)
+Строка со значением gamma не реплицировалась.
+Попробуем изменить строку.
+α=> UPDATE test SET cluster_name = 'delta' WHERE id = 2;
+ERROR: cannot update table "test"
+DETAIL: Column used in the publication WHERE expression is not part of the replica
+identity.
+Для update и delete в выражении фильтра допускаются только столбцы, входящие в логический идентификатор строк, а
+для insert — любые столбцы.
+Изменим условие фильтрации.
+α=> ALTER PUBLICATION test_pub SET TABLE test WHERE (id > 0);
+ALTER PUBLICATION
+Теперь мы можем изменить строку:
+α=> UPDATE test SET cluster_name = 'delta' WHERE id = 2;
+UPDATE 1
+β=> SELECT * FROM test WHERE id = 2;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+2 | Два | delta |
+(1 row)
+Строка изменилась и на подписчике.
+Новое условие фильтрации работает:
+α=> INSERT INTO test(id, descr) VALUES (0, 'Ноль');
+INSERT 0 1
+α=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name
+----+--------+--------------
+0 | Ноль | alpha
+1 | Раз | alpha
+2 | Два | delta
+3 | Три | alpha
+4 | Четыре | gamma
+(5 rows)
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+1 | Раз | alpha |
+2 | Два | delta |
+3 | Три | alpha |
+(3 rows)
+Строка с id = 0 не была опубликована и поэтому не реплицировалась.
+15
+Логическое декодирование
+логические
+операции
+записи WAL
+переупорядочивающий
+логическое буфер
+декодирование
+модуль
+вывода
+logical_decoding_work_mem = 64MB
+сообщения
+протокола
+репликации
+слот логической репликации
+зафиксированные
+транзакции
+wal sender
+При потоковой физической репликации процесс wal sender читает
+записи WAL и передает их реплике в неизменном виде.
+При логической репликации записи преобразуются. Модуль
+логического декодирования отбирает из них те, которые соответствуют
+публикуемым операциям и таблицам, учитывая столбцы и условия
+фильтров. Отобранные записи преобразуется в информацию
+о логических операциях, направляются в переупорядочивающий буфер
+и сохраняются в нем в соответствии с номерами транзакций.
+В журнал на уровне logical дополнительно записывается информация,
+необходимая для логического декодирования, в частности:
+● для update — новые значения всех столбцов, а не только
+измененных;
+● для update и delete — старые значения столбцов, входящих
+в логический идентификатор;
+● для commit — OID базы данных.
+Переупорядочивающий буфер находится в локальной памяти процесса
+wal sender. Если объем данных в нем приблизится к значению
+параметра logical_decoding_work_mem, самая большая транзакция
+сбрасывается в слот репликации (файл в PGDATA/pg_replslots/имя).
+При фиксации транзакции все ее операции направляются в модуль
+вывода, который преобразует их в сообщения протокола репликации.
+https://postgrespro.ru/docs/postgresql/16/logicaldecoding
+https://postgrespro.ru/docs/postgresql/16/runtime-config-resource#GUC-LO
+GICAL-DECODING-WORK-MEM
+Слот и логическое декодирование
+Очистим содержимое таблицы и посмотрим, как работает логическое декодирование.
+α=> TRUNCATE test;
+TRUNCATE TABLE
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+(0 rows)
+Создадим вручную слот логической репликации. Для передачи изменений подписчику используется модуль вывода
+pgoutput, а для наблюдения удобнее модуль вывода test_decoding:
+α=> SELECT pg_create_logical_replication_slot('test_slot','test_decoding');
+pg_create_logical_replication_slot
+------------------------------------
+(test_slot,0/158DFF40)
+(1 row)
+Теперь на сервере alpha два слота:
+α=> SELECT slot_name, plugin, slot_type, active FROM pg_replication_slots;
+slot_name | plugin | slot_type | active
+-----------+---------------+-----------+--------
+test_sub | pgoutput | logical | t
+test_slot | test_decoding | logical | f
+(2 rows)
+В отдельном сеансе начнем транзакцию и вставим строку в таблицу:
+student$ psql -d replica_logical
+α=> BEGIN;
+BEGIN
+α=> INSERT INTO test(descr) VALUES ('Πέντε');
+INSERT 0 1
+Модуль вывода может запросить у слота изменения:
+α=> SELECT * FROM pg_logical_slot_get_changes('test_slot', NULL, NULL);
+lsn | xid | data
+-----+-----+------
+(0 rows)
+Транзакция не завершена, модуль вывода пока ничего не получил. Сделаем еще несколько изменений и завершим
+транзакцию.
+α=> UPDATE test SET descr = 'Пять' WHERE id = 5;
+UPDATE 1
+α=> UPDATE test SET id = 1, descr='Раз' WHERE id = 5;
+UPDATE 1
+α=> COMMIT;
+COMMIT
+α=> SELECT * FROM pg_logical_slot_get_changes('test_slot', NULL, NULL) \gx (xheader_width=90)
+-[ RECORD 1 ]-----------------------------------------------------------------------------
+lsn | 0/158F41D0
+xid | 766
+data | BEGIN 766
+-[ RECORD 2 ]-----------------------------------------------------------------------------
+lsn | 0/158F41D0
+xid | 766
+data | table public.test: INSERT: id[integer]:5 descr[text]:'Πέντε'
+cluster_name[text]:'alpha'
+-[ RECORD 3 ]-----------------------------------------------------------------------------
+lsn | 0/158FA308
+xid | 766
+data | table public.test: UPDATE: id[integer]:5 descr[text]:'Пять'
+cluster_name[text]:'alpha'
+-[ RECORD 4 ]-----------------------------------------------------------------------------
+lsn | 0/158FB360
+xid | 766
+data | table public.test: UPDATE: old-key: id[integer]:5 new-tuple: id[integer]:1
+descr[text]:'Раз' cluster_name[text]:'alpha'
+-[ RECORD 5 ]-----------------------------------------------------------------------------
+lsn | 0/158FCC48
+xid | 766
+data | COMMIT 766
+Теперь модуль вывода получил изменения. Мы видим, что подписчику передаются публикуемые столбцы. При
+изменении логического идентификатора также передается его старое значение.
+Удалим тестовый слот, иначе он будет препятствовать удалению сегментов WAL.
+α=> SELECT pg_drop_replication_slot('test_slot');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+α=> \q
+17
+Большие транзакции
+сегменты WAL
+select, insert
+update, delete
+apply worker
+apply worker
+apply worker
+apply parallel
+worker
+apply parallel
+worker
+streaming =
+parallel
+streaming = on
+streaming = off
+wal sender
+wal sender
+врем.
+файл
+врем.
+файл
+врем.
+файл
+wal sender
+max_parallel_apply_workers_per_subscription = 2
+По умолчанию (параметр подписки streaming = off) изменения
+накапливаются в переупорядочивающем буфере и отправляются
+подписчику после фиксации транзакции.
+Если транзакция изменяет много данных, могут возникать проблемы:
+● расход памяти wal sender на переупорядочивающий буфер;
+● запись файлов при превышении памяти, выделенной под
+переупорядочивающий буфер (logical_decoding_work_mem);
+● отставание реплики.
+Если задать streaming = on, публикующий сервер будет передавать
+изменяемые данные подписчику во время работы транзакции.
+Когда общий объем изменений превышает значение параметра
+logical_decoding_work_mem, накопленные изменения самой большой
+по объему транзакции не сбрасываются в файл, а сразу передаются
+в модуль вывода. При этом подписчик сохраняет такие изменения
+в своих временных файлах и применяет при фиксации транзакции.
+Начиная с PostgreSQL 16, если задано streaming = parallel и есть
+доступные рабочие процессы, изменения на подписчике не
+сохраняются, а сразу же применяются дополнительными процессами.
+Число таких процессов для одной подписки ограничено параметром
+max_parallel_apply_workers_per_subscription.
+https://postgrespro.ru/docs/postgresql/16/sql-createsubscription#SQL-CREA
+TESUBSCRIPTION-WITH-STREAMING
+https://postgrespro.ru/docs/postgresql/16/runtime-config-replication#GUC-M
+AX-PARALLEL-APPLY-WORKERS-PER-SUBSCRIPTION
+18
+Конфликты
+Приводят к ошибке
+нарушение ограничений целостности,
+недостаточные права на целевую таблицу или политика защиты строк
+репликация выдает ошибку,
+подписка с параметром disable_on_error отключается
+можно вручную исправить данные на стороне подписки
+или пропустить конфликтующую транзакцию
+Игнорируются
+обновляемая или удаляемая строка отсутствует на подписчике
+репликация продолжается, но согласованность может быть нарушена
+Поскольку таблицы на публикующем сервере и на подписчике могут
+изменяться независимо друг от друга, при выполнении операции,
+поступившей от подписки, возможен конфликт с существующими
+данными.
+Часто конфликтом называют ситуацию, когда операция не может быть
+выполнена, обычно из-за нарушения ограничения целостности, или
+отсутствия прав у владельца подписки на целевую таблицу, или
+ограничений на уровне строк (RLS, row level security).
+В этом случае применение операции завершается ошибкой. Подписчик
+периодически повторяет попытки, но до разрешения конфликта они
+будут неудачными. Конфликты можно разрешать только вручную,
+автоматическое разрешение пока не реализовано. Есть два варианта:
+исправить данные на подписчике или пропустить конфликтующую
+транзакцию. Во втором случае нужно отключить репликацию, вызвать
+функцию pg_replication_origin_advance или выполнить команду ALTER
+SUBSCRIPTION ... SKIP ..., и снова включить репликацию. Можно также
+заранее настроить автоматическое отключение репликации, указав
+параметр подписки disable_on_error.
+Если строка, которую необходимо изменить или удалить, отсутствует на
+подписчике, операция не будет выполнена. В этом случае ошибка не
+возникает, но такие игнорируемые конфликты говорят о том, что
+согласованность данных между публикующим сервером и подписчиком
+нарушена.
+https://postgrespro.ru/docs/postgresql/16/logical-replication-conflicts
+Конфликты
+Заметим, что последовательности не реплицируются. На втором сервере создалась своя собственная последовательность:
+β=> INSERT INTO test(descr) VALUES ('Шесть — локально');
+ERROR: duplicate key value violates unique constraint "test_pkey"
+DETAIL: Key (id)=(1) already exists.
+А вот так получится:
+β=> INSERT INTO test VALUES (6, 'Шесть — локально');
+INSERT 0 1
+Что произойдет, если значение с таким же ключом (6) появится на публикующем сервере?
+α=> INSERT INTO test(descr) VALUES ('Шесть');
+INSERT 0 1
+α=> INSERT INTO test(descr) VALUES ('Семь');
+INSERT 0 1
+При репликации возникнет конфликт, и она будет приостановлена.
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+------------------+--------------+------------
+1 | Раз | alpha |
+6 | Шесть — локально | beta |
+(2 rows)
+Фактически, процесс logical replication apply worker будет периодически перезапускаться, проверяя, не устранен ли
+конфликт. Поэтому информация в pg_stat_subscription пропадает:
+β=> SELECT * FROM pg_stat_subscription \gx
+-[ RECORD 1 ]---------+---------
+subid | 16419
+subname | test_sub
+pid |
+leader_pid |
+relid |
+received_lsn |
+last_msg_send_time |
+last_msg_receipt_time |
+latest_end_lsn |
+latest_end_time |
+В журнал сообщений будут попадать записи о нарушении ограничений целостности:
+student$ sudo tail -n 3 /var/log/postgresql/postgresql-16-beta.log
+2026-04-10 18:09:54.050 MSK [81032] DETAIL: Key (id)=(6) already exists.
+2026-04-10 18:09:54.050 MSK [81032] CONTEXT: processing remote data for replication
+origin "pg_16419" during message type "INSERT" for replication target relation
+"public.test" in transaction 767, finished at 0/15918120
+2026-04-10 18:09:54.064 MSK [77670] LOG: background worker "logical replication worker"
+(PID 81032) exited with exit code 1
+А в таблице pg_stat_subscription_stats при каждой очередной попытке выполнить операцию будет расти счетчик ошибок:
+β=> SELECT * FROM pg_stat_subscription_stats;
+subid | subname | apply_error_count | sync_error_count | stats_reset
+-------+----------+-------------------+------------------+-------------
+16419 | test_sub | 2 | 0 |
+(1 row)
+(В PostgreSQL 18 в эту таблицу добавлены отдельные счетчики для каждого типа конфликта.)
+Чтобы разрешить конфликт, удалим конфликтующую строку из таблицы и немного подождем:
+β=> DELETE FROM test WHERE id = 6;
+DELETE 1
+Проверим:
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+-------+--------------+------------
+1 | Раз | alpha |
+6 | Шесть | alpha |
+7 | Семь | alpha |
+(3 rows)
+Данные появились, репликация восстановлена.
+Пропуск конфликтующей транзакции
+Можно разрешить конфликт по-другому: пропустить транзакцию, приводящую к конфликту.
+Конфликтующая транзакция:
+β=> INSERT INTO test(id,descr) VALUES (8,'Восемь — локально');
+INSERT 0 1
+α=> INSERT INTO test(descr) VALUES ('Восемь');
+INSERT 0 1
+Перед пропуском транзакции подписка должна быть отключена:
+β=> ALTER SUBSCRIPTION test_sub DISABLE;
+ALTER SUBSCRIPTION
+Вместо отключения вручную можно было установить параметр подписки disable_on_error.
+Подписка остановлена:
+β=> \dRs
+List of subscriptions
+Name | Owner | Enabled | Publication
+----------+---------+---------+-------------
+test_sub | student | f | {test_pub}
+(1 row)
+Посмотрим в журнал сообщений:
+β=> \! tail -4 /var/log/postgresql/postgresql-16-beta.log
+2026-04-10 18:09:59.698 MSK [81497] ERROR: duplicate key value violates unique
+constraint "test_pkey"
+2026-04-10 18:09:59.698 MSK [81497] DETAIL: Key (id)=(8) already exists.
+2026-04-10 18:09:59.698 MSK [81497] CONTEXT: processing remote data for replication
+origin "pg_16419" during message type "INSERT" for replication target relation
+"public.test" in transaction 770, finished at 0/159D17D0
+2026-04-10 18:09:59.708 MSK [77670] LOG: background worker "logical replication worker"
+(PID 81497) exited with exit code 1
+Сообщение в журнале содержит LSN записи о фиксации конфликтующей транзакции.
+Транзакцию можно пропустить командой:
+β=> ALTER SUBSCRIPTION test_sub SKIP (lsn = '0/159D17D0');
+ALTER SUBSCRIPTION
+Вместо предыдущей команды суперпользователь мог бы использовать функцию pg_replication_origin_advance.
+Включим репликацию.
+β=> ALTER SUBSCRIPTION test_sub ENABLE;
+ALTER SUBSCRIPTION
+β=> SELECT * FROM pg_stat_subscription \gx
+-[ RECORD 1 ]---------+------------------------------
+subid | 16419
+subname | test_sub
+pid | 81976
+leader_pid |
+relid |
+received_lsn | 0/15A61060
+last_msg_send_time | 2026-04-10 18:10:04.279423+03
+last_msg_receipt_time | 2026-04-10 18:10:04.279523+03
+latest_end_lsn | 0/15A61060
+latest_end_time | 2026-04-10 18:10:04.279423+03
+Репликация работает, но так как мы пропустили транзакцию, данные рассогласованы:
+α=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name
+----+--------+--------------
+1 | Раз | alpha
+6 | Шесть | alpha
+7 | Семь | alpha
+8 | Восемь | alpha
+(4 rows)
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+-------------------+--------------+------------
+1 | Раз | alpha |
+6 | Шесть | alpha |
+7 | Семь | alpha |
+8 | Восемь — локально | beta |
+(4 rows)
+Опустошим таблицу:
+α=> TRUNCATE test;
+TRUNCATE TABLE
+Триггеры на подписчике
+На подписчике могут выполняться триггеры; по умолчанию триггер будет срабатывать при локальных изменениях, но
+не при репликации. Это удобно, если на обоих серверах созданы одинаковые таблицы с одинаковым набором триггеров:
+в таком случае триггер уже отработал на публикующем сервере, его не надо выполнять на подписчике.
+Попробуем.
+β=> CREATE OR REPLACE FUNCTION change_descr() RETURNS trigger AS $$
+BEGIN
+NEW.additional := 'из публикации';
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE FUNCTION
+β=> CREATE TRIGGER test_before_row
+BEFORE INSERT OR UPDATE ON test
+FOR EACH ROW
+EXECUTE FUNCTION change_descr();
+CREATE TRIGGER
+α=> INSERT INTO test(descr) VALUES ('Девять');
+INSERT 0 1
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+--------+--------------+------------
+9 | Девять | alpha |
+(1 row)
+Триггер не сработал.
+Можно изменить таблицу, чтобы триггер срабатывал только при репликации:
+β=> ALTER TABLE test ENABLE REPLICA TRIGGER test_before_row;
+ALTER TABLE
+Или в обоих случаях: и при репликации, и при локальных изменениях.
+β=> ALTER TABLE test ENABLE ALWAYS TRIGGER test_before_row;
+ALTER TABLE
+Различить эти ситуации можно с помощью параметра session_replication_role:
+β=> CREATE OR REPLACE FUNCTION change_descr() RETURNS trigger AS $$
+BEGIN
+NEW.additional := current_setting('session_replication_role');
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE FUNCTION
+Добавляем по одной строке на каждом сервере:
+α=> INSERT INTO test(descr) VALUES ('Десять');
+INSERT 0 1
+β=> INSERT INTO test(id, descr) VALUES (11, 'Одиннадцать');
+INSERT 0 1
+β=> SELECT * FROM test ORDER BY id;
+id | descr | cluster_name | additional
+----+-------------+--------------+------------
+9 | Девять | alpha |
+10 | Десять | alpha | replica
+11 | Одиннадцать | beta | origin
+(3 rows)
+Триггер сработал в обоих случаях.
+20
+Параметр подписки origin
+any — передавать все изменения (по умолчанию)
+none — передавать только локальные изменения
+Источник репликации
+select, insert
+update, delete
+сегменты WAL
+select, insert
+update, delete
+сегменты WAL
+wal sender
+logical repl.
+worker
+logical repl.
+worker
+wal sender
+O1
+O1 O2
+источник
+транзакции
+O1 O2
+pg_replication_origin
+pg_replication_origin_status
+Если определить на одном сервере и публикацию, и подписку, и
+передавать все изменения, то реплицированные изменения будут
+реплицироваться и возникнет «снежный ком».
+Начиная с PostgreSQL 16, публикующий сервер в начале транзакции,
+которая была получена с другого узла, передает по протоколу
+сообщение об источнике этой транзакции. Это также важно при
+каскадной репликации.
+https://postgrespro.ru/docs/postgresql/16/protocol-logical-replication#PROT
+OCOL-LOGICAL-MESSAGES-FLOW
+По умолчанию подписка имеет параметр origin = any и публикация
+передает ей все транзакции: и локальные, и полученные с другого узла.
+В топологиях, где могут появиться циклы, например, при
+двунаправленной репликации, следует устанавливать origin = none.
+Тогда публикация будет передавать только локальные изменения.
+https://postgrespro.ru/docs/postgresql/16/sql-createsubscription#SQL-CREA
+TESUBSCRIPTION-WITH-ORIGIN
+Информацию об источниках можно увидеть в pg_replication_origin.
+https://postgrespro.ru/docs/postgresql/16/catalog-pg-replication-origin#CATA
+LOG-PG-REPLICATION-ORIGIN
+Текущая позиция воспроизведения для конкретного источника
+репликации выводится в представлении pg_replication_origin_status.
+https://postgrespro.ru/docs/postgresql/16/view-pg-replication-origin-status#V
+IEW-PG-REPLICATION-ORIGIN-STATUS
+Источник репликации
+Удалим строки таблицы:
+α=> TRUNCATE test;
+TRUNCATE TABLE
+Опубликуем несколько столбцов таблицы test на сервере beta.
+β=> CREATE PUBLICATION test_pub FOR TABLE test(id, descr, cluster_name);
+CREATE PUBLICATION
+Теперь публикации есть на обоих серверах. Если сейчас на alpha создать подписку, она будет принимать от beta все
+изменения, в том числе и те, которые были отправлены публикацией сервера alpha. Применить такие изменения alpha
+не сможет из-за нарушения ограничения целостности, репликация остановится.
+Чтобы beta получала только изменения, сделанные локально на alpha, зададим параметр подписки origin:
+β=> ALTER SUBSCRIPTION test_sub SET (origin = none);
+ALTER SUBSCRIPTION
+Для тех изменений, которые произошли в результате репликации, источник будет непуст, и публикация не отправит их
+подписке.
+Пусть и alpha станет подписчиком beta. Начальную синхронизацию отключим, поскольку таблица пуста. Также
+используем параметр подписки origin, чтобы получать только изменения, сделанные на beta:
+α=> CREATE SUBSCRIPTION test_sub
+CONNECTION 'host=localhost port=5433 user=student password=student dbname=replica_logical'
+PUBLICATION test_pub WITH (copy_data = false, origin = none);
+NOTICE: created replication slot "test_sub" on publisher
+CREATE SUBSCRIPTION
+Подписки теперь есть на обоих серверах.
+α=> \dRs
+List of subscriptions
+Name | Owner | Enabled | Publication
+----------+---------+---------+-------------
+test_sub | student | t | {test_pub}
+(1 row)
+β=> \dRs
+List of subscriptions
+Name | Owner | Enabled | Publication
+----------+---------+---------+-------------
+test_sub | student | t | {test_pub}
+(1 row)
+Вставим строку на сервере alpha.
+α=> INSERT INTO test VALUES (1, 'Эх, раз...');
+INSERT 0 1
+Проверяем на beta.
+β=> SELECT * FROM test;
+id | descr | cluster_name | additional
+----+------------+--------------+------------
+1 | Эх, раз... | alpha | replica
+(1 row)
+Вставляем строку на сервере beta.
+β=> INSERT INTO test VALUES (2, 'Да еще раз...');
+INSERT 0 1
+Проверяем на alpha.
+α=> SELECT * FROM test;
+id | descr | cluster_name
+----+---------------+--------------
+1 | Эх, раз... | alpha
+2 | Да еще раз... | beta
+(2 rows)
+Проверим изменение данных.
+α=> UPDATE test SET descr = 'Еще много, много раз!';
+UPDATE 2
+α=> SELECT * FROM test;
+id | descr | cluster_name
+----+-----------------------+--------------
+1 | Еще много, много раз! | alpha
+2 | Еще много, много раз! | beta
+(2 rows)
+β=> SELECT * FROM test;
+id | descr | cluster_name | additional
+----+-----------------------+--------------+------------
+1 | Еще много, много раз! | alpha | replica
+2 | Еще много, много раз! | beta | replica
+(2 rows)
+Если репликация больше не нужна, надо удалить подписки — иначе на публикующем сервере останутся открытыми
+репликационные слоты.
+α=> DROP SUBSCRIPTION test_sub;
+NOTICE: dropped replication slot "test_sub" on publisher
+DROP SUBSCRIPTION
+β=> DROP SUBSCRIPTION test_sub;
+NOTICE: dropped replication slot "test_sub" on publisher
+DROP SUBSCRIPTION
+22
+Итоги
+Логическая репликация использует модель
+«публикация—подписка»
+Передаются изменения табличных строк
+Строки сопоставляются по логическим идентификаторам
+Несовпадение данных на серверах может приводить
+к конфликтам
+Передача информации об источнике позволяет отслеживать
+ход каскадной репликации и исключить зацикливание
+23
+Практика
+1. Создайте две базы данных на одном сервере.
+В первой базе данных создайте таблицу с первичным
+ключом и добавьте в нее несколько строк. Настройте
+логическую репликацию таблицы из первой базы во вторую,
+проверьте работу репликации и удалите подписку.
+2. Настройте логическую репликацию таблицы с сервера alpha
+на сервер beta. Выполните транзакцию, изменяющую
+значительный объем данных; перед ее фиксацией убедитесь,
+что данные помещены на диск. Повторите то же самое, но
+в потоковом режиме. Сохранялись ли данные на диске?
+1. Воспользуйтесь утилитой pg_dump с ключом --schema-only.
+Если попробовать выполнить это обычным образом, команда создания
+подписки «повиснет» из-за того, что она должна дождаться завершения
+активных транзакций на публикующем сервере, то есть и самой себя
+в том числе. В таком случае необходимо заранее создать слот
+логической репликации, как описано в документации:
+https://postgrespro.ru/docs/postgresql/16/sql-createsubscription
+2. Чтобы публикация не попала в логическую копию, используйте ключ
+--no-publications.
+Проверьте значение параметра logical_decoding_work_mem,
+определяющего максимальный размер переупорядочивающего буфера.
+При превышении этого значения данные будут вытесняться на диск.
+1. Логическая репликация на одном сервере
+Сначала установим уровень журнала logical.
+α=> ALTER SYSTEM SET wal_level = logical;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+Базы данных:
+student$ psql
+α=> CREATE DATABASE replica_logical;
+CREATE DATABASE
+α=> CREATE DATABASE replica_logical_bis;
+CREATE DATABASE
+Таблица в первой базе:
+α=> \c replica_logical
+You are now connected to database "replica_logical" as user "student".
+α=> CREATE TABLE test(
+id integer PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+descr text
+);
+CREATE TABLE
+α=> INSERT INTO test(descr) VALUES ('Раз'), ('Два'), ('Три');
+INSERT 0 3
+Воспользоваться логической резервной копией для переноса схемы особенно удобно, когда таблиц много.
+student$ pg_dump --no-acl --schema-only replica_logical | psql -d replica_logical_bis
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+Переносить данные с помощью pg_dump не имеет смысла, поскольку в процессе переноса таблицы могут измениться.
+student$ psql -d replica_logical_bis
+α=> \d test
+Table "public.test"
+Column | Type | Collation | Nullable | Default
+--------+---------+-----------+----------+----------------------------------
+id | integer | | not null | generated by default as identity
+descr | text | | |
+Indexes:
+"test_pkey" PRIMARY KEY, btree (id)
+Публикация:
+α=> CREATE PUBLICATION test_pub FOR TABLE test;
+CREATE PUBLICATION
+Поскольку репликация будет настроена на одном и том же сервере, вначале вручную создаем слот логической
+репликации.
+α=> SELECT pg_create_logical_replication_slot('testslot','pgoutput');
+pg_create_logical_replication_slot
+------------------------------------
+(testslot,0/23EF3B8)
+(1 row)
+И затем создаем подписку:
+α=> CREATE SUBSCRIPTION test_sub
+CONNECTION 'user=student password=student dbname=replica_logical host=localhost'
+PUBLICATION test_pub
+WITH (create_slot = false, slot_name = testslot);
+CREATE SUBSCRIPTION
+Проверим работу репликации:
+α=> INSERT INTO test(descr) VALUES ('Четыре');
+INSERT 0 1
+α=> SELECT * FROM test;
+id | descr
+----+--------
+1 | Раз
+2 | Два
+3 | Три
+4 | Четыре
+(4 rows)
+Удалим подписку и слот.
+α=> DROP SUBSCRIPTION test_sub;
+NOTICE: dropped replication slot "testslot" on publisher
+DROP SUBSCRIPTION
+α=> \q
+2. Логическая репликация с сервера alpha на сервер beta
+Запустим сервер beta и скопируем команды DDL для таблицы test. Команды создания публикации на подписчике не
+нужны.
+student$ sudo pg_ctlcluster 16 beta start
+student$ pg_dump \
+--create \
+--schema-only \
+--no-publications \
+--no-acl \
+--dbname=replica_logical \
+| psql -p 5433
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "replica_logical" as user "student".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+Создадим подписку на сервере beta, слот на alpha создается автоматически.
+student$ psql -p 5433 -d replica_logical
+β=> CREATE SUBSCRIPTION test_sub
+CONNECTION 'user=student password=student dbname=replica_logical host=localhost'
+PUBLICATION test_pub;
+NOTICE: created replication slot "test_sub" on publisher
+CREATE SUBSCRIPTION
+β=> SELECT count(*) FROM test;
+count
+-------
+4
+(1 row)
+Репликация работает.
+Опустошим таблицу test на сервере публикации (alpha):
+α=> TRUNCATE test;
+TRUNCATE TABLE
+β=> SELECT count(*) FROM test;
+count
+-------
+0
+(1 row)
+Подписчик получил изменение.
+Начнем транзакцию, в которой вставим в таблицу значительное число строк.
+α=> BEGIN;
+BEGIN
+α=> INSERT INTO test(descr)
+SELECT now()::text FROM generate_series(1,1_000_000) AS g(id);
+INSERT 0 1000000
+Параметр logical_decoding_work_mem определяет максимальный размер переупорядочивающего буфера.
+α=> SHOW logical_decoding_work_mem;
+logical_decoding_work_mem
+---------------------------
+64MB
+(1 row)
+При превышении этого ограничения данные помещаются на диск в каталог PGDATA/pg_replslot/имя-слота. Сколько места
+на диске занимает каталог?
+postgres$ du -sh /var/lib/postgresql/16/alpha/pg_replslot/test_sub
+135M /var/lib/postgresql/16/alpha/pg_replslot/test_sub
+По умолчанию, пока транзакция не зафиксирована, никакие данные подписке не передаются.
+β=> SELECT count(*) FROM test;
+count
+-------
+0
+(1 row)
+Зафиксируем транзакцию...
+α=> COMMIT;
+COMMIT
+...и немного подождем:
+Подписчик получил все строки:
+β=> SELECT count(*) FROM test;
+count
+---------
+1000000
+(1 row)
+А сохраненные на диске данные удалены:
+postgres$ du -sh /var/lib/postgresql/16/alpha/pg_replslot/test_sub
+8,0K /var/lib/postgresql/16/alpha/pg_replslot/test_sub
+Заглянем в представление pg_stat_replication_slots:
+α=> SELECT * FROM pg_stat_replication_slots \gx
+-[ RECORD 1 ]+----------
+slot_name | test_sub
+spill_txns | 1
+spill_count | 3
+spill_bytes | 162000000
+stream_txns | 0
+stream_count | 0
+stream_bytes | 0
+total_txns | 2
+total_bytes | 162001984
+stats_reset |
+spill_txns — количество вытесненных на диск транзакций;
+spill_count — сколько раз данные вытеснялись на диск из-за превышения logical_decoding_work_mem;
+spill_bytes — сколько байт было вытеснено на диск.
+Повторим эксперимент в потоковом режиме.
+Сбросим статистику и снова опустошим таблицу.
+α=> SELECT pg_stat_reset_replication_slot('test_sub');
+pg_stat_reset_replication_slot
+--------------------------------
+(1 row)
+α=> TRUNCATE test;
+TRUNCATE TABLE
+Теперь зададим для подписки потоковый режим:
+β=> ALTER SUBSCRIPTION test_sub SET (streaming = on);
+ALTER SUBSCRIPTION
+И снова запустим большую транзакцию.
+α=> BEGIN;
+BEGIN
+α=> INSERT INTO test(descr)
+SELECT now()::text FROM generate_series(1,1_000_000) AS g(id);
+INSERT 0 1000000
+Теперь данных в каталоге слота гораздо меньше, часть их уже отправлена подписчику:
+postgres$ du -sh /var/lib/postgresql/16/alpha/pg_replslot/test_sub
+8,0K /var/lib/postgresql/16/alpha/pg_replslot/test_sub
+Зафиксируем транзакцию...
+α=> COMMIT;
+COMMIT
+...и немного подождем:
+β=> SELECT count(*) FROM test;
+count
+---------
+1000000
+(1 row)
+Заглянем в представление pg_stat_replication_slots:
+α=> SELECT * FROM pg_stat_replication_slots \gx
+-[ RECORD 1 ]+------------------------------
+slot_name | test_sub
+spill_txns | 0
+spill_count | 0
+spill_bytes | 0
+stream_txns | 1
+stream_count | 3
+stream_bytes | 161000000
+total_txns | 2
+total_bytes | 161001984
+stats_reset | 2026-04-10 18:23:59.806794+03
+На этот раз при исчерпании выделенной оперативной памяти данные на диск не вытеснялись, а отправлялись
+подписчику.
+Уборка
+Удалим подписку, слот и базы данных, сбросим параметры конфигурации.
+β=> DROP SUBSCRIPTION test_sub;
+NOTICE: dropped replication slot "test_sub" on publisher
+DROP SUBSCRIPTION
+β=> \c postgres
+You are now connected to database "postgres" as user "student".
+β=> DROP DATABASE replica_logical;
+DROP DATABASE
+student$ sudo pg_ctlcluster 16 beta stop
+α=> \c postgres
+You are now connected to database "postgres" as user "student".
+α=> DROP DATABASE replica_logical;
+DROP DATABASE
+α=> DROP DATABASE replica_logical_bis;
+DROP DATABASE
+α=> ALTER SYSTEM RESET wal_level;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+
+24
+Практика+
+1. Создайте и опубликуйте на сервере alpha таблицу
+со столбцом типа bytea. Вставьте в таблицу несколько
+миллионов строк. Сравните время начальной синхронизации
+для подписки в обычном и двоичном режимах, используя
+для этого сервер beta.
+2. Включите для подписки параллельную синхронизацию.
+Добавляя в таблицу строки, изучите процессы,
+обслуживающие подписку.
+1. Оценить время начальной синхронизации можно с помощью
+мониторинга таблицы pg_subscription_rel. Его можно организовать
+на стороне клиента с помощью метакоманды \watch или на стороне
+сервера с помощью функции, написанной, например, на PL/pgSQL.
+https://postgrespro.ru/docs/postgresql/16/catalog-pg-subscription-rel#CATAL
+OG-PG-SUBSCRIPTION-REL
+https://postgrespro.ru/docs/postgresql/16/plpgsql
+2. Задайте подходящее значение параметра подписки streaming.
+Для мониторинга процессов подписки используйте представление
+pg_stat_subscription.
+1. Начальная синхронизация данных при логической репликации
+Создадим базу данных.
+α=> CREATE DATABASE replica_logical;
+CREATE DATABASE
+α=> \c replica_logical
+You are now connected to database "replica_logical" as user "student".
+Изменим уровень журнала WAL и перезапустим сервер.
+α=> ALTER SYSTEM SET wal_level = logical;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+student$ psql -d replica_logical
+Создадим таблицу с большим количеством строк.
+α=> CREATE TABLE t AS
+SELECT n::text::bytea
+FROM generate_series(1, 5_000_000) AS g(n);
+SELECT 5000000
+Запустим сервер beta и скопируем на него базу со структурой таблиц, но без данных.
+student$ sudo pg_ctlcluster 16 beta start
+student$ pg_dump -d replica_logical --schema-only --create --no-acl | psql -p 5433
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "replica_logical" as user "student".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+student$ psql -p 5433 -d replica_logical
+Создадим публикацию на сервере alpha.
+α=> CREATE PUBLICATION pub FOR TABLE t;
+CREATE PUBLICATION
+Подписка на beta исходно будет неактивна.
+β=> CREATE SUBSCRIPTION sub
+CONNECTION 'dbname=replica_logical host=localhost port=5432 user=postgres password=postgres'
+PUBLICATION pub
+WITH (enabled = false);
+NOTICE: created replication slot "sub" on publisher
+CREATE SUBSCRIPTION
+Состояние таблицы в подписке можно увидеть в представлении:
+β=> SELECT srsubid, srrelid::regclass, srsubstate, srsublsn
+FROM pg_subscription_rel;
+srsubid | srrelid | srsubstate | srsublsn
+---------+---------+------------+----------
+16397 | t | i |
+(1 row)
+Значения кодов состояния в поле srsubstate:
+i — инициализация;
+d — копирование данных;
+f — копирование таблицы завершено;
+s — синхронизация выполнена;
+r — нормальная репликация.
+Время синхронизации будем измерять с помощью функцию на PL/pgSQL:
+β=> CREATE OR REPLACE FUNCTION time4sync() RETURNS interval AS
+$$
+DECLARE
+st timestamp := clock_timestamp();
+BEGIN
+WHILE EXISTS(SELECT 1 FROM pg_subscription_rel WHERE srsubstate <> 'r') LOOP
+PERFORM pg_sleep(0.01); -- достаточная точность
+END LOOP;
+RETURN clock_timestamp() - st;
+END;
+$$
+LANGUAGE plpgsql;
+CREATE FUNCTION
+Активируем подписку и измерим время начальной синхронизации.
+β=> ALTER SUBSCRIPTION sub ENABLE; SELECT time4sync();
+ALTER SUBSCRIPTION
+time4sync
+-----------------
+00:00:08.664681
+(1 row)
+Теперь настроим синхронизацию в двоичном режиме. Удалим подписку, опустошим таблицу и создадим новую
+подписку, указав параметр binary.
+β=> DROP SUBSCRIPTION sub;
+NOTICE: dropped replication slot "sub" on publisher
+DROP SUBSCRIPTION
+β=> TRUNCATE TABLE t;
+TRUNCATE TABLE
+β=> CREATE SUBSCRIPTION sub
+CONNECTION 'dbname=replica_logical host=localhost port=5432 user=postgres password=postgres'
+PUBLICATION pub
+WITH (enabled = false, binary = true);
+NOTICE: created replication slot "sub" on publisher
+CREATE SUBSCRIPTION
+Включаем подписку и измеряем время синхронизации.
+β=> ALTER SUBSCRIPTION sub ENABLE; SELECT time4sync();
+ALTER SUBSCRIPTION
+time4sync
+-----------------
+00:00:06.661815
+(1 row)
+Видим, что начальная синхронизация заметно ускорилась.
+Параметр binary действует и на последующую синхронизацию. Однако двоичный режим возможен не для всех типов
+данных; нужно также учитывать переносимость между разными архитектурами и основными версиями PostgreSQL.
+Двоичный режим реализован в версии 14, а в версиях до 16 начальная синхронизация всегда выполняется в текстовом
+режиме.
+2. Параллельное применение изменений
+Зададим для подписки параллельный режим.
+β=> ALTER SUBSCRIPTION sub SET (streaming = parallel);
+ALTER SUBSCRIPTION
+Процессы, обслуживающие подписку:
+β=> SELECT
+a.pid, a.leader_pid, a.backend_type,
+r.srsubstate, s.received_lsn
+FROM pg_stat_subscription s
+LEFT JOIN pg_subscription_rel r ON r.srsubid=s.subid AND r.srrelid='t'::regclass
+LEFT JOIN pg_stat_activity a ON s.pid=a.pid
+WHERE s.subname = 'sub';
+pid | leader_pid | backend_type | srsubstate | received_lsn
+--------+------------+----------------------------+------------+--------------
+107953 | | logical replication worker | r | 0/15368FA8
+(1 row)
+Опустошим таблицу, вставим в нее большое число строк и повторим запрос к представлениям системного каталога:
+α=> TRUNCATE t;
+TRUNCATE TABLE
+α=> INSERT INTO t SELECT g.i::text::bytea FROM generate_series(1, 1_000_000) AS g(i);
+β=> SELECT
+a.pid, a.leader_pid, a.backend_type,
+r.srsubstate, s.received_lsn
+FROM pg_stat_subscription s
+LEFT JOIN pg_subscription_rel r ON r.srsubid=s.subid AND r.srrelid='t'::regclass
+LEFT JOIN pg_stat_activity a ON s.pid=a.pid
+WHERE s.subname = 'sub';
+pid | leader_pid | backend_type | srsubstate | received_lsn
+--------+------------+-------------------------------------+------------+--------------
+107953 | | logical replication worker | r | 0/16FFFFE0
+108149 | 107953 | logical replication parallel worker | r |
+(2 rows)
+Появился дополнительный процесс, который применяет изменения, не дожидаясь окончания транзакции на сервере
+публикации.
+INSERT 0 1000000
+Вставка строк окончена. Подождем еще немного...
+β=> select count(*) from t;
+count
+---------
+1000000
+(1 row)
+Теперь подписчик получил все строки.
+Уборка
+Удалим подписку.
+β=> DROP SUBSCRIPTION sub;
+NOTICE: dropped replication slot "sub" on publisher
+DROP SUBSCRIPTION
+Удалим базы данных.
+β=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+β=> DROP DATABASE replica_logical;
+DROP DATABASE
+Сбросим изменения в конфигурации.
+α=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+α=> ALTER SYSTEM RESET synchronous_standby_names;
+ALTER SYSTEM
+α=> ALTER SYSTEM RESET wal_level;
+ALTER SYSTEM
+Перезагрузим сервер alpha.
+student$ sudo pg_ctlcluster 16 alpha restart
+student$ psql
+α=> DROP DATABASE replica_logical;
+DROP DATABASE
+Остановим сервер beta.
+student$ sudo pg_ctlcluster 16 beta stop

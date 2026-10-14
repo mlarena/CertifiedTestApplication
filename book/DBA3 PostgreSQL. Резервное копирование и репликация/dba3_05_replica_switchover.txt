@@ -1,0 +1,1094 @@
+
+
+Репликация
+Переключение на реплику
+16
+
+2
+Темы
+Переключение на реплику
+Возвращение в строй бывшего мастера
+Особенности, связанные с файловым архивом
+3
+Переключение на реплику
+Причины
+плановое переключение (switchover):
+останов основного сервера для проведения технических работ
+аварийное переключение (failover):
+переход на реплику из-за сбоя основного сервера
+Процедура
+убедиться, что мастер остановлен
+$ pg_ctl promote или
+pg_promote()
+автоматическое переключение: отсутствует
+(для автоматизации требуется стороннее кластерное ПО)
+Причиной перехода на резервный сервер может быть необходимость
+проведения технических работ на основном сервере — тогда переход
+выполняется в удобное время в штатном режиме (switchover).
+А в случае сбоя переходить на резервный сервер нужно как можно
+быстрее, чтобы сократить время простоя системы (failover).
+Чтобы переключить реплику в режим самостоятельного сервера, ей
+посылают команду, вызывая либо pg_ctl promote из операционной
+системы, либо функцию pg_promote из SQL. Переключение с помощью
+триггерного файла (параметр promote_trigger_file) начиная с 16-й
+версии не поддерживается.
+Перед этим важно убедиться, что мастер остановлен. Если он
+продолжает работу и к нему еще подключены клиенты, данные на
+разных серверах могут «разойтись», и свести их потом воедино —
+нетривиальная и неавтоматизируемая задача. Скорее всего, часть
+данных придется просто потерять.
+Для перехода на резервный сервер необходимо переключить на него
+клиентов. Автоматизация такого переключения требует стороннего
+кластерного программного обеспечения (это обсуждается в модуле
+«Кластерные технологии»), так как в PostgreSQL собственных средств
+для этого нет.
+https://postgrespro.ru/docs/postgresql/16/warm-standby-failover
+4
+Повышение реплики
+Применяет журнальные записи
+уже полученные wal receiver, но еще не примененные startup
+Завершает процессы
+wal receiver
+startup
+Запускает процессы
+wal writer
+autovacuum launcher
+archiver (зависит от настройки)
+Переходит на новую линию времени
+Получив сигнал, реплика повышается: завершает восстановление и
+переходит в режим обычного сервера.
+Для этого процесс startup применяет журнальные записи, которые уже
+были получены процессом wal receiver, но еще не применены. На этом
+wal receiver и startup завершают свою работу — на основном сервере
+они не нужны.
+А вот процессы wal writer и autovacuum launcher, наоборот, запускаются.
+Может запускаться и процесс archiver.
+Выйдя из режима восстановления, сервер переходит на новую линию
+времени.
+С точностью до некоторых деталей, все происходит так же, как при
+окончании восстановления из резервной копии.
+Настройка потоковой репликации
+В этой демонстрации мы будем выполнять контрольные точки вручную, а интервал расписания увеличим.
+α=> ALTER SYSTEM SET checkpoint_timeout = '1d';
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha reload
+α=> CREATE DATABASE replica_switchover;
+CREATE DATABASE
+Подключим расширение pg_walinspect. Оно потребуется для исследования записей о контрольных точках в WAL. Нужны
+права суперпользователя.
+α=> \c replica_switchover postgres
+You are now connected to database "replica_switchover" as user "postgres".
+α=> CREATE EXTENSION pg_walinspect;
+CREATE EXTENSION
+α=> \c - student
+You are now connected to database "replica_switchover" as user "student".
+α=> CREATE TABLE test(s text);
+CREATE TABLE
+α=> INSERT INTO test VALUES ('Исходное состояние. Сервер alpha — единственный.');
+INSERT 0 1
+Мы будем использовать автономную резервную копию несколько раз, поэтому создаем ее в формате tar.
+student$ pg_basebackup \
+--format=tar \
+--compress=gzip \
+--checkpoint=fast \
+--pgdata=/home/student/tmp/backup
+Выкладываем копию в каталог PGDATA сервера beta:
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ mkdir /var/lib/postgresql/16/beta
+postgres$ chmod 700 /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/pg_wal.tar.gz -C /var/lib/postgresql/16/beta/pg_wal
+Нам потребуется файл standby.signal.
+postgres$ touch /var/lib/postgresql/16/beta/standby.signal
+Настроим подключение к мастеру.
+postgres$ cat << EOF >> /var/lib/postgresql/16/beta/postgresql.auto.conf
+primary_conninfo = 'user=student port=5432'
+primary_slot_name = 'replica'
+EOF
+Создадим на сервере alpha слот репликации и запустим реплику beta.
+student$ pg_receivewal --create-slot --slot=replica
+student$ sudo pg_ctlcluster 16 beta start
+Проверим реплику:
+α=> INSERT INTO test VALUES ('Проверка репликации: alpha — мастер, beta — реплика.');
+INSERT 0 1
+student$ psql -p 5433 -d replica_switchover
+β=> SELECT * FROM test;
+s
+------------------------------------------------------
+Исходное состояние. Сервер alpha — единственный.
+Проверка репликации: alpha — мастер, beta — реплика.
+(2 rows)
+Останов мастера и контрольная точка
+Добавим в таблицу еще одну строку и корректно остановим мастер. При этом выполнится контрольная точка.
+α=> INSERT INTO test VALUES ('Перед корректным остановом мастера — сервера alpha.');
+INSERT 0 1
+student$ sudo pg_ctlcluster 16 alpha stop
+Информация о контрольной точке записалась в управляющий файл:
+postgres$ /usr/lib/postgresql/16/bin/pg_controldata -D ~postgres/16/alpha | \
+grep -E '^.*(cluster|checkpoint.*location).*:'
+Database cluster state: shut down
+Latest checkpoint location: 0/30002B8
+Latest checkpoint's REDO location: 0/30002B8
+Получила ли реплика эту запись о контрольной точке?
+Исследуем WAL на реплике, начиная с LSN записи о контрольной точке.
+β=> SELECT start_lsn, prev_lsn, resource_manager, record_type, record_length,
+left(description, 46) || '...' description
+FROM pg_get_wal_records_info('0/30002B8', 'FFFFFFFF/FFFFFFFF') \gx
+-[ RECORD 1 ]----+--------------------------------------------------
+start_lsn | 0/30002B8
+prev_lsn | 0/3000290
+resource_manager | XLOG
+record_type | CHECKPOINT_SHUTDOWN
+record_length | 114
+description | redo 0/30002B8; tli 1; prev tli 1; fpw true; x...
+В поле record_length показана длина записи в байтах.
+Последняя позиция, полученная репликой, больше LSN записи о контрольной точке:
+β=> SELECT pg_last_wal_receive_lsn(), pg_wal_lsn_diff(pg_last_wal_receive_lsn(), '0/30002B8' );
+pg_last_wal_receive_lsn | pg_wal_lsn_diff
+-------------------------+-----------------
+0/3000330 | 120
+(1 row)
+Разница немного превышает длину записи (114) из-за выравнивания записей WAL: на 64-разрядной платформе LSN
+записей кратны восьми байтам.
+Повышение реплики
+Сейчас сервер beta является репликой (находится в режиме восстановления):
+β=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+t
+(1 row)
+Повышаем реплику. Можно использовать функцию pg_promote(), которая выполняет то же действие.
+student$ sudo pg_ctlcluster 16 beta promote
+Есть еще один вариант выполнить повышение: удалить файл standby.signal и перезапустить резервный сервер. Это не
+вполне «честный» способ, поскольку в этом случае реплика не поймет, что восстановление завершено, и не перейдет на
+новую линию времени.
+Теперь бывшая реплика beta стала полноценным экземпляром.
+β=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+f
+(1 row)
+6
+Возвращение в строй
+основной сервер
+(бывшая реплика)
+archiver
+архив WAL
+файлы WAL
+select, insert
+update, delete
+бывший мастер
+переход
+на новую линию
+времени
+После повышения бывшая реплика выступает в качестве
+самостоятельного сервера. Она обслуживает запросы клиентов и
+формирует архив журнальных записей — уже с новой линией времени.
+Если переключение не было вызвано выходом сервера из строя,
+то нужен способ быстро вернуть старый мастер в строй — теперь уже
+в качестве реплики (failback).
+7
+Простое подключение
+Бывший мастер подключается к новому как реплика
+допустимо, только если перед переключением реплика получила
+от мастера все журнальные записи
+мастер
+реплика мастер
+реплика
+аккуратный
+останов
+переключение
+В случае аккуратной остановки мастера (в режиме fast или smart) все
+журнальные записи мастера скорее всего дойдут до реплики, хотя это
+и не гарантируется. Процесс останова организован таким образом, что
+сначала отключаются все обслуживающие процессы, затем
+выполняется контрольная точка, и только в самую последнюю очередь
+останавливается процесс wal sender, чтобы реплика получила запись
+WAL о контрольной точке.
+Позицию в журнале мастера можно проверить с помощью утилиты
+pg_controldata (запись latest checkpoint location), а позицию на реплике
+покажет функция pg_last_wal_receive_lsn. Эта функция возвращает
+текущую позицию в WAL, поэтому ее значение должно опережать
+latest checkpoint location на длину записи о контрольной точке.
+Если все журнальные записи действительно были получены, то
+бывший мастер можно непосредственно подключить к новому, изменив
+соответствующим образом конфигурационные параметры.
+В случае останова мастера без выполнения контрольной точки (сбой
+или режим immediate), такое подключение на нагруженном сервере,
+скорее всего, будет невозможно. При этом сервер не сможет
+стартовать, а в журнале сообщений будет фиксироваться ошибка.
+Возвращение в строй: прямое подключение
+Введем сервер alpha в строй, но теперь уже в качестве реплики. Для этого создадим файл standby.signal:
+postgres$ touch /var/lib/postgresql/16/alpha/standby.signal
+Настроим подключение к мастеру.
+postgres$ cat << EOF >> /var/lib/postgresql/16/alpha/postgresql.auto.conf
+primary_conninfo = 'user=student port=5433'
+EOF
+Запустим alpha и убедимся, что этот сервер стал репликой.
+student$ sudo pg_ctlcluster 16 alpha start
+student$ psql -d replica_switchover
+α=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+t
+(1 row)
+На сервере beta мы можем изменять данные:
+β=> INSERT INTO test VALUES ('Сейчас сервер beta — мастер, alpha запущена как реплика.');
+INSERT 0 1
+А реплика alpha их принимает.
+α=> SELECT * FROM test;
+s
+----------------------------------------------------------
+Исходное состояние. Сервер alpha — единственный.
+Проверка репликации: alpha — мастер, beta — реплика.
+Перед корректным остановом мастера — сервера
+alpha.
+Сейчас сервер beta — мастер, alpha запущена как
+реплика.
+(4 rows)
+9
+Резервная копия
+Бывший мастер восстанавливается из резервной копии
+абсолютно новая реплика, процесс занимает много времени
+можно ускорить rsync, если с момента сбоя прошло немного времени
+(но все равно долго для больших баз данных)
+мастер
+реплика мастер
+реплика
+потерянные
+записи WAL
+Если мастер был остановлен аварийно, велика вероятность того, что
+часть журнальных записей не успела дойти до реплики. В этом случае
+просто так подключать мастер нельзя.
+Простой и надежный вариант — создать абсолютно новую реплику
+путем изготовления и развертывания базовой резервной копии. Однако
+для больших баз данных этот процесс может занимать много времени.
+Вариант такого подхода — не использовать утилиту pg_basebackup,
+а сделать копию с помощью API резервирования с использованием
+утилиты rsync. Если выполнять копирование сразу после перехода
+на реплику, то большая часть файлов не успеет поменяться
+и процесс может пройти существенно быстрее. Но это, конечно,
+усложняет процедуру.
+10
+Утилита pg_rewind
+Подготовка к восстановлению
+«откатывает» потерянные записи WAL, заменяя соответствующие
+страницы целевого сервера страницами с сервера-источника
+копирует с сервера-источника все служебные файлы
+мастер
+реплика мастер
+реплика
+потерянные
+записи WAL
+контрольная
+точка
+целевой сервер
+сервер-источник
+Еще более быстрый вариант состоит в использовании штатной утилиты
+pg_rewind.
+Утилита определяет место расхождения между двумя серверами,
+определяет ближайшую к нему общую контрольную точку, и,
+просматривая журнал, определяет все страницы, измененные
+с момента этой контрольной точки.
+Найденные страницы (которых должно быть немного) заменяются
+страницами с сервера-источника (нового мастера). Кроме того, утилита
+копирует с сервера-источника все служебные файлы.
+Дальше применяются все необходимые записи WAL с нового мастера.
+Фактически, это выполняет уже не утилита, а обычный процесс
+восстановления после запуска сервера. Чтобы восстановление
+началось с нужного момента, утилита создает управляющий файл
+backup_label.
+https://postgrespro.ru/docs/postgresql/16/app-pgrewind
+11
+Особенности pg_rewind
+Целевой сервер (бывший мастер)
+все необходимые журнальные файлы должны сохраниться в pg_wal
+или в архиве
+должны быть включены контрольные суммы или wal_log_hints = on
+должен быть включен параметр full_page_writes = on
+Сервер-источник (текущий мастер)
+клиент-серверное подключение:
+--source-server = строка подключения
+корректно остановленный сервер:
+--source-pgdata = каталог
+Для сервера-источника, если он запущен, ключом --source-server
+задается строка клиент-серверного подключения libpq (утилита не
+использует протокол репликации). Роль для подключения должна иметь
+право выполнения функций pg_ls_dir, pg_stat_file, pg_read_binary_file.
+Если же сервер-источник остановлен корректно, можно указать его
+каталог данных ключом --source-pgdata.
+Утилита имеет ряд особенностей:
+● Все сегменты WAL, содержащие записи от последней общей
+контрольной точки до текущего момента, должны находиться
+в каталоге pg_wal целевого сервера или быть доступны для
+получения из архива. Во втором случае надо задать параметр
+restore_command и ключ --restore-target-wal.
+● Из-за ошибок при записи возможно рассогласование данных внутри
+страницы (проблема неатомарной записи, обсуждается в теме
+«Базовая резервная копия»). Чтобы решить проблему, на целевом
+сервере первое изменение страницы после контрольной точки
+должно вызывать запись в WAL полного ее образа. Для этого должен
+быть установлен full_page_writes = on. Этот режим не учитывает
+«незначительные» изменения страниц (hint bits), поэтому
+дополнительно требуется, чтобы в кластере либо были включены
+контрольные суммы страниц, либо был установлен параметр
+wal_log_hints = on.
+● Если целевой сервер был остановлен нештатно, без контрольной
+точки, утилита запустит его в однопользовательском режиме и тут же
+остановит корректно.
+Возвращение в строй: утилита pg_rewind
+Воспроизведем теперь аварийную ситуацию появления двух пишущих серверов — разделение сети (мы подробно
+обсуждаем этот и другие виды сбоев в теме «Обзор кластерных технологий» этого курса). Выведем сервер alpha из режима
+реплики, не останавливая основной сервер beta.
+student$ sudo pg_ctlcluster 16 alpha promote
+Теперь и на alpha, и на beta можно изменять данные:
+β=> INSERT INTO test VALUES ('Die hard');
+INSERT 0 1
+В реальности такой ситуации необходимо всячески избегать, поскольку теперь непонятно, какому серверу верить.
+Придется либо полностью потерять изменения на одном из серверов, либо придумывать, как объединить данные.
+Наш выбор — потерять изменения, сделанные на сервере beta.
+Откатим на beta изменения, которые противоречат изменениям, сделанным на alpha. Для этого мы используем утилиту
+pg_rewind, поэтому убедимся, что на целевом сервере (beta) заданы необходимые значения параметров:
+β=> \dconfig data_checksums|full_page_writes
+List of configuration parameters
+Parameter | Value
+------------------+-------
+data_checksums | on
+full_page_writes | on
+(2 rows)
+Остановим целевой сервер некорректно.
+student$ sudo kill -QUIT $(sudo head -n 1 /var/lib/postgresql/16/beta/postmaster.pid)
+В ключах утилиты pg_rewind надо указать каталог PGDATA целевого сервера и способ обращения к серверу-источнику
+(alpha): либо строку подключения (если сервер работает), либо местоположение его каталога PGDATA (если он выключен).
+В нашем случае сервер alpha запущен.
+Поскольку целевой сервер beta не был остановлен корректно, утилита запустит его в однопользовательском режиме и
+остановит с выполнением контрольной точки. Для запуска нужно указать расположение файла конфигурации.
+Ключ -R обеспечит запуск целевого сервера как реплики после завершения работы утилиты: восстановив
+согласованность, он останется в режиме восстановления.
+postgres$ /usr/lib/postgresql/16/bin/pg_rewind \
+-D /var/lib/postgresql/16/beta \
+--config-file=/etc/postgresql/16/beta/postgresql.conf \
+-R \
+--source-server='user=student port=5432'
+pg_rewind: executing "/usr/lib/postgresql/16/bin/postgres" for target server to complete
+crash recovery
+2026-04-10 18:06:02.619 MSK [74028] LOG: database system was interrupted; last known up
+at 2026-04-10 18:05:54 MSK
+2026-04-10 18:06:02.619 MSK [74028] LOG: database system was not properly shut down;
+automatic recovery in progress
+2026-04-10 18:06:02.621 MSK [74028] LOG: redo starts at 0/3000360
+2026-04-10 18:06:02.622 MSK [74028] LOG: invalid record length at 0/3006BF0: expected at
+least 24, got 0
+2026-04-10 18:06:02.622 MSK [74028] LOG: redo done at 0/3006BB0 system usage: CPU: user:
+0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-04-10 18:06:02.624 MSK [74028] LOG: checkpoint starting: end-of-recovery immediate
+wait
+2026-04-10 18:06:02.625 MSK [74028] LOG: checkpoint complete: wrote 8 buffers (0.0%); 0
+WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s;
+sync files=0, longest=0.000 s, average=0.000 s; distance=26 kB, estimate=26 kB;
+lsn=0/3006BF0, redo lsn=0/3006BF0
+PostgreSQL stand-alone backend 16.11 (Ubuntu 16.11-1.pgdg24.04+1)
+backend> 2026-04-10 18:06:02.633 MSK [74028] LOG: checkpoint starting: shutdown immediate
+2026-04-10 18:06:02.634 MSK [74028] LOG: checkpoint complete: wrote 0 buffers (0.0%); 0
+WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.002 s;
+sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=23 kB;
+lsn=0/3006C68, redo lsn=0/3006C68
+pg_rewind: servers diverged at WAL location 0/3002C38 on timeline 2
+pg_rewind: rewinding from last common checkpoint at 0/3002968 on timeline 2
+pg_rewind: Done!
+В результате pg_rewind «откатила» страницы данных к последней контрольной точке перед моментом, когда изменения
+серверов разошлись.
+Утилита также создала файл backup_label с информацией о позиции WAL, с которой нужно начинать восстановление.
+Заглянем в него:
+postgres$ cat /var/lib/postgresql/16/beta/backup_label
+START WAL LOCATION: 0/3000360 (file 000000020000000000000003)
+CHECKPOINT LOCATION: 0/3002968
+BACKUP METHOD: pg_rewind
+BACKUP FROM: standby
+START TIME: 2026-04-10 18:06:03 MSK
+Используя параметр -R, мы попросили утилиту создать сигнальный файл standby.signal и задать в конфигурационном
+файле строку соединения.
+postgres$ ls -l /var/lib/postgresql/16/beta/standby.signal
+-rw------- 1 postgres postgres 0 апр 10 18:06
+/var/lib/postgresql/16/beta/standby.signal
+На сервере alpha заранее создан слот репликации, задействуем его.
+postgres$ echo primary_slot_name = 'replica' >> /var/lib/postgresql/16/beta/postgresql.auto.conf
+postgres$ cat /var/lib/postgresql/16/beta/postgresql.auto.conf
+# Do not edit this file manually!
+# It will be overwritten by the ALTER SYSTEM command.
+checkpoint_timeout = '1d'
+primary_conninfo = 'user=student port=5433'
+primary_conninfo = 'user=student passfile=''/var/lib/postgresql/.pgpass''
+channel_binding=prefer port=5432 sslmode=prefer sslnegotiation=postgres sslcompression=0
+sslcertmode=allow sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer
+krbsrvname=postgres gssdelegation=0 target_session_attrs=any load_balance_hosts=disable'
+primary_slot_name = replica
+Теперь beta запустится в режиме реплики.
+student$ sudo pg_ctlcluster 16 beta start
+Слот репликации инициализировался и используется:
+α=> SELECT * FROM pg_replication_slots \gx
+-[ RECORD 1 ]-------+----------
+slot_name | replica
+plugin |
+slot_type | physical
+datoid |
+database |
+temporary | f
+active | t
+active_pid | 74281
+xmin |
+catalog_xmin |
+restart_lsn | 0/305E000
+confirmed_flush_lsn |
+wal_status | reserved
+safe_wal_size |
+two_phase | f
+conflicting |
+Данные, измененные на новом мастере (alpha), получены репликой (beta):
+student$ psql -p 5433 -d replica_switchover
+β=> SELECT * FROM test;
+s
+----------------------------------------------------------
+Исходное состояние. Сервер alpha — единственный.
+Проверка репликации: alpha — мастер, beta — реплика.
+Перед корректным остановом мастера — сервера
+alpha.
+Сейчас сервер beta — мастер, alpha запущена как
+реплика.
+(4 rows)
+Добавим еще одну строку:
+α=> INSERT INTO test VALUES ('Еще строка с сервера alpha.');
+INSERT 0 1
+β=> SELECT * FROM test;
+s
+----------------------------------------------------------
+Исходное состояние. Сервер alpha — единственный.
+Проверка репликации: alpha — мастер, beta — реплика.
+Перед корректным остановом мастера — сервера
+alpha.
+Сейчас сервер beta — мастер, alpha запущена как
+реплика.
+Еще строка с сервера alpha.
+(5 rows)
+Итак, мы ввели бывший мастер (beta) в строй в качестве реплики.
+13
+Переключение и архив
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика)
+archiver
+архив WAL
+wal receiver
+startup
+wal sender
+archive_mode = on
+сегмент
+еще не записан:
+временные
+сложности
+сегменты WAL
+с мастера
+Архив журнала предзаписи, пополняемый с помощью механизма
+непрерывного архивирования, имеет неприятную особенность
+в контексте потоковой репликации и переключения на реплику:
+при отказе мастера некоторые сегменты могут не попасть в архив.
+Например, если возникли проблемы с местом на диске,
+archive_command будет возвращать ошибку.
+14
+Переключение и архив
+основной сервер
+(бывшая реплика)
+archiver
+архив WAL
+файлы WAL
+select, insert
+update, delete
+бывший мастер
+сегмент потерян,
+восстановление из резервных
+копий возможно только
+до этой точки
+archive_mode = on
+Но реплика не в курсе настроек архивирования на мастере. Когда
+бывшая реплика займет место мастера, она не запишет недостающие
+сегменты в архив (хотя они у нее есть), потому что рассчитывает на то,
+что архив работал без сбоев. В результате архив будет неполным.
+А это означает, что из имеющихся резервных копий можно
+восстановить систему только до образовавшейся «дыры». Если такая
+ситуация возникла (а это еще нужно заметить), требуется в срочном
+порядке выполнить резервное копирование.
+Потоковый архив лишен этого недостатка, поскольку утилита
+pg_receivewal отслеживает содержимое каталога и запрашивает
+у сервера недостающие журнальные записи. Но, как отмечалось
+в модуле «Резервное копирование», использование этой утилиты
+сопряжено с поддержанием дополнительной инфраструктуры.
+Проблемы с файловым архивом
+Восстановим серверы alpha и beta из резервной копии и настроим на обоих файловую архивацию в общий архив.
+student$ sudo pg_ctlcluster 16 alpha stop
+student$ sudo pg_ctlcluster 16 beta stop
+postgres$ rm -rf /var/lib/postgresql/16/alpha
+postgres$ mkdir /var/lib/postgresql/16/alpha
+postgres$ chmod 700 /var/lib/postgresql/16/alpha
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ mkdir /var/lib/postgresql/16/beta
+postgres$ chmod 700 /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/alpha
+student$ sudo tar xzf /home/student/tmp/backup/pg_wal.tar.gz -C /var/lib/postgresql/16/alpha/pg_wal
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/pg_wal.tar.gz -C /var/lib/postgresql/16/beta/pg_wal
+Архив сегментов WAL.
+postgres$ rm -rf /var/lib/postgresql/archive
+postgres$ mkdir /var/lib/postgresql/archive
+Одинаковые настройки архивации на серверах alpha и beta.
+postgres$ cat << EOF | tee -a \
+/var/lib/postgresql/16/alpha/postgresql.auto.conf \
+/var/lib/postgresql/16/beta/postgresql.auto.conf
+archive_mode = on
+archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p /var/lib/postgresql/archive/%f'
+EOF
+archive_mode = on
+archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p
+/var/lib/postgresql/archive/%f'
+На реплике (beta) создадим файл standby.signal и настроим подключение к мастеру.
+postgres$ touch /var/lib/postgresql/16/beta/standby.signal
+postgres$ cat << EOF >> /var/lib/postgresql/16/beta/postgresql.auto.conf
+primary_conninfo = 'user=student port=5432'
+primary_slot_name = 'replica'
+EOF
+Запускаем мастер (alpha) и создаем слот репликации.
+student$ sudo pg_ctlcluster 16 alpha start
+student$ pg_receivewal --create-slot --slot=replica
+Теперь стартуем реплику.
+student$ sudo pg_ctlcluster 16 beta start
+Текущий сегмент журнала:
+student$ psql -d replica_switchover
+α=> SELECT pg_walfile_name(pg_current_wal_lsn());
+pg_walfile_name
+--------------------------
+000000010000000000000003
+(1 row)
+Принудительно переключим сегмент WAL. Чтобы переключение произошло, нужно гарантировать, что текущий и
+следующий сегменты содержат какие-либо записи.
+α=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/3006658
+(1 row)
+α=> INSERT INTO test SELECT now();
+INSERT 0 1
+Теперь журнальные записи пишутся в следующий сегмент, а предыдущий попал в архив:
+α=> SELECT
+pg_walfile_name(pg_current_wal_lsn()) current_wal,
+last_archived_wal,
+last_failed_wal
+FROM pg_stat_archiver;
+current_wal | last_archived_wal | last_failed_wal
+--------------------------+--------------------------+-----------------
+000000010000000000000004 | 000000010000000000000003 |
+(1 row)
+Представим, что возникли трудности с архивацией. Причиной может быть, например, заполнение диска или проблемы с
+сетевым соединением, а мы смоделируем их, возвращая статус 1 из команды архивации.
+α=> ALTER SYSTEM SET archive_command = 'exit 1';
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha reload
+Опять переключим сегмент WAL.
+α=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/4002C08
+(1 row)
+α=> INSERT INTO test SELECT now();
+INSERT 0 1
+Сегмент не архивируется.
+α=> SELECT
+pg_walfile_name(pg_current_wal_lsn()) current_wal,
+last_archived_wal,
+last_failed_wal
+FROM pg_stat_archiver;
+current_wal | last_archived_wal | last_failed_wal
+--------------------------+--------------------------+--------------------------
+000000010000000000000005 | 000000010000000000000003 | 000000010000000000000004
+(1 row)
+Процесс archiver будет продолжать попытки, но безуспешно.
+student$ tail -n 4 /var/log/postgresql/postgresql-16-alpha.log
+2026-04-10 18:07:21.223 MSK [75035] LOG: archive command failed with exit code 1
+2026-04-10 18:07:21.223 MSK [75035] DETAIL: The failed archive command was: exit 1
+2026-04-10 18:07:22.224 MSK [75035] LOG: archive command failed with exit code 1
+2026-04-10 18:07:22.224 MSK [75035] DETAIL: The failed archive command was: exit 1
+Сервер beta в режиме реплики не выполнял архивацию, а после повышения не будет архивировать пропущенный
+сегмент.
+Остановим alpha, повышаем beta.
+student$ sudo kill -QUIT $(sudo head -n 1 /var/lib/postgresql/16/alpha/postmaster.pid)
+student$ sudo pg_ctlcluster 16 beta promote
+Еще раз принудительно переключим сегмент, теперь уже на beta.
+student$ psql -p 5433 -d replica_switchover
+β=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/5002158
+(1 row)
+β=> INSERT INTO test SELECT now();
+INSERT 0 1
+Что с архивом?
+student$ ls -l /var/lib/postgresql/archive
+total 49156
+-rw------- 1 postgres postgres 16777216 апр 10 18:07 000000010000000000000003
+-rw------- 1 postgres postgres 16777216 апр 10 18:07 000000010000000000000005.partial
+-rw------- 1 postgres postgres 16777216 апр 10 18:07 000000020000000000000005
+-rw------- 1 postgres postgres 41 апр 10 18:07 00000002.history
+Сегмент 000000010000000000000004 отсутствует, архив теперь непригоден для восстановления и репликации.
+16
+Переключение и архив
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика)
+archiver
+архив WAL
+wal receiver
+startup
+archive_mode = always
+archiver
+команда должна
+корректно обрабатывать
+одновременную запись
+двумя серверами
+archive_command
+wal sender
+сегменты WAL
+с мастера
+При установке archive_mode = always на реплике запускается процесс
+archiver, который записывает сегменты в архив наравне с мастером.
+Таким образом, один и тот же файл будет записан два раза с двух
+серверов. Это накладывает на команду archive_command серьезные
+требования:
+● она не должна перезаписывать существующий файл, но должна
+сообщать об успехе, если файл с тем же содержимым уже есть
+в архиве;
+● она должна корректно обрабатывать одновременный вызов с двух
+серверов.
+При такой настройке сегмент не пропадет, поскольку реплика будет
+продолжать попытки записи даже после останова мастера.
+(Разумеется, можно настроить archive_command и так, чтобы мастер
+и реплика сохраняли сегменты журнала в разные архивы, но вряд ли
+это практично.)
+Архивация с реплики
+Чтобы при переключении на реплику архив не пострадал, на реплике нужно использовать значение archive_mode =
+always. При этом команда архивации должна корректно обрабатывать одновременную запись сегмента мастером и
+репликой.
+Еще раз восстановим alpha и beta из резервной копии и настроим на обоих файловую архивацию в общий архив.
+student$ sudo pg_ctlcluster 16 alpha stop
+Cluster is not running.
+student$ sudo pg_ctlcluster 16 beta stop
+postgres$ rm -rf /var/lib/postgresql/16/alpha
+postgres$ mkdir /var/lib/postgresql/16/alpha
+postgres$ chmod 700 /var/lib/postgresql/16/alpha
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ mkdir /var/lib/postgresql/16/beta
+postgres$ chmod 700 /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/alpha
+student$ sudo tar xzf /home/student/tmp/backup/pg_wal.tar.gz -C /var/lib/postgresql/16/alpha/pg_wal
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/pg_wal.tar.gz -C /var/lib/postgresql/16/beta/pg_wal
+Архив сегментов WAL.
+postgres$ rm -rf /var/lib/postgresql/archive
+postgres$ mkdir /var/lib/postgresql/archive
+Настройка архивации на мастере (alpha). Мы заменили логическую связку в команде архивации, чтобы при наличии
+файла она сразу возвращала 0.
+postgres$ cat << EOF | tee -a /var/lib/postgresql/16/alpha/postgresql.auto.conf
+archive_mode = on
+archive_command = 'test -f /var/lib/postgresql/archive/%f || cp %p /var/lib/postgresql/archive/%f'
+EOF
+archive_mode = on
+archive_command = 'test -f /var/lib/postgresql/archive/%f || cp %p
+/var/lib/postgresql/archive/%f'
+Настройка архивации на реплике (beta). Используем режим always и ту же команду архивации.
+postgres$ cat << EOF | tee -a /var/lib/postgresql/16/beta/postgresql.auto.conf
+archive_mode = always
+archive_command = 'test -f /var/lib/postgresql/archive/%f || cp %p /var/lib/postgresql/archive/%f'
+primary_conninfo = 'user=student port=5432'
+primary_slot_name = 'replica'
+EOF
+archive_mode = always
+archive_command = 'test -f /var/lib/postgresql/archive/%f || cp %p
+/var/lib/postgresql/archive/%f'
+primary_conninfo = 'user=student port=5432'
+primary_slot_name = 'replica'
+На реплике нужен еще standby.signal.
+postgres$ touch /var/lib/postgresql/16/beta/standby.signal
+Запускаем мастер и создаем слот репликации.
+student$ sudo pg_ctlcluster 16 alpha start
+student$ pg_receivewal --create-slot --slot=replica
+Теперь стартуем реплику.
+student$ sudo pg_ctlcluster 16 beta start
+student$ psql -d replica_switchover
+Повторим опыт. Переключаем сегмент:
+α=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/3006658
+(1 row)
+α=> INSERT INTO test SELECT now();
+INSERT 0 1
+Проверяем состояние архивации:
+α=> SELECT
+pg_walfile_name(pg_current_wal_lsn()) current_wal,
+last_archived_wal,
+last_failed_wal
+FROM pg_stat_archiver;
+current_wal | last_archived_wal | last_failed_wal
+--------------------------+--------------------------+-----------------
+000000010000000000000004 | 000000010000000000000003 |
+(1 row)
+Заполненный сегмент попал в архив.
+На сервере alpha возникли проблемы с архивацией, команда возвращает 1:
+α=> ALTER SYSTEM SET archive_command = 'exit 1';
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha reload
+Alpha продолжает генерировать сегменты WAL.
+α=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/4002C08
+(1 row)
+α=> INSERT INTO test SELECT now();
+INSERT 0 1
+Но основной сервер их не архивирует:
+α=> SELECT
+pg_walfile_name(pg_current_wal_lsn()) current_wal,
+last_archived_wal,
+last_failed_wal
+FROM pg_stat_archiver;
+current_wal | last_archived_wal | last_failed_wal
+--------------------------+--------------------------+--------------------------
+000000010000000000000005 | 000000010000000000000003 | 000000010000000000000004
+(1 row)
+Однако архивация с реплики срабатывает и сегмент оказывается в архиве:
+student$ ls -l /var/lib/postgresql/archive
+total 32768
+-rw------- 1 postgres postgres 16777216 апр 10 18:08 000000010000000000000003
+-rw------- 1 postgres postgres 16777216 апр 10 18:08 000000010000000000000004
+Выполняем переключение на реплику.
+student$ sudo kill -QUIT $(sudo head -n 1 /var/lib/postgresql/16/alpha/postmaster.pid)
+student$ sudo pg_ctlcluster 16 beta promote
+Beta стала основным сервером и генерирует файлы WAL.
+student$ psql -p 5433 -d replica_switchover
+β=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/5002158
+(1 row)
+β=> INSERT INTO test SELECT now();
+INSERT 0 1
+Еще раз заглянем в архив:
+student$ ls -l /var/lib/postgresql/archive
+total 65540
+-rw------- 1 postgres postgres 16777216 апр 10 18:08 000000010000000000000003
+-rw------- 1 postgres postgres 16777216 апр 10 18:08 000000010000000000000004
+-rw------- 1 postgres postgres 16777216 апр 10 18:08 000000010000000000000005.partial
+-rw------- 1 postgres postgres 16777216 апр 10 18:08 000000020000000000000005
+-rw------- 1 postgres postgres 41 апр 10 18:08 00000002.history
+В архиве появились файлы реплики, пропусков в нем нет, проблема решена.
+18
+Итоги
+Переключение используется как в штатных,
+так и в нештатных ситуациях
+После переключения бывший мастер надо вернуть в строй
+Обе процедуры должны быть заранее отработаны
+Файловый архив журнала предзаписи требует внимания
+19
+Практика
+1. Выполните необходимую настройку потоковой репликации
+с сервера alpha на beta с использованием слота, без
+непрерывного архивирования.
+2. Сымитируйте сбой сервера alpha и переключитесь
+на сервер beta.
+3. Верните в строй сервер alpha в качестве реплики, выполнив
+резервную копию с нового мастера beta и настроив
+необходимые параметры.
+Убедитесь, что репликация работает и использует слот.
+4. Переключитесь на сервер alpha, чтобы бывший мастер снова
+стал основным сервером.
+2. Для имитации сбоя можно остановить сервер в режиме immediate:
+pg_ctlcluster 16 имя_кластера stop -m immediate --skip-systemctl-redirect
+или завершить основной процесс postgres:
+kill -QUIT номер_процесса
+Номер процесса можно найти в первой строке файла
+PGDATA/postmaster.pid.
+После завершения практических заданий удалите слот и созданную
+базу данных, сбросьте измененные параметры.
+1. Настройка репликации без архива
+Настраиваем репликацию.
+Остановим сервер beta и очистим его каталог данных.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+Формируем автономную резервную копию в каталоге данных сервера beta, предварительно создав слот replica.
+postgres$ pg_basebackup \
+--checkpoint=fast \
+--pgdata=/var/lib/postgresql/16/beta \
+-R \
+--create-slot \
+--slot=replica
+postgres$ cat /var/lib/postgresql/16/beta/postgresql.auto.conf
+# Do not edit this file manually!
+# It will be overwritten by the ALTER SYSTEM command.
+primary_conninfo = 'user=postgres passfile=''/var/lib/postgresql/.pgpass''
+channel_binding=prefer host=''/var/run/postgresql'' port=5432 sslmode=prefer
+sslnegotiation=postgres sslcompression=0 sslcertmode=allow sslsni=1
+ssl_min_protocol_version=TLSv1.2 gssencmode=prefer krbsrvname=postgres gssdelegation=0
+target_session_attrs=any load_balance_hosts=disable'
+primary_slot_name = 'replica'
+Запускаем сервер в режиме реплики.
+student$ sudo pg_ctlcluster 16 beta start
+Проверим настройки. Выполним несколько команд на мастере:
+α=> CREATE DATABASE replica_switchover;
+CREATE DATABASE
+α=> \c replica_switchover
+You are now connected to database "replica_switchover" as user "student".
+α=> CREATE TABLE test(s text);
+CREATE TABLE
+α=> INSERT INTO test VALUES ('Привет, мир!');
+INSERT 0 1
+Проверим реплику:
+student$ psql -p 5433
+β=> \c replica_switchover
+You are now connected to database "replica_switchover" as user "student".
+β=> SELECT * FROM test;
+s
+--------------
+Привет, мир!
+(1 row)
+2. Сбой основного сервера и переход на реплику
+Имитируем аварийную остановку мастера.
+student$ sudo kill -QUIT $(sudo head -n 1 /var/lib/postgresql/16/alpha/postmaster.pid)
+Повышаем реплику.
+student$ sudo pg_ctlcluster 16 beta promote
+3. Возвращение в строй бывшего мастера
+Создаем автономную резервную копию сервера beta в каталоге данных сервера alpha.
+Перед этим удалим конфигурационный файл, иначе pg_basebackup его скопирует и допишет параметры.
+postgres$ rm -f /var/lib/postgresql/16/beta/postgresql.auto.conf
+Очистим каталог данных на сервере alpha.
+postgres$ rm -rf /var/lib/postgresql/16/alpha
+Запускаем утилиту резервного копирования, попросив ее создать слот и настройки репликации.
+postgres$ pg_basebackup \
+--port=5433 \
+--checkpoint=fast \
+--pgdata=/var/lib/postgresql/16/alpha \
+-R \
+--create-slot \
+--slot=replica
+Параметры конфигурации и сигнальный файл подготовлены утилитой:
+postgres$ cat /var/lib/postgresql/16/alpha/postgresql.auto.conf
+primary_conninfo = 'user=postgres passfile=''/var/lib/postgresql/.pgpass''
+channel_binding=prefer port=5433 sslmode=prefer sslnegotiation=postgres sslcompression=0
+sslcertmode=allow sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer
+krbsrvname=postgres gssdelegation=0 target_session_attrs=any load_balance_hosts=disable'
+primary_slot_name = 'replica'
+postgres$ ls -l /var/lib/postgresql/16/alpha/standby.signal
+-rw------- 1 postgres postgres 0 апр 10 18:20
+/var/lib/postgresql/16/alpha/standby.signal
+student$ sudo pg_ctlcluster 16 alpha start
+Слот репликации инициализировался и используется:
+β=> SELECT * FROM pg_replication_slots \gx
+-[ RECORD 1 ]-------+----------
+slot_name | replica
+plugin |
+slot_type | physical
+datoid |
+database |
+temporary | f
+active | t
+active_pid | 99939
+xmin |
+catalog_xmin |
+restart_lsn | 0/5000060
+confirmed_flush_lsn |
+wal_status | reserved
+safe_wal_size |
+two_phase | f
+conflicting |
+Проверим репликацию:
+β=> INSERT INTO test VALUES ('Я — бывшая реплика (новый мастер).');
+INSERT 0 1
+student$ psql -d replica_switchover
+α=> SELECT * FROM test;
+s
+------------------------------------
+Привет, мир!
+Я — бывшая реплика (новый мастер).
+(2 rows)
+4. Переключение на новую реплику
+Повышаем реплику.
+student$ sudo pg_ctlcluster 16 alpha promote
+α=> select pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+f
+(1 row)
+В итоге прежний мастер снова стал основным сервером.
+Уборка
+Удалим слот и базу данных, сбросим измененные параметры.
+α=> \c postgres
+You are now connected to database "postgres" as user "student".
+α=> DROP DATABASE replica_switchover;
+DROP DATABASE
+student$ sudo pg_ctlcluster 16 alpha restart
+β=> \c postgres
+You are now connected to database "postgres" as user "student".
+β=> SELECT pg_drop_replication_slot('replica');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+student$ sudo pg_ctlcluster 16 beta stop
+20
+Практика+
+1. Настройте сервер alpha, чтобы после контрольной точки
+сохранялись два дополнительных сегмента WAL,
+и запустите физическую репликацию с alpha на сервер beta
+без слота репликации.
+2. Аварийно остановите сервер alpha и выполните повышение
+beta. Запустите alpha и измените данные на нем. Убедитесь,
+что данные на alpha и beta не совпадают.
+3. Остановите сервер alpha и запустите его в качестве реплики
+сервера beta, используя утилиту pg_rewind.
+1. Настройте репликацию с простейшими настройками и без слота
+репликации. Для гарантии сохранения двух дополнительных сегментов
+WAL задайте подходящее значение wal_keep_size.
+После завершения практических заданий удалите слот и созданную
+базу данных, сбросьте измененные параметры.
+1. Репликация
+Мы не используем слоты репликации, поэтому потребуем сохранять два дополнительных сегмента WAL.
+α=> ALTER SYSTEM SET wal_keep_size = 32;
+ALTER SYSTEM
+Остановим сервер beta и сделаем его репликой для сервера alpha.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ pg_basebackup --checkpoint=fast -R --pgdata=/var/lib/postgresql/16/beta
+student$ sudo pg_ctlcluster 16 beta start
+Создадим базу данных и таблицу в ней.
+α=> CREATE DATABASE replica_switchover;
+CREATE DATABASE
+α=> \c replica_switchover
+You are now connected to database "replica_switchover" as user "student".
+α=> CREATE TABLE test AS SELECT 'Сервер alpha — мастер.' txt;
+SELECT 1
+Изменения реплицированы на сервер beta.
+student$ psql -p 5433 -d replica_switchover
+β=> SELECT * FROM test;
+txt
+------------------------
+Сервер alpha — мастер.
+(1 row)
+Проверим статус репликации.
+α=> SELECT * FROM pg_stat_replication \gx
+-[ RECORD 1 ]----+------------------------------
+pid | 100787
+usesysid | 10
+usename | postgres
+application_name | 16/beta
+client_addr |
+client_hostname |
+client_port | -1
+backend_start | 2026-04-10 18:21:16.297541+03
+backend_xmin |
+state | streaming
+sent_lsn | 0/3432440
+write_lsn | 0/3432440
+flush_lsn | 0/3432440
+replay_lsn | 0/3432440
+write_lag | 00:00:00.000407
+flush_lag | 00:00:00.007474
+replay_lag | 00:00:00.008946
+sync_priority | 0
+sync_state | async
+reply_time | 2026-04-10 18:21:23.621078+03
+На реплике можно посмотреть статистику приемника WAL:
+β=> SELECT pid, status, written_lsn FROM pg_stat_wal_receiver;
+pid | status | written_lsn
+--------+-----------+-------------
+100786 | streaming | 0/3432440
+(1 row)
+2. Разрыв репликации
+На мастер-сервере отключено питание.
+student$ sudo kill -QUIT $(sudo head -n 1 /var/lib/postgresql/16/alpha/postmaster.pid)
+Повышаем beta.
+student$ sudo pg_ctlcluster 16 beta promote
+Изменяем данные на новом мастере.
+β=> INSERT INTO test VALUES('Сервер beta повышен, он выполняет пишущие транзакции.');
+INSERT 0 1
+На сервере alpha питание восстановлено.
+student$ sudo pg_ctlcluster 16 alpha start
+student$ psql -d replica_switchover
+α=> INSERT INTO test VALUES('Die Hard...');
+INSERT 0 1
+Данные на серверах разошлись.
+α=> SELECT * FROM test;
+txt
+------------------------
+Сервер alpha — мастер.
+Die Hard...
+(2 rows)
+β=> SELECT * FROM test;
+txt
+-------------------------------------------------------
+Сервер alpha — мастер.
+Сервер beta повышен, он выполняет пишущие
+транзакции.
+(2 rows)
+Остановим сервер alpha (бывший мастер).
+student$ sudo pg_ctlcluster 16 alpha stop
+3. Ввод в строй бывшего мастера
+Мы хотим запустить сервер alpha как реплику. Для этого нужно вернуть его к состоянию, совместимому с beta.
+Используем штатную утилиту.
+postgres$ /usr/lib/postgresql/16/bin/pg_rewind \
+-D /var/lib/postgresql/16/alpha \
+--config-file=/etc/postgresql/16/alpha/postgresql.conf \
+--source-server='user=postgres port=5433' \
+-R
+pg_rewind: servers diverged at WAL location 0/3432440 on timeline 1
+pg_rewind: rewinding from last common checkpoint at 0/2000060 on timeline 1
+pg_rewind: Done!
+На сервере beta выполняются пишущие транзакции.
+β=> INSERT INTO test VALUES('На сервере beta продолжаются изменения.');
+INSERT 0 1
+Данные, измененные на сервере beta, получены сервером alpha:
+student$ sudo pg_ctlcluster 16 alpha start
+student$ psql -d replica_switchover
+α=> SELECT * FROM test;
+txt
+-------------------------------------------------------
+Сервер alpha — мастер.
+Сервер beta повышен, он выполняет пишущие
+транзакции.
+На сервере beta продолжаются изменения.
+(3 rows)
+Уборка
+Удалим созданную базу данных и сбросим настройки конфигурационных параметров.
+β=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+β=> DROP DATABASE replica_switchover;
+DROP DATABASE
+β=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 beta stop
+α=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+α=> SELECT pg_promote();
+pg_promote
+------------
+t
+(1 row)
+α=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart

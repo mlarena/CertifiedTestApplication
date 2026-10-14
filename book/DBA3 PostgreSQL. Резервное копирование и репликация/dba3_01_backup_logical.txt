@@ -1,0 +1,1287 @@
+
+
+Резервное копирование
+Логическое резервирование
+16
+
+2
+Темы
+Понятие логической резервной копии
+Копирование и восстановление отдельных таблиц
+Копирование и восстановление баз данных
+Копирование и восстановление кластера
+3
+Логическая копия
+Команды SQL для создания объектов и наполнения
+данными
++ можно сделать копию отдельного объекта или отдельной базы
++ можно восстановиться на другой версии или архитектуре
++ (не требуется двоичная совместимость)
+− невысокая скорость работы
+− восстановление только на момент создания резервной копии
+Логическая копия содержит набор команд SQL, выполнив которые
+можно восстановить кластер, базу данных или выбранные таблицы.
+В процессе восстановления из логической копии создаются
+необходимые объекты и наполняются данными.
+Команды можно выполнить на другой версии СУБД или даже на другой
+платформе и архитектуре, так как не требуется двоичная
+совместимость.
+В частности, логическую резервную копию можно использовать для
+долговременного хранения: ее можно будет восстановить и после
+обновления сервера на новую версию.
+Однако для большой базы команды могут выполняться очень долго.
+Восстановить систему из логической копии можно ровно на момент
+начала резервного копирования.
+https://postgrespro.ru/docs/postgresql/16/backup-dump
+4
+SQL-команда COPY
+YKS Якутск (129.770
+MJZ Мирный (114.039
+KHV Хабаровск-Новый (1
+PKC Елизово (158.453
+UUS Хомутово (142.718
+VVO Владивосток (1
+LED Пулково (30.2625
+KGD Храброво (20.5925
+KEJ Кемерово (86.1072
+CEK Челябинск (61.5033
+MQF Магнитогорск (5
+PEE Пермь (56.0211
+SGC Сургут (73.4018
+=# COPY таблица TO 'файл';
+=# COPY таблица FROM 'файл';
+файл в ФС сервера, принадлежащий владельцу экземпляра PostgreSQL
+можно выбрать столбцы или использовать произвольный запрос
+при восстановлении строки добавляются к имеющимся в таблице
+формат
+настраивается
+Команда COPY TO записывает содержимое таблицы или результат
+запроса в файл или поток вывода. Строки представлений или
+секционированных таблиц можно скопировать с помощью запроса.
+Для использования COPY TO требуется роль pg_write_server_file.
+Команда COPY FROM добавляет в таблицу строки из файла или
+стандартного потока ввода. Она работает существенно быстрее, чем
+аналогичные команды INSERT. Следить за процессом копирования
+можно в представлении pg_stat_progress_copy.
+Для COPY FROM требуется роль pg_read_server_files (а для чтения
+потока ввода — pg_execute_server_program).
+Тонкость: при выполнении команды COPY FROM не применяются
+правила (rules), хотя ограничения целостности и триггеры выполняются.
+Если столбец таблицы при вставке должен получать значения,
+генерируемые последовательностью, но COPY заполняет этот столбец
+явно, последовательность не будет изменять свое состояние (счетчик).
+Оба варианта команды COPY позволяют выбрать столбцы таблицы,
+а также указать такие параметры, как:
+● FORMAT — формат данных (текстовый, CSV или двоичный);
+● DELIMITER — разделитель полей;
+● NULL — текстовое представление NULL;
+● ENCODING — кодировку;
+● HEADER — заголовок, описывающий столбцы.
+https://postgrespro.ru/docs/postgresql/16/sql-copy
+5
+Команда psql \copy
+YKS Якутск (129.770
+MJZ Мирный (114.039
+KHV Хабаровск-Новый (1
+PKC Елизово (158.453
+UUS Хомутово (142.718
+VVO Владивосток (1
+LED Пулково (30.2625
+KGD Храброво (20.5925
+KEJ Кемерово (86.1072
+CEK Челябинск (61.5033
+MQF Магнитогорск (5
+PEE Пермь (56.0211
+SGC Сургут (73.4018
+=# \copy таблица to 'файл'
+=# \copy таблица from 'файл'
+файл в ФС клиента и доступен пользователю ОС, запустившему psql
+происходит пересылка данных между клиентом и сервером
+синтаксис и возможности аналогичны команде COPY
+В psql существует метакоманда \copy — вариант команды COPY
+с аналогичным синтаксисом, — выполняющаяся на стороне клиента.
+Файл должен быть доступен пользователю операционной системы,
+запустившему psql. Обращение к файлу происходит на клиенте, а на
+сервер передается только содержимое.
+https://postgrespro.ru/docs/postgresql/16/app-psql#APP-PSQL-META-COM
+MANDS-COPY
+Команда COPY
+Создадим базу данных и таблицу.
+α=> CREATE DATABASE backup_logical;
+CREATE DATABASE
+α=> \c backup_logical
+You are now connected to database "backup_logical" as user "student".
+α=> CREATE TABLE t(
+id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+s text
+);
+CREATE TABLE
+α=> INSERT INTO t(s) VALUES ('Привет, мир!'), (''), (NULL);
+INSERT 0 3
+α=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 |
+(3 rows)
+Выведем содержимое таблицы в терминал:
+α=> COPY t TO stdout;
+1 Привет, мир!
+2
+3 \N
+Видно, как различаются в выводе пустые строки и неопределенные значения.
+Формат вывода настраивается достаточно гибко. Можно изменить разделитель, представление неопределенных
+значений и т. п. Например:
+α=> COPY t TO stdout WITH (NULL '<NULL>', DELIMITER ',');
+1,Привет\, мир!
+2,
+3,<NULL>
+Обратите внимание, что символ-разделитель внутри строки был экранирован (символ для экранирования тоже
+настраивается).
+Вместо таблицы можно указать произвольный запрос.
+α=> COPY (SELECT * FROM t WHERE s IS NOT NULL) TO stdout;
+1 Привет, мир!
+2
+Таким образом можно сохранить результат запроса, данные представления и т. п.
+Команда поддерживает вывод в формате CSV, который поддерживается множеством программ.
+α=> COPY t TO stdout WITH (FORMAT csv);
+1,"Привет, мир!"
+2,""
+3,
+Аналогично работает и ввод данных из файла или с терминала.
+α=> TRUNCATE TABLE t;
+TRUNCATE TABLE
+Но при вводе с терминала требуется маркер конца файла — обратная косая черта с точкой; в обычном файле он не нужен.
+Чтобы данные загрузились, при вводе надо указать те же параметры, что были указаны при выводе.
+При загрузке также можно указать условие:
+α=> COPY t FROM stdin WHERE id != 2;
+1 Привет, мир!
+2
+3 \N
+\.
+COPY 2
+Вот что загрузилось в таблицу (для наглядности настроим в psql вывод неопределенных значений):
+α=> \pset null '\\N'
+Null display is "\N".
+α=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+3 | \N
+(2 rows)
+Загрузим все строки:
+α=> TRUNCATE TABLE t;
+TRUNCATE TABLE
+α=> COPY t FROM stdin;
+1 Привет, мир!
+2
+3 \N
+\.
+COPY 3
+α=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 | \N
+(3 rows)
+7
+Копия базы данных
+--
+-- PostgreSQL database dum
+--
+-- Dumped from database ve
+-- Dumped by pg_dump versi
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET
+idle_in_transaction_sessio
+SET client_encoding = 'UTF
+SET standard_conforming_st
+$ pg_dump -d база -f файл
+$ psql -f файл
+формат: команды SQL
+при выгрузке можно выбрать отдельные объекты базы данных
+новая база должна быть создана из шаблона template0
+заранее должны быть созданы роли и табличные пространства
+после загрузки имеет смысл выполнить ANALYZE
+Для создания полноценной резервной копии базы данных используется
+утилита pg_dump.
+Если не указать имя файла (-f, --file), то утилита выведет результат
+в стандартный поток вывода.
+Результатом является скрипт, предназначенный для psql, который
+содержит команды для создания объектов и наполнения их данными.
+Дополнительными ключами утилиты можно ограничить набор объектов:
+выбрать указанные таблицы или все объекты в указанных схемах,
+выгрузить только определения объектов или только данные и т. п.
+Следует иметь в виду, что базу данных для восстановления надо
+создавать из шаблона template0, так как все изменения, сделанные
+в template1, попадут в резервную копию.
+Кроме того, заранее должны быть созданы необходимые роли
+и табличные пространства. Поскольку эти объекты не относятся
+к конкретной БД, они не будут выгружены в резервную копию.
+После восстановления базы данных имеет смысл выполнить команду
+ANALYZE — она соберет статистику, необходимую оптимизатору для
+планирования запросов.
+https://postgrespro.ru/docs/postgresql/16/app-pgdump
+Утилита pg_dump
+При запуске без дополнительных параметров утилита pg_dump выдает команды SQL, создающие все объекты в текущей
+базе данных.
+Чтобы получить команды, позволяющие восстановить копию на системе с другим набором ролей, могут пригодиться
+ключи:
+-O, --no-owner — не генерировать команды для установки владельца объектов;
+-x, --no-acl — не генерировать команды для установки привилегий.
+student$ pg_dump -d backup_logical --no-acl
+--
+-- PostgreSQL database dump
+--
+\restrict 9SVmaQgVs0mNXwAdBl23jRpxukDiAurf2WaDlfki9mmjnWo9zicdFaR4DvxXuxG
+-- Dumped from database version 16.11 (Ubuntu 16.11-1.pgdg24.04+1)
+-- Dumped by pg_dump version 16.11 (Ubuntu 16.11-1.pgdg24.04+1)
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+SET default_tablespace = '';
+SET default_table_access_method = heap;
+--
+-- Name: t; Type: TABLE; Schema: public; Owner: student
+--
+CREATE TABLE public.t (
+id integer NOT NULL,
+s text
+);
+ALTER TABLE public.t OWNER TO student;
+--
+-- Name: t_id_seq; Type: SEQUENCE; Schema: public; Owner: student
+--
+ALTER TABLE public.t ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+SEQUENCE NAME public.t_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1
+);
+--
+-- Data for Name: t; Type: TABLE DATA; Schema: public; Owner: student
+--
+COPY public.t (id, s) FROM stdin;
+1 Привет, мир!
+2
+3 \N
+\.
+--
+-- Name: t_id_seq; Type: SEQUENCE SET; Schema: public; Owner: student
+--
+SELECT pg_catalog.setval('public.t_id_seq', 3, true);
+--
+-- Name: t t_pkey; Type: CONSTRAINT; Schema: public; Owner: student
+--
+ALTER TABLE ONLY public.t
+ADD CONSTRAINT t_pkey PRIMARY KEY (id);
+--
+-- PostgreSQL database dump complete
+--
+\unrestrict 9SVmaQgVs0mNXwAdBl23jRpxukDiAurf2WaDlfki9mmjnWo9zicdFaR4DvxXuxG
+Видно, что pg_dump создал таблицу t и заполнил ее с помощью уже рассмотренной нами команды COPY. Ключ --columninserts
+позволяет использовать команды INSERT, но загрузка будет работать существенно дольше.
+Логическая резервная копия в формате plain может содержать злонамеренно вставленные метакоманды, например
+\gexec. Чтобы избежать проблем при выполнении скрипта в psql, pg_dump добавляет в его начало метакоманду \restrict с
+последующим ключом. Эта команда включает ограниченный режим, в котором psql игнорирует все метакоманды, кроме
+команды \unrestrict с таким же ключом, отменяющей ограниченный режим.
+Эти ключи полезны для выгрузки и загрузки данных частями:
+-s, --schema-only — выгрузить только определения объектов без данных;
+-a, --data-only — выгрузить только данные, без создания объектов.
+Удобны, если восстанавливать копию на системе, в которой уже есть данные (и наоборот, на чистой системе):
+-c, --clean — генерировать команды DROP для создаваемых объектов;
+-C, --create — генерировать команды создания БД и подключения к ней.
+Важный момент: в выгрузку попадают и изменения, сделанные в шаблонной БД template1. Поэтому восстанавливать
+резервную копию лучше на базе данных, созданной из template0. При использовании ключа --create это учитывается
+автоматически:
+student$ pg_dump --create -d backup_logical | grep 'CREATE DATABASE'
+CREATE DATABASE backup_logical WITH TEMPLATE = template0 ENCODING = 'UTF8'
+LOCALE_PROVIDER = libc LOCALE = 'en_US.UTF-8';
+Существуют ключи для выбора объектов, которые должны попасть в резервную копию:
+-n, --schema — шаблон для имен схем;
+-t, --table — шаблон для имен таблиц.
+И наоборот, включить в копию все, кроме указанного:
+-N, --exclude-schema — шаблон для имен схем;
+-T, --exclude-table — шаблон для имен таблиц.
+Например, восстановим таблицу t в другой базе данных на другом сервере.
+student$ psql -p 5433
+β=> CREATE DATABASE backup_logical_1;
+CREATE DATABASE
+student$ pg_dump --table=t -d backup_logical | psql -p 5433 -d backup_logical_1
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+COPY 3
+setval
+--------
+3
+(1 row)
+ALTER TABLE
+β=> \c backup_logical_1
+You are now connected to database "backup_logical_1" as user "student".
+β=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 |
+(3 rows)
+9
+Формат custom
+;;
+Archive created at 2017-
+; dbname: demo
+; TOC Entries: 146
+; Compression: -1
+; Dump Version: 1.12-0
+; Format: CUSTOM
+;;
+Selected TOC Entries:
+; 2297; 1262 475453 DATABASE
+5; 2615 475454 SCHEMA - bo
+2298; 0 0 COMMENT - SCHEMA
+$ pg_dump -d база -F c -f файл
+$ pg_restore -d база -j N файл
+внутренний формат с оглавлением
+отдельные объекты базы данных можно выбрать на этапе восстановления
+возможна загрузка в несколько параллельных потоков
+Утилита pg_dump поддерживает несколько форматов резервной копии.
+По умолчанию это plain — простые команды для psql.
+Формат custom (-F c, --format=custom) создает резервную копию
+в специальном формате, содержащем не только объекты, но и
+оглавление. Наличие оглавления позволяет выбирать объекты для
+восстановления не при создании копии, а непосредственно при
+восстановлении. Файл формата custom по умолчанию сжат.
+Для восстановления потребуется другая утилита — pg_restore.
+Она читает файл и преобразует его в команды psql. Если не указать
+явно имя базы данных (в ключе -d), то команды будут выведены
+в стандартный поток вывода. Если же база данных указана — утилита
+соединится с этой БД и выполнит команды без участия psql.
+Чтобы восстановить только часть объектов, можно воспользоваться
+одним из двух подходов. Во-первых, можно ограничить объекты
+аналогично тому, как они ограничиваются в pg_dump. Вообще,
+pg_restore использует многие параметры утилиты pg_dump.
+Во-вторых, можно получить из оглавления список объектов,
+содержащихся в резервной копии (ключ --list). Затем этот список можно
+отредактировать вручную, удалив ненужное и передать измененный
+список на вход pg_restore (ключ --use-list).
+Загрузку можно выполнить параллельно, указав количество потоков
+ключом -j — это еще одно преимущество формата custom.
+https://postgrespro.ru/docs/postgresql/16/app-pgdump
+Утилита pg_dump — формат custom
+Серьезное ограничение обычного формата (plain) состоит в том, что выбирать объекты нужно в момент выгрузки.
+Формат custom позволяет сначала сделать полную копию, а выбирать объекты уже при загрузке.
+student$ pg_dump --format=custom -d backup_logical -f /home/student/tmp/backup_logical.custom
+Для восстановления объектов из такой копии предназначена утилита pg_restore. Повторим восстановление таблицы t:
+β=> DROP TABLE t;
+DROP TABLE
+student$ pg_restore --table=t -p 5433 -d backup_logical_1 --no-acl
+/home/student/tmp/backup_logical.custom
+Формат резервной копии указывать не обязательно — утилита распознает его сама.
+Утилита pg_restore понимает те же ключи для фильтрации объектов, что и pg_dump, и даже больше:
+-I, --index — загрузить определенные индексы;
+-P, --function — загрузить определенные функции;
+-T, --trigger — загрузить определенные триггеры.
+Проверим, как восстановилась таблица:
+β=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 |
+(3 rows)
+Еще один пример: восстановим целиком исходную базу данных backup_logical на другом сервере.
+student$ pg_restore --create -p 5433 -d postgres --no-acl /home/student/tmp/backup_logical.custom
+Здесь мы указали БД postgres, но могли указать любую — утилита сама создаст нужную БД и тут же переключится в нее.
+Проверим:
+β=> \c backup_logical
+You are now connected to database "backup_logical" as user "student".
+β=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 |
+(3 rows)
+11
+Формат directory
+$ pg_dump -d база -F d -j N -f каталог
+$ pg_restore -d база -j N каталог
+каталог с оглавлением и отдельными файлами на каждый объект базы
+отдельные объекты базы данных можно выбрать на этапе восстановления
+и выгрузка, и загрузка возможны в несколько параллельных потоков
+согласованность
+обеспечивается общим
+снимком данных
+Еще один формат резервной копии — directory. В таком случае будет
+создан не один файл, а каталог, содержащий объекты и оглавление.
+По умолчанию файлы внутри каталога будут сжаты.
+Преимущество перед форматом custom состоит в том, что такая
+резервная копия может создаваться параллельно в несколько потоков
+(количество указывается в ключе -j, --jobs).
+Разумеется, несмотря на параллельное выполнение, копия будет
+содержать согласованные данные. Это обеспечивается общим снимком
+данных для всех параллельно работающих процессов.
+https://postgrespro.ru/docs/postgresql/16/functions-admin#FUNCTIONS-SN
+APSHOT-SYNCHRONIZATION
+Восстановление, как и для формата custom, возможно в несколько
+потоков.
+В остальном возможности по работе с форматом directory не
+отличаются от ранее рассмотренных: поддерживаются те же ключи и
+подходы.
+Утилита pg_dump — формат directory
+Формат directory интересен тем, что позволяет выгружать данные в несколько параллельных потоков.
+student$ pg_dump --format=directory \
+--jobs=2 \
+-d backup_logical \
+-f /home/student/tmp/backup_logical.directory
+При этом гарантируется согласованность данных: все параллельные потоки будут использовать один и тот же снимок
+данных.
+Заглянем внутрь каталога:
+student$ ls -l /home/student/tmp/backup_logical.directory
+total 12
+-rw-rw-r-- 1 student student 60 апр 10 17:59 3442.dat.gz
+-rw-rw-r-- 1 student student 4985 апр 10 17:59 toc.dat
+В нем находится файл оглавления и по одному файлу на каждый выгружаемый объект (у нас он всего один):
+student$ zcat /home/student/tmp/backup_logical.directory/3442.dat.gz
+1 Привет, мир!
+2
+3 \N
+\.
+Для восстановления из резервной копии предварительно отключимся от базы данных backup_logical:
+β=> \q
+В команду восстановления добавляем ключ --clean, который генерирует команду удаления существующей БД:
+student$ pg_restore --clean \
+--create \
+--jobs=2 \
+-p 5433 \
+-d postgres /home/student/tmp/backup_logical.directory \
+--no-acl
+student$ psql --pset null='\N' -p 5433 -d backup_logical -c 'SELECT * FROM t'
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 | \N
+(3 rows)
+13
+Сравнение форматов
+plain custom directory tar
+утилита для
+восстановления psql pg_restore
+сжатие gzip, lz4 или zstd
+выборочное
+восстановление да да да
+параллельное
+резервирование да
+параллельное
+восстановление да да
+В приведенной таблице разные форматы сравниваются с точки зрения
+предоставляемых ими возможностей.
+Имеется и четвертый формат — tar. Он не рассматривался, так как
+не привносит ничего нового и не дает преимуществ перед другими
+форматами. Фактически он соответствует созданию tar-файла из
+каталога в формате directory, но не поддерживает сжатие и
+параллелизм.
+14
+Копия кластера БД
+--
+-- PostgreSQL database clu
+--
+SET default_transaction_re
+SET client_encoding = 'UTF
+SET standard_conforming_st
+--
+-- Roles
+--
+CREATE ROLE postgres;
+$ pg_dumpall -f файл
+$ psql -f файл
+формат: команды SQL
+выгружает весь кластер, включая роли и табличные пространства
+пользователь должен иметь доступ ко всем объектам кластера
+не поддерживает параллельную выгрузку
+Чтобы создать резервную копию всего кластера, включая роли и
+табличные пространства, можно воспользоваться утилитой pg_dumpall.
+Поскольку pg_dumpall требуется доступ ко всем объектам всех БД,
+имеет смысл запускать ее от имени суперпользователя. Утилита по
+очереди подключается к каждой БД кластера и выгружает информацию
+с помощью pg_dump. Кроме того, она сохраняет и данные, относящиеся
+к кластеру в целом.
+Чтобы начать работу, утилите требуется подключиться хотя бы
+к какой-то базе данных. По умолчанию выбирается postgres или
+template1, но можно указать и другую.
+Результатом работы pg_dumpall является скрипт для psql. Другие
+форматы не поддерживаются. Это означает, что pg_dumpall не
+поддерживает параллельную выгрузку данных, что может оказаться
+проблемой при больших объемах данных. В таком случае можно
+воспользоваться ключом --globals-only, чтобы выгрузить только роли
+и табличные пространства, а сами базы данных выгрузить отдельно
+с помощью pg_dump в параллельном режиме.
+https://postgrespro.ru/docs/postgresql/16/app-pg-dumpall
+Утилита pg_dumpall
+Утилита pg_dump годится для выгрузки одной базы данных, но никогда не выгружает общие объекты кластера БД, такие,
+как роли и табличные пространства. Чтобы сделать полную копию кластера, нужна утилита pg_dumpall.
+Утилиты pg_dumpall, pg_dump и pg_restore не требуют каких-то отдельных привилегий, но у выполняющей их роли
+должны быть привилегии на чтение (создание) всех затронутых объектов. Утилитой pg_dump может, например,
+пользоваться владелец базы данных. Но поскольку для копирования кластера надо иметь доступ ко всем БД, мы
+выполняем pg_dumpall под суперпользовательской ролью.
+student$ pg_dumpall --clean -U postgres -f /home/student/tmp/alpha.sql
+В копию кластера попадают:
+команды, которые выгружает pg_dump для каждой базы;
+команды для общих объектов кластера (ролей и табличных пространств).
+Команды для общих объектов можно получить отдельно:
+student$ pg_dumpall --clean --globals-only -U postgres
+--
+-- PostgreSQL database cluster dump
+--
+\restrict 3es50MMtas3DuQEICBlRybTIYFuQo6UjJ6QSte0gHU6YC3Cu9FPpqeA5bz5XfUS
+SET default_transaction_read_only = off;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+--
+-- Drop roles
+--
+DROP ROLE postgres;
+DROP ROLE student;
+--
+-- Roles
+--
+CREATE ROLE postgres;
+ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
+BYPASSRLS PASSWORD
+'SCRAM-SHA-256$4096:yfk/5FFxV407/S3oyBsCgw==$OXcRX+r8Qf1rHG4twj/5+MvsSQCLZ3Coe4dpq05MMow=:
+v0NHWjIxeJKzuvakkOGY42c9o2EtM/wkNcgJuhVXE7E=';
+CREATE ROLE student;
+ALTER ROLE student WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
+NOBYPASSRLS PASSWORD
+'SCRAM-SHA-256$4096:G2Dm/mJ7z4+gqTtmhCcqZA==$C/rauObLdXjclYh6ggwRIaRneqQs5QjUDjRIjHKx/t8=:
+VGpRpwauhFGf5KaEVb7adV9+KZuEEZ0vGKrIa80yuJM=';
+--
+-- User Configurations
+--
+--
+-- Role memberships
+--
+GRANT pg_checkpoint TO student WITH INHERIT TRUE GRANTED BY postgres;
+GRANT pg_create_subscription TO student WITH INHERIT TRUE GRANTED BY postgres;
+GRANT pg_monitor TO student WITH INHERIT TRUE GRANTED BY postgres;
+GRANT pg_read_server_files TO student WITH INHERIT TRUE GRANTED BY postgres;
+GRANT pg_write_server_files TO student WITH INHERIT TRUE GRANTED BY postgres;
+--
+-- Role privileges on configuration parameters
+--
+GRANT ALTER SYSTEM ON PARAMETER archive_command TO student;
+GRANT ALTER SYSTEM ON PARAMETER archive_mode TO student;
+GRANT ALTER SYSTEM ON PARAMETER archive_timeout TO student;
+GRANT ALTER SYSTEM ON PARAMETER checkpoint_timeout TO student;
+GRANT ALTER SYSTEM ON PARAMETER hot_standby_feedback TO student;
+GRANT ALTER SYSTEM ON PARAMETER listen_addresses TO student;
+GRANT ALTER SYSTEM ON PARAMETER log_recovery_conflict_waits TO student;
+GRANT ALTER SYSTEM ON PARAMETER max_connections TO student;
+GRANT ALTER SYSTEM ON PARAMETER max_slot_wal_keep_size TO student;
+GRANT ALTER SYSTEM ON PARAMETER max_standby_streaming_delay TO student;
+GRANT ALTER SYSTEM ON PARAMETER max_wal_size TO student;
+GRANT ALTER SYSTEM ON PARAMETER min_wal_size TO student;
+GRANT ALTER SYSTEM ON PARAMETER restore_command TO student;
+GRANT ALTER SYSTEM ON PARAMETER synchronous_commit TO student;
+GRANT ALTER SYSTEM ON PARAMETER synchronous_standby_names TO student;
+GRANT ALTER SYSTEM ON PARAMETER wal_keep_size TO student;
+GRANT ALTER SYSTEM ON PARAMETER wal_level TO student;
+GRANT ALTER SYSTEM ON PARAMETER wal_receiver_status_interval TO student;
+\unrestrict 3es50MMtas3DuQEICBlRybTIYFuQo6UjJ6QSte0gHU6YC3Cu9FPpqeA5bz5XfUS
+--
+-- PostgreSQL database cluster dump complete
+--
+Восстановление выполняется с помощью psql — никакой другой формат не поддерживается.
+student$ psql -p 5433 -U postgres -f /home/student/tmp/alpha.sql
+SET
+SET
+SET
+DROP DATABASE
+DROP DATABASE
+psql:/home/student/tmp/alpha.sql:26: ERROR: current user cannot be dropped
+psql:/home/student/tmp/alpha.sql:27: ERROR: role "student" cannot be dropped because
+some objects depend on it
+DETAIL: owner of database backup_logical_1
+1 object in database backup_logical_1
+psql:/home/student/tmp/alpha.sql:34: ERROR: role "postgres" already exists
+ALTER ROLE
+psql:/home/student/tmp/alpha.sql:36: ERROR: role "student" already exists
+ALTER ROLE
+psql:/home/student/tmp/alpha.sql:48: NOTICE: role "student" has already been granted
+membership in role "pg_checkpoint" by role "postgres"
+GRANT ROLE
+psql:/home/student/tmp/alpha.sql:49: NOTICE: role "student" has already been granted
+membership in role "pg_create_subscription" by role "postgres"
+GRANT ROLE
+psql:/home/student/tmp/alpha.sql:50: NOTICE: role "student" has already been granted
+membership in role "pg_monitor" by role "postgres"
+GRANT ROLE
+psql:/home/student/tmp/alpha.sql:51: NOTICE: role "student" has already been granted
+membership in role "pg_read_server_files" by role "postgres"
+GRANT ROLE
+psql:/home/student/tmp/alpha.sql:52: NOTICE: role "student" has already been granted
+membership in role "pg_write_server_files" by role "postgres"
+GRANT ROLE
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+UPDATE 1
+DROP DATABASE
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "template1" as user "postgres".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+COMMENT
+ALTER DATABASE
+You are now connected to database "template1" as user "postgres".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+REVOKE
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "backup_logical" as user "postgres".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+COPY 3
+setval
+--------
+3
+(1 row)
+ALTER TABLE
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+DROP DATABASE
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "postgres" as user "postgres".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+COMMENT
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "student" as user "postgres".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+В процессе восстановления могут возникать ошибки из-за невозможности удалить некоторые объекты или создать уже
+существующие, в данном случае это нормально и не мешает процессу.
+student$ psql -p 5433
+β=> SELECT datname FROM pg_database;
+datname
+------------------
+template0
+backup_logical_1
+template1
+backup_logical
+postgres
+student
+(6 rows)
+β=> \c backup_logical
+You are now connected to database "backup_logical" as user "student".
+β=> SELECT * FROM t;
+id | s
+----+--------------
+1 | Привет, мир!
+2 |
+3 |
+(3 rows)
+Влияние политик защиты строк
+Если на таблицах определены политики защиты строк (подробно рассматриваются в теме «Доступ на уровне строк»
+курса DBS), то есть опасность выгрузить неполные данные и даже не узнать об этом. Чтобы этого не произошло, перед
+выполнением команды COPY можно установить параметр row_security в значение off — в этом случае применение
+политики приведет к явной ошибке.
+Простой пример. Настроим политику так, чтобы не были видны пустые строки, и включим ее для владельца таблицы:
+α=> CREATE POLICY t_s_not_null ON t USING (s IS NOT NULL);
+CREATE POLICY
+α=> ALTER TABLE t ENABLE ROW LEVEL SECURITY;
+ALTER TABLE
+α=> ALTER TABLE t FORCE ROW LEVEL SECURITY;
+ALTER TABLE
+Теперь COPY выгрузит только две строки:
+α=> COPY t TO stdout;
+1 Привет, мир!
+2
+Но если установить параметр в off, получим ошибку:
+α=> SET row_security = off;
+SET
+α=> COPY t TO stdout;
+ERROR: query would be affected by row-level security policy for table "t"
+HINT: To disable the policy for the table's owner, use ALTER TABLE NO FORCE ROW LEVEL
+SECURITY.
+Утилиты pg_dump и pg_dumpall автоматически устанавливают row_security = off, так что дополнительные действия не
+нужны:
+student$ pg_dump -d backup_logical -t t > /dev/null
+pg_dump: error: query failed: ERROR: query would be affected by row-level security
+policy for table "t"
+HINT: To disable the policy for the table's owner, use ALTER TABLE NO FORCE ROW LEVEL
+SECURITY.
+pg_dump: detail: Query was: COPY public.t (id, s) TO stdout;
+Утилита попыталась выгрузить строки таблицы командой COPY и завершилась ошибкой — она сообщает, что выгрузить
+все строки таблицы t не удается.
+Если все-таки решим выгрузить только доступные строки, можно использовать --enable-row-security:
+student$ pg_dump -d backup_logical -t t --enable-row-security | grep -A3 '^COPY'
+COPY public.t (id, s) FROM stdin;
+1 Привет, мир!
+2
+\.
+Чтобы обойти политики защиты строк и выгрузить все данные, пользователь должен иметь атрибут BYPASSRLS:
+α=> \c - postgres
+You are now connected to database "backup_logical" as user "postgres".
+α=> ALTER USER student BYPASSRLS;
+ALTER ROLE
+Теперь запросы от роли student будут игнорировать политики защиты строк:
+student$ pg_dump -d backup_logical -t t --data-only
+--
+-- PostgreSQL database dump
+--
+\restrict 7lfgcqAyFvDojclaH2Z2g2Q0XjsgfiBgIufeXBMlBtwEvtm604zA95pzqmRtbh2
+-- Dumped from database version 16.11 (Ubuntu 16.11-1.pgdg24.04+1)
+-- Dumped by pg_dump version 16.11 (Ubuntu 16.11-1.pgdg24.04+1)
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+--
+-- Data for Name: t; Type: TABLE DATA; Schema: public; Owner: student
+--
+COPY public.t (id, s) FROM stdin;
+1 Привет, мир!
+2
+3 \N
+\.
+--
+-- Name: t_id_seq; Type: SEQUENCE SET; Schema: public; Owner: student
+--
+SELECT pg_catalog.setval('public.t_id_seq', 3, true);
+--
+-- PostgreSQL database dump complete
+--
+\unrestrict 7lfgcqAyFvDojclaH2Z2g2Q0XjsgfiBgIufeXBMlBtwEvtm604zA95pzqmRtbh2
+16
+Итоги
+Логическое резервирование позволяет сделать копию
+всего кластера, базы данных или отдельных объектов
+Хорошо подходит
+для данных небольшого объема
+для длительного хранения, за время которого меняется версия сервера
+для миграции на другую платформу
+Плохо подходит
+для восстановления после сбоя с минимальной потерей данных
+17
+Практика
+1. Создайте пару баз данных с таблицами и представлениями,
+получите с помощью pg_dumpall копию только глобальных
+объектов кластера, а затем сделайте копии баз данных
+с помощью утилиты pg_dump в параллельном режиме.
+Восстановите кластер на другом сервере, используя
+созданные резервные копии.
+2. Создайте таблицу с двумя столбцами, один из которых
+является первичным ключом и заполняется
+последовательностью. Воспроизведите ситуацию, когда
+при загрузке с помощью COPY последовательность не
+генерирует новые значения, вызывая нарушение
+уникальности при последующей вставке строк.
+2. Объявите столбец как GENERATED ALWAYS AS IDENTITY.
+После выполнения практических заданий удалите созданные базы
+данных и файлы логических копий.
+1. Логическое копирование
+Создадим базы данных, пару таблиц и представлений.
+α=> CREATE DATABASE backup_logical1;
+CREATE DATABASE
+α=> \c backup_logical1
+You are now connected to database "backup_logical1" as user "student".
+α=> CREATE TABLE t1(n integer);
+CREATE TABLE
+α=> INSERT INTO t1 VALUES (1), (2), (3);
+INSERT 0 3
+α=> CREATE VIEW v1 AS SELECT * FROM t1;
+CREATE VIEW
+α=> CREATE DATABASE backup_logical2;
+CREATE DATABASE
+α=> \c backup_logical2
+You are now connected to database "backup_logical2" as user "student".
+α=> CREATE TABLE t2(n integer);
+CREATE TABLE
+α=> INSERT INTO t2 VALUES (1), (2), (3);
+INSERT 0 3
+α=> CREATE VIEW v2 AS SELECT * FROM t2;
+CREATE VIEW
+Сделаем копию глобальных объектов.
+student$ pg_dumpall --clean --globals-only -U postgres -f /home/student/tmp/alpha_globals.sql
+Логические копии баз данных в параллельном режиме:
+student$ pg_dump --jobs=2 \
+--format=directory \
+-d backup_logical1 \
+-f /home/student/tmp/backup_logical1.directory
+student$ pg_dump --jobs=2 \
+--format=directory \
+-d backup_logical2 \
+-f /home/student/tmp/backup_logical2.directory
+Теперь восстановим кластер. Сначала восстанавливаем глобальные объекты:
+student$ psql -p 5433 -U postgres -f /home/student/tmp/alpha_globals.sql 2> /dev/null
+SET
+SET
+SET
+ALTER ROLE
+ALTER ROLE
+GRANT ROLE
+GRANT ROLE
+GRANT ROLE
+GRANT ROLE
+GRANT ROLE
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+Затем — две базы данных в параллельном режиме:
+student$ pg_restore -p 5433 \
+-U postgres \
+-d postgres \
+--create \
+--jobs=2 \
+/home/student/tmp/backup_logical1.directory
+student$ pg_restore -p 5433 \
+-U postgres \
+-d postgres \
+--create \
+--jobs=2 \
+/home/student/tmp/backup_logical2.directory
+Проверим:
+student$ psql -p 5433
+β=> \c backup_logical1
+You are now connected to database "backup_logical1" as user "student".
+β=> \d
+List of relations
+Schema | Name | Type | Owner
+--------+------+-------+---------
+public | t1 | table | student
+public | v1 | view | student
+(2 rows)
+β=> \c backup_logical2
+You are now connected to database "backup_logical2" as user "student".
+β=> \d
+List of relations
+Schema | Name | Type | Owner
+--------+------+-------+---------
+public | t2 | table | student
+public | v2 | view | student
+(2 rows)
+Удалим созданные базы данных.
+α=> \c postgres
+You are now connected to database "postgres" as user "student".
+α=> DROP DATABASE backup_logical1;
+DROP DATABASE
+α=> DROP DATABASE backup_logical2;
+DROP DATABASE
+2. COPY для таблицы с последовательностью
+Таблица с двумя столбцами:
+α=> CREATE DATABASE backup_logical;
+CREATE DATABASE
+α=> \c backup_logical
+You are now connected to database "backup_logical" as user "student".
+α=> CREATE TABLE t(
+id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+txt text
+);
+CREATE TABLE
+Созданы таблица и последовательность:
+α=> \d
+List of relations
+Schema | Name | Type | Owner
+--------+----------+----------+---------
+public | t | table | student
+public | t_id_seq | sequence | student
+(2 rows)
+Загружаем строки, не указывая значения для первого столбца.
+α=> COPY t(txt) FROM STDIN;
+Один
+Два
+Три
+\.
+COPY 3
+Содержимое таблицы соответствует ожиданиям:
+α=> SELECT * FROM t;
+id | txt
+----+------
+1 | Один
+2 | Два
+3 | Три
+(3 rows)
+Счетчик последовательности корректен:
+α=> SELECT currval('t_id_seq');
+currval
+---------
+3
+(1 row)
+Можно добавить очередную строку:
+α=> INSERT INTO t(txt) VALUES('Четыре');
+INSERT 0 1
+Вставляя строки с помощью команды INSERT, мы не можем указывать значение столбца, объявленного как GENERATED
+ALWAYS. Оно должно генерироваться последовательностью:
+α=> INSERT INTO t(id,txt) VALUES(5,'Пять');
+ERROR: cannot insert a non-DEFAULT value into column "id"
+DETAIL: Column "id" is an identity column defined as GENERATED ALWAYS.
+HINT: Use OVERRIDING SYSTEM VALUE to override.
+Однако COPY дает такую возможность:
+α=> COPY t FROM STDIN;
+5 Пять
+6 Шесть
+7 Семь
+\.
+COPY 3
+На первый взгляд все нормально...
+α=> SELECT * FROM t;
+id | txt
+----+--------
+1 | Один
+2 | Два
+3 | Три
+4 | Четыре
+5 | Пять
+6 | Шесть
+7 | Семь
+(7 rows)
+Но это не так:
+α=> INSERT INTO t(txt) VALUES('Восемь');
+ERROR: duplicate key value violates unique constraint "t_pkey"
+DETAIL: Key (id)=(5) already exists.
+Нарушение первичного ключа произошло из-за того, что COPY не обращается к последовательности:
+α=> SELECT currval('t_id_seq');
+currval
+---------
+5
+(1 row)
+Исправим ситуацию, изменив состояние последовательности.
+α=> SELECT setval('t_id_seq', max(id)) FROM t;
+setval
+--------
+7
+(1 row)
+Теперь добавление удастся:
+α=> INSERT INTO t(txt) VALUES('Восемь');
+INSERT 0 1
+α=> SELECT * FROM t;
+id | txt
+----+--------
+1 | Один
+2 | Два
+3 | Три
+4 | Четыре
+5 | Пять
+6 | Шесть
+7 | Семь
+8 | Восемь
+(8 rows)
+Уборка
+Удалим базу данных.
+α=> \c postgres
+You are now connected to database "postgres" as user "student".
+α=> DROP DATABASE backup_logical;
+DROP DATABASE
+18
+Практика+
+1. Создайте таблицу с несколькими строками. Подберите такие
+параметры \copy, чтобы при записи копии в файл
+перепутались корректные данные и неопределенные значения
+(NULL) из-за неудачного выбора кода.
+2. Используя \copy, создайте текстовый файл, в котором
+отсутствие значения обозначается как N/A. Загрузите строки
+из этого файла в таблицу, в которой отсутствие значения
+представляет NULL.
+3. Создайте таблицу с данными размером несколько мегабайт
+и получите размеры логических копий в пользовательском
+формате с разными способами сжатия. Также измерьте время,
+затраченное при копировании с каждым методом сжатия.
+1. Если ошибочно использовать код для NULL, который будет совпадать
+с каким-либо нормальным содержимым столбцов таблицы,
+получившаяся копия не позволит корректно восстановить данные.
+3. Сгенерировать данные можно, например, запросом
+SELECT (random()::numeric*(g.i))^(g.i) AS n
+FROM generate_series(1,2_500) AS g(i);
+Измерить время можно командой /usr/bin/time -f %e pg_dump … .
+После выполнения практических заданий удалите созданные базы
+данных и временные файлы.
+1. Ломаем COPY
+Создадим базу данных.
+α=> CREATE DATABASE backup_logical;
+CREATE DATABASE
+α=> \c backup_logical
+You are now connected to database "backup_logical" as user "student".
+Например, можно установить отображение неопределенных значений, совпадающее с какими-либо данными:
+α=> CREATE TABLE anticopy(s text);
+CREATE TABLE
+α=> INSERT INTO anticopy(s) VALUES ('N'), (NULL);
+INSERT 0 2
+Установим для неопределенных значений код N:
+α=> \copy anticopy to '/home/student/tmp/anticopy.dump' with (null 'N');
+COPY 2
+Вывод двух разных значений теперь неотличим друг от друга. Корректно восстановить из такой копии данные
+невозможно.
+student$ cat ${HOME}/tmp/anticopy.dump
+NN
+Осторожнее с изменением формата по умолчанию!
+2. Загрузка данных с пропусками
+Создадим файл, в котором отсутствие данных будет отмечено как N/A.
+α=> \copy (VALUES (0,'N/A'), (1,'Раз'), (2,'N/A'), (3,'Три')) to /home/student/tmp/backup_logical.txt
+COPY 4
+α=> \! cat /home/student/tmp/backup_logical.txt
+0 N/A
+1 Раз
+2 N/A
+3 Три
+Создадим таблицу для загрузки данных.
+α=> CREATE TABLE t (k int, v text);
+CREATE TABLE
+Загрузим данные в таблицу из файла. Значение N/A должно загружаться как NULL.
+α=> \copy t from /home/student/tmp/backup_logical.txt null 'N/A'
+COPY 4
+α=> SELECT *, v IS NULL "IsNull" FROM t;
+k | v | IsNull
+---+-----+--------
+0 | | t
+1 | Раз | f
+2 | | t
+3 | Три | f
+(4 rows)
+3. Сжатие в pg_dump
+Создадим таблицу достаточно большого размера.
+α=> CREATE TABLE mb AS
+SELECT (random()::numeric*(g.i))^(g.i) AS n
+FROM generate_series(1,2_500) AS g(i);
+SELECT 2500
+α=> SELECT pg_size_pretty(pg_table_size('mb'));
+pg_size_pretty
+----------------
+5128 kB
+(1 row)
+Измерим время выгрузки данных без сжатия (а также прогреем кеш).
+student$ /usr/bin/time -f %e pg_dump \
+--format=custom --dbname=backup_logical \
+--compress=none --file=/home/student/tmp/backup_logical.none
+0.44
+Сколько потребуется времени на выгрузку со сжатием gzip (используется по умолчанию)?
+student$ /usr/bin/time -f %e pg_dump \
+--format=custom --dbname=backup_logical \
+--compress=gzip --file=/home/student/tmp/backup_logical.gzip
+1.81
+Теперь испытаем lz4.
+student$ /usr/bin/time -f %e pg_dump \
+--format=custom --dbname=backup_logical \
+--compress=lz4 --file=/home/student/tmp/backup_logical.lz4
+0.35
+А теперь — zstd.
+student$ /usr/bin/time -f %e pg_dump \
+--format=custom --dbname=backup_logical \
+--compress=zstd --file=/home/student/tmp/backup_logical.zstd
+0.58
+Сравним размеры полученных копий:
+student$ ls -lhS ~/tmp/backup_logical.*
+-rw-rw-r-- 1 student student 8,3M апр 10 18:12 /home/student/tmp/backup_logical.none
+-rw-rw-r-- 1 student student 7,9M апр 10 18:12 /home/student/tmp/backup_logical.lz4
+-rw-rw-r-- 1 student student 4,1M апр 10 18:12 /home/student/tmp/backup_logical.zstd
+-rw-rw-r-- 1 student student 3,9M апр 10 18:12 /home/student/tmp/backup_logical.gzip
+-rw-rw-r-- 1 student student 30 апр 10 18:12 /home/student/tmp/backup_logical.txt
+Выводы:
+gzip сжимает лучше всех, однако работает в несколько раз дольше;
+lz4 — самый быстрый, но дает весьма небольшой эффект;
+zstd — хороший компромисс: степень сжатия лишь немного уступает gzip, а скорость сравнима с lz4.
+Уборка
+Удалим созданные базы данных и временные файлы.
+student$ rm ~/tmp/backup_logical.*
+student$ rm ~/tmp/anticopy.dump
+α=> \c postgres
+You are now connected to database "postgres" as user "student".
+α=> DROP DATABASE backup_logical;
+DROP DATABASE

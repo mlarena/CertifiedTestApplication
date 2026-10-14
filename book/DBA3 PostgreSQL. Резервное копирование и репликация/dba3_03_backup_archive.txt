@@ -1,0 +1,958 @@
+
+
+Резервное копирование
+Архив журналов предзаписи
+16
+
+2
+Темы
+Файловый архив — непрерывная архивация
+Потоковый архив — утилита pg_receivewal
+Восстановление с использованием архива
+Очистка архива
+3
+Непрерывная архивация
+сервер
+файлы WAL
+select, insert
+update, delete
+archiver
+archive_command или archive_library
+копируется
+отработанный
+сегмент
+архив WAL
++ вся настройка внутри СУБД
+− записи попадают в архив с задержкой
+archive_mode = on
+archive_command
+archive_library
+archive_timeout
+Базовая резервная копия, рассмотренная в предыдущей теме,
+содержит все журнальные записи, необходимые для согласования
+страниц файлов данных. Такая копия называется автономной и
+позволяет восстановить состояние сервера на момент окончания
+резервирования.
+Если же к автономной копии добавлять новые файлы журнала
+предзаписи, генерируемые сервером, можно будет восстановить
+кластер на произвольный момент времени. На практике заполненные
+журнальные сегменты копируются не в саму копию, а в отдельный
+архив. Этим занимается процесс archiver при значении параметра
+archive_mode = on.
+В PostgreSQL есть два способа копирования сегмента WAL в архив:
+1. Командой ОС. При переключении на очередной сегмент WAL
+процесс выполняет команду, которую он получает из параметра
+archive_command.
+2. С помощью функций модуля архивирования (начиная с версии 15).
+Имя модуля задается параметром archive_library.
+https://postgrespro.ru/docs/postgresql/16/archive-modules
+На слабо загруженных серверах параметром archive_timeout задают
+максимальное время, которое может пройти до переключения на новый
+сегмент WAL. Переключение можно выполнить и вручную, используя
+функцию pg_switch_wal.
+https://postgrespro.ru/docs/postgresql/16/continuous-archiving
+4
+archive_command
+Команда ОС, архивирующая заполненный сегмент WAL
+копирует файл %p в архив под именем %f,
+сам архив может быть организован любым образом
+должна завершаться со статусом 0 только при успехе
+не должна перезаписывать уже существующие файлы
+должна гарантировать запись в энергонезависимую память
+удобно реализовать нужную логику в собственном скрипте
+Мониторинг
+текущий статус — представление pg_stat_archiver
+удобно включить коллектор сообщений (logging_collector = on)
+и получать диагностику в журнале сообщений сервера
+Команда архивирования должна скопировать указанный файл в некий
+архив. Архив может быть организован любым образом. Например, это
+может быть файловая система на отдельном сервере.
+Команда обязана завершаться с нулевым статусом только при успехе;
+в этом случае скопированный сегмент может быть удален контрольной
+точкой. При ненулевом статусе не скопированный сегмент и следующие
+за ним не удаляются, а сервер периодически повторяет команду
+архивирования, пока не получит 0.
+Команда не должна перезаписывать уже существующие файлы, так как
+это скорее всего означает какую-то ошибку, и перезапись файла может
+погубить архив.
+Для гарантии надежности команда должна обеспечить попадание
+файла в энергонезависимую память: иначе при сбое архива можно
+потерять сегмент, если сервер PostgreSQL успеет его удалить.
+Текущий статус архивации показывает представление pg_stat_archiver.
+Удобно включить сбор сообщений с помощью процесса
+logging_collector, так как в этом случае сообщения об ошибках при
+выполнения archive_command будут попадать в журнал сервера.
+Если подразумевается сложная логика, то ее удобно записать в скрипт
+и использовать имя скрипта в качестве команды копирования.
+https://postgrespro.ru/docs/postgresql/16/runtime-config-wal#GUC-ARCHIV
+E-COMMAND
+Настройка непрерывной архивации
+Архив будем хранить в каталоге /var/lib/postgresql/archive. Он должен быть доступен пользователю-владельцу PostgreSQL.
+postgres$ mkdir /var/lib/postgresql/archive
+В реальной практике архив может размещаться на отдельном сервере или дисковой системе с доступом по сети.
+Включим режим архивирования и установим команду копирования заполненных сегментов журнала.
+α=> ALTER SYSTEM SET archive_mode = on;
+ALTER SYSTEM
+В archive_command мы сначала проверяем наличие файла с указанным именем в архиве, и копируем его только в случае
+отсутствия.
+α=> ALTER SYSTEM SET archive_command =
+'test ! -f /var/lib/postgresql/archive/%f && cp %p /var/lib/postgresql/archive/%f';
+ALTER SYSTEM
+В archive_command можно указать произвольную команду, лишь бы она завершалась со статусом 0 только в случае
+успеха. Например, можно организовать сжатие архивируемых сегментов:
+SET archive_command =
+'test ! -f /var/lib/postgresql/archive/%f && gzip <%p >/var/lib/postgresql/archive/%f';
+В идеале команда архивирования должна выполнять sync, чтобы файл гарантированно попал в энергонезависимую
+память. Иначе при сбое он может пропасть из архива, а сервер может успеть стереть его из каталога pg_wal.
+Обычно удобно поместить всю необходимую логику архивирования в отдельный скрипт и вызывать его:
+SET archive_command = 'archive.sh "%f" "%p"';
+Изменение archive_mode требует рестарта сервера.
+student$ sudo pg_ctlcluster 16 alpha restart
+student$ psql
+Появился процесс archiver:
+α=> SELECT pid, backend_type, backend_start
+FROM pg_stat_activity
+WHERE backend_type='archiver';
+pid | backend_type | backend_start
+-------+--------------+-------------------------------
+67529 | archiver | 2026-04-10 18:02:42.120579+03
+(1 row)
+Проверим работу архивации. Создадим базу и таблицу.
+α=> CREATE DATABASE backup_archive;
+CREATE DATABASE
+α=> \c backup_archive
+You are now connected to database "backup_archive" as user "student".
+α=> CREATE TABLE t(s text);
+CREATE TABLE
+α=> INSERT INTO t VALUES ('Строка №1');
+INSERT 0 1
+Вот какой сегмент WAL используется сейчас:
+α=> SELECT pg_walfile_name(pg_current_wal_lsn());
+pg_walfile_name
+--------------------------
+000000010000000000000001
+(1 row)
+Чтобы заполнить файл, пришлось бы выполнить большое количество операций. В тестовых целях проще принудительно
+переключить сегмент:
+α=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/1FB66D0
+(1 row)
+α=> INSERT INTO t VALUES ('И еще одна строка');
+INSERT 0 1
+Сегмент сменился:
+α=> SELECT pg_walfile_name(pg_current_wal_lsn());
+pg_walfile_name
+--------------------------
+000000010000000000000002
+(1 row)
+А предыдущий должен был попасть в архив. Проверим:
+student$ sudo ls -lh /var/lib/postgresql/archive
+total 16M
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000001
+Текущий статус архивации показывает представление pg_stat_archiver:
+α=> SELECT * FROM pg_stat_archiver \gx
+-[ RECORD 1 ]------+------------------------------
+archived_count | 1
+last_archived_wal | 000000010000000000000001
+last_archived_time | 2026-04-10 18:02:50.111998+03
+failed_count | 0
+last_failed_wal |
+last_failed_time |
+stats_reset | 2025-11-25 18:23:08.681015+03
+Таким образом, файловая архивация настроена и работает.
+6
+pg_receivewal
+сервер
+файлы WAL
+select, insert
+update, delete wal sender
+pg_receivewal
+архив WAL
+слот
+.partial
+max_wal_senders
+max_replication_slots
++ записи попадают в архив сразу
+− требуется отдельная утилита
+− нужен слот репликации
+Можно организовать пополнение архива иным способом, с помощью
+протокола репликации. Для этого используется утилита pg_receivewal.
+Обычно утилита запускается на отдельном сервере, хранящем архив.
+Она формирует файлы аналогично тому, как это делает сам сервер,
+и записывает их в указанный каталог. Не до конца заполненные
+сегменты имеют суффикс .partial. По умолчанию синхронизация кеша
+с файловой системой происходит только при закрытии сегмента WAL,
+но можно сделать запись синхронной, задав параметр --synchronous.
+Утилита может сжимать сегменты WAL. Для этого в параметре
+--compress нужно указать алгоритм (gzip или lz4) и уровень сжатия.
+При первом запуске (когда архив пуст) архивирование начнется
+с начала текущего сегмента. Обычно же архивирование начинается
+с начала сегмента, следующего за последним заполненным сегментом
+в архиве. При использовании слота репликации это гарантирует
+отсутствие пропусков в архиве, даже если утилита отключалась на
+некоторое время.
+По умолчанию утилита получает записи бесконечно, но можно
+завершить ее работу при получении записи с заданным LSN, если
+указать --endpos=lsn.
+Учтите, что утилита не запускается автоматически как сервис и не
+демонизируется.
+https://postgrespro.ru/docs/postgresql/16/app-pgreceivewal
+Потоковый архив
+Чтобы настроить пополнение архива по протоколу потоковой репликации, остановим сначала файловую архивацию.
+α=> ALTER SYSTEM RESET archive_mode;
+ALTER SYSTEM
+α=> ALTER SYSTEM RESET archive_command;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+Текущее состояние архива.
+student$ sudo ls -lh /var/lib/postgresql/archive
+total 32M
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000001
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000002
+Сначала попросим утилиту pg_receivewal создать слот, чтобы гарантировать получение всех записей журнала.
+postgres$ /usr/lib/postgresql/16/bin/pg_receivewal --create-slot --slot=archive
+Затем запустим ее фоном в режиме архивации. Увидев, что в архиве уже есть файлы, утилита запросит у сервера
+следующий сегмент, чтобы в архиве не было пропусков.
+postgres$ /usr/lib/postgresql/16/bin/pg_receivewal -D /var/lib/postgresql/archive --slot=archive &
+Добавим в таблицу много строк и удалим их.
+student$ psql -d backup_archive
+α=> INSERT INTO t SELECT 'И снова здравствуйте.' FROM generate_series(1,200_000);
+INSERT 0 200000
+α=> DELETE FROM t WHERE s = 'И снова здравствуйте.';
+DELETE 200000
+α=> VACUUM t;
+VACUUM
+В архиве появились новые файлы.
+student$ sudo ls -lh /var/lib/postgresql/archive
+total 64M
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000001
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000002
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000003
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000004.partial
+Последний файл, скорее всего, имеет суффикс .partial — в него идет запись.
+Теперь мы настроили потоковую архивацию.
+8
+Базовая копия
+сервер
+файлы WAL
+select, insert
+update, delete
+wal sender pg_basebackup
+базовая копия поток
+данных
+архив WAL
+журнальные
+записи в базовой копии
+теперь не нужны
+Если мы располагаем настроенным архивом журнала предзаписи,
+то в базовой резервной копии файлы журнала перестают быть
+обязательными — ведь их при восстановлении можно получить
+из архива. Поэтому pg_basebackup можно запускать с ключом
+--wal-method=none.
+(Но и никакого вреда от журнальных файлов внутри базовой копии,
+кроме занимаемого объема, тоже нет. Более того, они позволят
+восстановить систему в ситуации, если архив окажется недоступен.)
+Базовая резервная копия
+Поскольку архив пополняется автоматически, попросим pg_basebackup не добавлять файлы журнала к резервной копии:
+student$ pg_basebackup \
+--checkpoint=fast \
+--wal-method=none \
+--pgdata /home/student/tmp/backup
+NOTICE: WAL archiving is not enabled; you must ensure that all required WAL segments are
+copied through other means to complete the backup
+В каталоге pg_wal резервной копии сегментов WAL нет:
+student$ ls -l /home/student/tmp/backup/pg_wal/
+total 4
+drwx------ 2 student student 4096 апр 10 18:03 archive_status
+Зато в архиве прибавилось файлов:
+student$ sudo ls -lh /var/lib/postgresql/archive
+total 96M
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000001
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000002
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000003
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000004
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000005
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000006.partial
+10
+recovery.signal
+сигнализирует о восстановлении
+из резервной копии
+tablespace_map
+пути для табличных пространств
+backup_label
+начальная позиция и др.
+postgresql.conf
+restore_command
+целевая точка
+и др.
+Восстановление
+сервер
+архив WAL
+начальная
+позиция
+целевая точка
+восстановления
+restore_command
+startup
+Процессом восстановления управляют три файла и параметры.
+Файл recovery.signal создается вручную. Его наличие дает указание
+серверу перейти в режим восстановления. Содержимое файла
+игнорируется. Если recovery.signal отсутствует, то PostgreSQL считает,
+что он выполняет автоматическое восстановление после сбоя. Если же
+файл есть, сервер понимает, что происходит управляемое
+пользователем восстановление из резервной копии и обращает
+внимание на два других файла, которые генерируются при создании
+базовой резервной копии:
+● Файл tablespace_map содержит пути для табличных пространств.
+Если символические ссылки в pg_tblspc отсутствуют (это верно для
+формата tar), то они будут созданы при старте сервера на основании
+информации в tablespace_map.
+С этим файлом мы уже встречались в теме «Базовая резервная
+копия».
+● Файл метки backup_label содержит название, время создания копии
+и — самое важное — название сегмента WAL и позицию в нем,
+с которой надо начинать восстановление.
+При восстановлении процесс startup читает файлы из архива
+с помощью команды из параметра restore_command и применяет
+журнальные записи от начальной позиции, указанной в файле метки,
+до целевой точки восстановления.
+Настройка восстановления
+Настройку восстановления начнем с создания сигнального файла.
+student$ touch /home/student/tmp/backup/recovery.signal
+При создании базовой резервной копии был создан файл метки backup_label.
+student$ cat /home/student/tmp/backup/backup_label
+START WAL LOCATION: 0/5000028 (file 000000010000000000000005)
+CHECKPOINT LOCATION: 0/5000060
+BACKUP METHOD: streamed
+BACKUP FROM: primary
+START TIME: 2026-04-10 18:03:00 MSK
+LABEL: pg_basebackup base backup
+START TIMELINE: 1
+Главная информация в этом файле — начальная точка для восстановления (START WAL LOCATION). Теоретически
+восстановление можно начать и с более ранней (но не более поздней) позиции, но это потребует больше времени.
+Поскольку в нашем кластере нет дополнительных табличных пространств, файл tablespace_map не нужен. Осталось
+задать в конфигурационном файле restore_command и другие параметры.
+12
+Команда ОС, восстанавливающая сегмент WAL
+выполняет действие, «обратное» archive_command
+копирует файл %f из архива на сервер по пути %p
+должна завершаться со статусом 0 только при успехе
+(может вызываться для несуществующих файлов)
+Мониторинг
+log_startup_progress_interval = 10s
+журналирование статуса процесса startup
+restore_command
+Параметр restore_command определяет команду, «обратную» команде
+архивирования archive_command. Она должна скопировать файл из
+архива в каталог pg_wal и завершаться со статусом 0 только при
+успехе. Это очень важно, так как в процессе восстановления сервер
+может выполнять команду восстановления для файлов, которых не
+окажется в архиве — это не ошибка, но команда должна завершиться
+с ненулевым статусом.
+Начиная с 14-й версии PostgreSQL изменение параметра
+restore_command не требует рестарта сервера.
+https://postgrespro.ru/docs/postgresql/16/runtime-config-wal#RUNTIME-CO
+NFIG-WAL-ARCHIVE-RECOVERY
+С 15-й версии за состоянием процесса восстановления можно следить
+в журнале сообщений сервера при включенном параметре
+log_startup_progress_interval. При значении по умолчанию информация
+сбрасывается в журнал раз в 10 секунд.
+В более ранних версиях информация о текущем состоянии
+восстановления отображалась только в имени unix-процесса startup.
+13
+Аналог контрольной точки при восстановлении
+сброс грязных буферов
+запись в управляющий файл
+удаление ненужных сегментов WAL
+Выполняется при применении записи о контрольной точке
+если после точки перезапуска прошло не менее checkpoint_timeout
+или объем WAL приближается к max_wal_size
+Мониторинг
+log_checkpoints
+pg_stat_bgwriter
+Точка перезапуска
+Когда при восстановлении процесс startup применяет журнальные
+записи, данные в общей памяти сервера изменяются так же, как при
+обычной работе: появляются грязные буферы. Если произойдет сбой,
+после него нужно будет повторять восстановление, и на этот случай
+необходимо хранить журнальные записи. Чтобы ограничить объем
+хранимых записей и не начинать восстановление с самого начала,
+сервер периодически выполняет точки перезапуска (restart points),
+сбрасывая, как при контрольной точке, грязные буферы структур общей
+памяти: буферного кеша, кеша clog и других. При успешном
+завершении точки перезапуска сервер делает запись в управляющем
+файле и удаляет сегменты WAL, которые целиком предшествуют ее
+началу.
+Точка перезапуска выполняется, когда процесс startup встречает в WAL
+запись о контрольной точке, если после последней точки перезапуска
+прошло не менее checkpoint_timeout времени или если объем журнала
+приближается к значению max_wal_size. Иными словами, точка
+перезапуска инициируется журнальной записью о контрольной точке, но
+если ни одно из условий не выполняется, запись пропускается.
+Если включен параметр log_checkpoints, в журнал сообщений будет
+попадать информация обо всех точках перезапуска, а представление
+pg_stat_bgwriter показывает накопленную статистику.
+https://postgrespro.ru/docs/postgresql/16/wal-configuration
+14
+Восстановление до определенной точки (PITR)
+recovery_target = 'immediate' только восстановить согласованность
+recovery_target_name = 'имя' до именованной точки, созданной
+pg_create_restore_point('имя')
+recovery_target_time = 'время' до указанного времени
+recovery_target_xid = 'xid' до указанной транзакции
+recovery_target_lsn = 'lsn' до указанного LSN
+recovery_target_inclusive = on|off включать ли указанную точку
+recovery_target_action = pause
+pause
+promote принимает подключения
+shutdown останавливается
+Цель восстановления
+завершить — pg_wal_replay_resume()
+задать новую цель + рестарт
+Если цель восстановления не задана, кластер будет восстановлен
+максимально близко к моменту сбоя. Однако процесс восстановления
+можно остановить и в любой другой момент, указав целевую точку:
+● Параметр recovery_target = 'immediate' остановит восстановление,
+как только будет достигнута согласованность. Фактически, это
+эквивалентно восстановлению из базовой копии без архива.
+● Параметр recovery_target_name позволяет указать именованную
+целевую точку восстановления, созданную заранее с помощью
+функции pg_create_restore_point.
+● Параметр recovery_target_time позволяет указать произвольное
+время (timestamp), recovery_target_xid — произвольную транзакцию,
+recovery_target_lsn — номер LSN. С помощью параметра
+recovery_target_inclusive можно включить или исключить саму точку.
+Параметр recovery_target_action позволяет выбрать состояние,
+в котором окажется сервер по достижении целевой точки:
+● При значении pause восстановление приостанавливается.
+Администратор может выполнить запросы и решить, корректно ли
+была выбрана цель, после чего либо завершить восстановление
+(функция pg_wal_replay_resume), либо задать новую цель,
+перезапустить сервер и продолжить применение записей WAL.
+● Если задано значение promote, сервер сразу сможет принимать
+запросы на подключения.
+● Значение shutdown приведет к остановке сервера. При этом файл
+recovery.signal не удаляется.
+15
+recovery.signal удаляется
+backup_label backup_label.old
+выполняется recovery_end_command
+проблемы диагностируются
+по журналу сообщений
+Окончание восстановления
+сервер
+архив WAL
+файлы WAL
+select, insert
+update, delete
+перенастроить
+на другой архив?
+После того как восстановление закончено, процесс startup завершается,
+postmaster запускает остальные служебные процессы, необходимые
+для работы экземпляра, и сервер начинает работать
+в обычном режиме. Файл recovery.signal удаляется, backup_label
+переименовывается в backup_label.old.
+В параметре recovery_end_command можно задать команду, которая
+выполнится по окончании восстановления; это могут быть действия
+с файловой системой, очистка архива, отправка уведомления и др.
+Возможна ситуация, когда запущенный сервер не стартует. В этом
+случае в операционной системе будут отсутствовать процессы
+экземпляра (и не будет файла postmaster.pid), а recovery.signal не будет
+удален. Причину ошибки можно узнать из журнала сообщений сервера
+(например, в параметрах была допущена ошибка). После исправления
+причины ошибки сервер следует запустить еще раз.
+Важный момент: если на сервере-источнике было настроено
+непрерывное архивирование, то на резервном сервере его надо либо
+отключить, либо перенаправить в другой архив.
+Восстановление из базовой резервной копии
+Зададим настройки восстановления на сервере beta. В простейшем случае достаточно указать команду восстановления,
+которая будет копировать указанный сегмент WAL обратно из архива по указанному пути:
+student$ echo "restore_command = 'cp /var/lib/postgresql/archive/%f %p'" \
+>> /home/student/tmp/backup/postgresql.auto.conf
+Если не указана целевая точка восстановления (один из параметров recovery_target*), то к базовой резервной копии будут
+применены записи WAL из всех файлов в архиве.
+Выкладываем резервную копию в каталог данных сервера beta и запускаем его.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+student$ sudo rm -rf /var/lib/postgresql/16/beta
+student$ sudo mv /home/student/tmp/backup /var/lib/postgresql/16/beta
+student$ sudo chown -R postgres:postgres /var/lib/postgresql/16/beta
+student$ sudo pg_ctlcluster 16 beta start
+После успешного восстановления файл recovery.signal удаляется, а файл метки переименовывается в backup_label.old:
+student$ sudo ls -l /var/lib/postgresql/16/beta | egrep 'recovery|backup_label'
+-rw------- 1 postgres postgres 225 апр 10 18:03 backup_label.old
+Поскольку были применены все записи WAL, сервер beta сразу начинает принимать подключения. Проверим, что
+восстановлено в таблице:
+student$ psql -p 5433 -d backup_archive
+β=> SELECT * FROM t;
+s
+-------------------
+Строка №1
+И еще одна строка
+(2 rows)
+Накопительная статистика сервера содержит информацию о точках перезапуска:
+β=> SELECT checkpoints_timed, checkpoints_req, checkpoint_write_time, checkpoint_sync_time, buffers_checkpoint
+FROM pg_stat_bgwriter \gx
+-[ RECORD 1 ]---------+---
+checkpoints_timed | 0
+checkpoints_req | 1
+checkpoint_write_time | 31
+checkpoint_sync_time | 15
+buffers_checkpoint | 0
+17
+Порядковый номер, +1 при каждом восстановлении
+номер N линии времени входит в имя сегмента WAL
+история сохраняется в файле pg_wal/N.history и архивируется
+Линии времени
+1
+2
+целевая
+точка
+1
+2
+recovery_target_timeline = 'latest'
+восстановление по последней линии
+(по умолчанию)
+recovery_target_timeline = 'current'
+восстановление по текущей линии
+recovery_target_timeline = '1'
+восстановление по указанной линии
+После восстановления на момент в прошлом сервер начинает
+генерировать новые записи WAL, номера которых будут повторять
+номера записей «из прошлой жизни». Чтобы не потерять записи и,
+вместе с ними, возможность восстановления на другой момент,
+PostgreSQL вводит понятие линии времени. После каждого
+восстановления с использованием recovery.signal номер линии времени
+увеличивается, и этот номер является частью номера сегментов WAL.
+Линии времени образуют древовидную структуру, на рисунках приведен
+пример. Первая линия имеет номер 1. Произошло восстановление на
+момент времени в прошлом, и началась линия 2.
+Если выполнить восстановление с указанием параметра
+recovery_target_timeline = 'latest' (по умолчанию), то, дойдя то точки
+ветвления, применение записей WAL продолжится по второй (более
+поздней) линии.
+Если же указать параметр recovery_target_timeline = '1', то
+восстановление продолжится по первой (указанной) линии, а если
+указать recovery_target_timeline = 'current', то по текущей (в нашем
+случае тоже по линии 1).
+Информацию о точках ветвления PostgreSQL берет из файлов истории
+pg_wal/N.history. Поэтому их никогда не следует удалять из архива.
+Линии времени
+Что стало с линией времени после восстановления?
+β=> SELECT pg_walfile_name(pg_current_wal_lsn());
+pg_walfile_name
+--------------------------
+000000020000000000000006
+(1 row)
+Номер увеличился на единицу.
+В каталоге pg_wal появился файл истории, соответствующий этой ветви:
+postgres$ ls /var/lib/postgresql/16/beta/pg_wal/00000002.history
+/var/lib/postgresql/16/beta/pg_wal/00000002.history
+В нем есть информация о «точках ветвления», через которые мы пришли в данную линию времени:
+student$ sudo cat /var/lib/postgresql/16/beta/pg_wal/00000002.history
+1 0/6000000 no recovery target specified
+Эти файлы PostgreSQL использует, когда мы указываем линию времени в параметре recovery_target_timeline. Поэтому
+файлы истории подлежат архивации вместе с сегментами WAL, и удалять из архива их не надо.
+19
+Очистка архива
+сервер
+файлы WAL
+select, insert
+update, delete
+wal sender pg_basebackup
+базовая копия
+архив WAL
+контрольная
+точка
+pg_archivecleanup
+Архив со временем разрастается, поэтому требуется периодическая
+очистка от ненужных файлов.
+Для очистки можно воспользоваться утилитой pg_archivecleanup.
+Утилите нужно указать имя сегмента WAL, и она удалит все ему
+предшествующие.
+https://postgrespro.ru/docs/postgresql/16/pgarchivecleanup
+Вопрос в том, как определить позицию в архиве, начиная с которой
+сегменты уже не нужны.
+Если архив используется только для восстановления из одной базовой
+резервной копии, можно выполнять очистку сразу после ее обновления.
+Но если архив должен поддерживать восстановление из нескольких
+базовых резервных копий, то для автоматизации очистки либо придется
+написать собственный скрипт, либо — что лучше — воспользоваться
+одной из сторонних программ резервного копирования, таких как
+pg_probackup, которые позволяют гибко настроить политику хранения
+резервных копий.
+Очистка архива
+Сейчас архив первого сервера содержит ненужные файлы, они попали туда до формирования базовой копии:
+student$ sudo ls -lh /var/lib/postgresql/archive
+total 96M
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000001
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000002
+-rw------- 1 postgres postgres 16M апр 10 18:02 000000010000000000000003
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000004
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000005
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000006.partial
+Утилите pg_archivecleanup нужно передать путь к архиву и имя последнего сохраняемого сегмента WAL (его можно
+найти в файле backup_label).
+student$ sudo head -n 1 /var/lib/postgresql/16/beta/backup_label.old
+START WAL LOCATION: 0/5000028 (file 000000010000000000000005)
+student$ sudo pg_archivecleanup /var/lib/postgresql/archive 000000010000000000000005
+Посмотрим, какие файлы остались в архиве:
+student$ sudo ls -lh /var/lib/postgresql/archive
+total 32M
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000005
+-rw------- 1 postgres postgres 16M апр 10 18:03 000000010000000000000006.partial
+Архив очищен.
+Утилиту можно вызывать сразу после формирования базовой резервной копии, поместив обе команды в скрипт.
+21
+Итоги
+Физическое резервирование —
+базовые резервные копии и архив журнала предзаписи
+Хорошо подходит
+для текущего периодического резервирования
+для восстановления после сбоя с минимальной потерей данных
+для восстановления на произвольный момент времени
+для резервирования данных большого объема
+Плохо подходит
+для длительного хранения
+Не подходит
+для миграции на другую платформу
+22
+Практика
+1. На сервере alpha создайте базу данных и таблицу с данными.
+2. Настройте непрерывное архивирование.
+3. Сделайте копию кластера без файлов журнала.
+4. Вставьте еще несколько строк в таблицу и убедитесь,
+что текущий сегмент WAL попал в архив.
+5. Восстановите сервер beta из резервной копии, указав
+в параметрах одну только команду восстановления.
+6. Снова восстановите сервер beta из той же резервной копии,
+на этот раз указав целевую точку восстановления immediate.
+После выполнения практических заданий удалите базы данных
+и сбросьте изменения параметров конфигурации.
+1. База данных и таблица
+α=> CREATE DATABASE backup_archive;
+CREATE DATABASE
+α=> \c backup_archive
+You are now connected to database "backup_archive" as user "student".
+α=> CREATE TABLE t(s text);
+CREATE TABLE
+α=> INSERT INTO t VALUES ('Привет, мир!');
+INSERT 0 1
+2. Настройка непрерывной архивации
+postgres$ mkdir /var/lib/postgresql/archive
+α=> ALTER SYSTEM SET archive_mode = on;
+ALTER SYSTEM
+α=> ALTER SYSTEM SET archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p /var/lib/postgresql/archive/%f';
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+3. Базовая резервная копия
+Поскольку нам потребуется восстанавливаться из одной копии два раза, сделаем ее в формате tar со сжатием.
+student$ pg_basebackup \
+--checkpoint=fast \
+--wal-method=none \
+--format=tar \
+--gzip \
+--pgdata=/home/student/tmp/backup
+NOTICE: all required WAL segments have been archived
+student$ ls -l /home/student/tmp/backup
+total 5324
+-rw------- 1 student student 224439 апр 10 18:14 backup_manifest
+-rw------- 1 student student 5224402 апр 10 18:14 base.tar.gz
+4. Добавление строк в таблицу
+student$ psql -d backup_archive
+α=> INSERT INTO t VALUES ('Еще одна строка');
+INSERT 0 1
+Переключаем сегмент:
+α=> SELECT pg_walfile_name(pg_current_wal_lsn()), pg_switch_wal();
+pg_walfile_name | pg_switch_wal
+--------------------------+---------------
+000000010000000000000003 | 0/3006658
+(1 row)
+Проверяем статус архивации:
+α=> SELECT last_archived_wal FROM pg_stat_archiver;
+last_archived_wal
+--------------------------
+000000010000000000000003
+(1 row)
+5. Восстановление из базовой резервной копии
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ mkdir /var/lib/postgresql/16/beta
+postgres$ chmod 700 /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/beta
+Для простоты отключим непрерывное архивирование на резервном сервере и укажем только команду восстановления:
+postgres$ echo "restore_command = 'cp /var/lib/postgresql/archive/%f %p' " \
+| tee /var/lib/postgresql/16/beta/postgresql.auto.conf
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+Создаем recovery.signal.
+postgres$ touch /var/lib/postgresql/16/beta/recovery.signal
+Запускаем сервер.
+student$ sudo pg_ctlcluster 16 beta start
+student$ psql -p 5433 -d backup_archive
+β=> SELECT * FROM t;
+s
+-----------------
+Привет, мир!
+Еще одна строка
+(2 rows)
+Восстановились все строки. Поскольку по умолчанию применяются все имеющиеся журнальные записи, сервер сразу перешел в
+обычный режим и готов принимать запросы на изменение данных:
+β=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+f
+(1 row)
+6. Восстановление из базовой резервной копии — immediate
+student$ sudo pg_ctlcluster 16 beta stop
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ mkdir /var/lib/postgresql/16/beta
+postgres$ chmod 700 /var/lib/postgresql/16/beta
+student$ sudo tar xzf /home/student/tmp/backup/base.tar.gz -C /var/lib/postgresql/16/beta
+Создаем recovery.signal, в конфигурационный файл записываем команду восстановления и целевую точку:
+postgres$ touch /var/lib/postgresql/16/beta/recovery.signal
+postgres$ cat << EOF | tee /var/lib/postgresql/16/beta/postgresql.auto.conf
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+recovery_target = 'immediate'
+EOF
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+recovery_target = 'immediate'
+Запускаем сервер.
+student$ sudo pg_ctlcluster 16 beta start
+student$ psql -p 5433 -d backup_archive
+β=> SELECT * FROM t;
+s
+--------------
+Привет, мир!
+(1 row)
+Восстановилась только первая строка.
+На этот раз были применены только журнальные записи, необходимые для согласования данных. Сервер уже принимает запросы на
+чтение, при необходимости восстановление можно продолжить:
+β=> SELECT pg_is_in_recovery(), pg_get_wal_replay_pause_state();
+pg_is_in_recovery | pg_get_wal_replay_pause_state
+-------------------+-------------------------------
+t | paused
+(1 row)
+Функция pg_get_wal_replay_pause_state() возвращает:
+not paused — приостановка не запрашивалась;
+pause requested — запрошена приостановка;
+paused — восстановление приостановлено.
+Поскольку нам не нужно применять последующие записи, завершаем восстановление, переводя сервер в обычный режим (нужны
+права суперпользователя):
+β=> SELECT pg_wal_replay_resume();
+pg_wal_replay_resume
+----------------------
+(1 row)
+β=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+f
+(1 row)
+Чтобы не выходить из режима восстановления вручную, можно было заранее задать значение recovery_target_action = 'promote'.
+Уборка
+Удалим резервную копию и базы данных, сбросим настройки параметров конфигурации.
+student$ rm -rf /home/student/tmp/backup
+β=> ALTER SYSTEM RESET archive_mode;
+ALTER SYSTEM
+β=> ALTER SYSTEM RESET archive_command;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 beta stop
+α=> \c student postgres
+You are now connected to database "student" as user "postgres".
+α=> DROP DATABASE backup_archive;
+DROP DATABASE
+α=> ALTER SYSTEM RESET archive_mode;
+ALTER SYSTEM
+α=> ALTER SYSTEM RESET archive_command;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+postgres$ rm -rf /var/lib/postgresql/archive
+23
+Практика+
+1. На сервере alpha создайте таблицу, в которую будут
+периодически записываться данные. Создайте физическую
+резервную копию и настройте непрерывную архивацию
+WAL.
+2. Вставьте в подготовленную таблицу трижды по 100 строк
+(данные за январь, февраль и март), отмечая время сразу
+после вставки. Между вставками удалите некоторые строки:
+сымитируйте ситуацию, в которой пользователь случайно
+удаляет часть данных в неизвестный момент, но проблему
+замечают не сразу.
+3. Восстановите удаленные данные, не останавливая при этом
+сервер alpha.
+3. Используйте сервер beta как вспомогательный.
+1. Таблица и резервирование с архивом WAL
+α=> CREATE DATABASE backup_archive;
+CREATE DATABASE
+α=> \c backup_archive
+You are now connected to database "backup_archive" as user "student".
+Подготовим таблицу:
+α=> CREATE TABLE t (
+id integer PRIMARY KEY,
+month text
+);
+CREATE TABLE
+После формирования структуры данных создадим физическую копию:
+postgres$ pg_basebackup \
+--checkpoint=fast \
+--pgdata /var/lib/postgresql/backup
+Архив сегментов WAL:
+postgres$ mkdir /var/lib/postgresql/archive
+Добавим файл параметров архивирования в каталог дополнительной конфигурации.
+postgres$ cat << EOF | tee /etc/postgresql/16/alpha/conf.d/arch.conf
+archive_mode = 'on'
+archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p /var/lib/postgresql/archive/%f'
+archive_timeout = '30s'
+EOF
+archive_mode = 'on'
+archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p
+/var/lib/postgresql/archive/%f'
+archive_timeout = '30s'
+Перезапускаем сервер.
+student$ sudo pg_ctlcluster 16 alpha restart
+student$ psql -d backup_archive
+2. Вставка данных в таблицу
+Наше условное приложение добавляет в таблицу 100 строк в конце каждого месяца.
+Вставка строк за январь:
+α=> INSERT INTO t SELECT g.i, 'Январь' FROM generate_series(1,100) AS g(i);
+INSERT 0 100
+Запомним момент времени после завершения вставки:
+α=> SELECT now();
+now
+------------------------------
+2026-04-10 18:16:16.26225+03
+(1 row)
+Пользователь по ошибке удаляет часть данных:
+α=> DELETE FROM t WHERE id BETWEEN 42 AND 111;
+DELETE 59
+Вставим данные за февраль:
+α=> INSERT INTO t SELECT g.i, 'Февраль' FROM generate_series(101,200) AS g(i);
+INSERT 0 100
+Снова запомним момент времени после окончания транзакции:
+α=> SELECT now();
+now
+-------------------------------
+2026-04-10 18:16:26.577825+03
+(1 row)
+Пользователь зачем-то еще раз выполняет ту же команду:
+α=> DELETE FROM t WHERE id BETWEEN 42 AND 111;
+DELETE 11
+Но ошибку пока не заметили. Выполняем еще одну вставку:
+α=> INSERT INTO t SELECT g.i, 'Март' FROM generate_series(201,300) AS g(i);
+INSERT 0 100
+Опять запомним момент времени:
+α=> SELECT now();
+now
+-------------------------------
+2026-04-10 18:16:36.882398+03
+(1 row)
+Теперь ошибка обнаружена:
+α=> SELECT month, count(*) FROM t GROUP BY month;
+month | count
+---------+-------
+Февраль | 89
+Март | 100
+Январь | 41
+(3 rows)
+3. Восстановление с помощью архива
+Задача: восстановить данные, не останавливая сервер alpha.
+Пропали данные за январь и февраль, поэтому план действий таков:
+на сервере beta восстанавливаем, используя архив WAL, данные на конец загрузки январских строк;
+выгружаем логическую копию данных за январь;
+заново восстанавливаем данные, но теперь на конец загрузки февральских строк;
+выгружаем логическую копию данных за февраль (январские данные в этот момент могут быть повреждены);
+загружаем восстановленные данные в таблицу приложения на сервере alpha.
+Остановим сервер beta и поместим физическую копию в его каталог данных.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ mv /var/lib/postgresql/backup /var/lib/postgresql/16/beta
+Необходимо создать файл recovery.signal:
+postgres$ touch /var/lib/postgresql/16/beta/recovery.signal
+Мы хотим восстановить состояние сервера на определенный момент времени, то есть выполнить point-in-time recovery
+(PITR). Зададим команду восстановления и укажем целевую точку восстановления на запомненный момент сразу после
+загрузки данных за январь:
+postgres$ cat << EOF | tee /etc/postgresql/16/beta/conf.d/recovery.conf
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+recovery_target_time = '2026-04-10 18:16:16.26225+03'
+EOF
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+recovery_target_time = '2026-04-10 18:16:16.26225+03'
+Перед началом восстановления принудительно переключим сегмент на alpha, чтобы все записи WAL попали в архив.
+Архивация происходит при начале записи в следующий сегмент.
+α=> SELECT pg_switch_wal();
+pg_switch_wal
+---------------
+0/301D630
+(1 row)
+α=> CHECKPOINT;
+CHECKPOINT
+Запускаем сервер beta.
+student$ sudo pg_ctlcluster 16 beta start
+student$ psql -p 5433 -d backup_archive
+Проверим, что данные за январь восстановлены:
+β=> SELECT month, count(*) FROM t GROUP BY month;
+month | count
+--------+-------
+Январь | 100
+(1 row)
+Сервер beta находится в состоянии восстановления:
+β=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+t
+(1 row)
+Однако это не помешает выгрузить логическую копию данных.
+postgres$ mkdir /var/lib/postgresql/tmp
+β=> COPY (SELECT * FROM t WHERE month = 'Январь') TO '/var/lib/postgresql/tmp/jan.dump';
+COPY 100
+Переходим к февралю. Указываем новое время:
+postgres$ sed -i "/recovery_target_time/c\recovery_target_time = '2026-04-10 18:16:26.577825+03'"
+/etc/postgresql/16/beta/conf.d/recovery.conf
+postgres$ cat /etc/postgresql/16/beta/conf.d/recovery.conf
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+recovery_target_time = '2026-04-10 18:16:26.577825+03'
+Чтобы продолжить восстановление, перезапустим сервер beta.
+student$ sudo pg_ctlcluster 16 beta restart
+student$ psql -p 5433 -d backup_archive
+Проверяем восстановленные данные:
+β=> SELECT month, count(*) FROM t GROUP BY month;
+month | count
+---------+-------
+Февраль | 100
+Январь | 41
+(2 rows)
+Мы видим, что февральские строки на месте, а январские уже повреждены. Выгружаем февраль:
+β=> COPY (SELECT * FROM t WHERE month = 'Февраль') TO '/var/lib/postgresql/tmp/feb.dump';
+COPY 100
+Теперь восстановим выгруженные данные за два месяца на сервере alpha.
+α=> DELETE FROM t WHERE month IN ('Январь', 'Февраль');
+DELETE 130
+α=> COPY t FROM '/var/lib/postgresql/tmp/jan.dump';
+COPY 100
+α=> COPY t FROM '/var/lib/postgresql/tmp/feb.dump';
+COPY 100
+Все получилось:
+α=> SELECT month, count(*) FROM t GROUP BY month;
+month | count
+---------+-------
+Февраль | 100
+Январь | 100
+Март | 100
+(3 rows)
+Начиная с версии PostgreSQL 17 можно было бы не удалять строки, а воспользоваться командой COPY с параметром ON
+ERROR ignore, чтобы пропустить уже существующие в таблице.
+Уборка
+Удалим базы данных и настройки параметров конфигурации.
+student$ sudo pg_ctlcluster 16 beta stop
+α=> \c postgres
+You are now connected to database "postgres" as user "student".
+α=> DROP DATABASE backup_archive;
+DROP DATABASE
+postgres$ rm /etc/postgresql/16/beta/conf.d/recovery.conf
+student$ sudo pg_ctlcluster 16 alpha restart
+Удалим ненужные файлы.
+postgres$ rm -rf /var/lib/postgresql/{tmp,archive,backup}

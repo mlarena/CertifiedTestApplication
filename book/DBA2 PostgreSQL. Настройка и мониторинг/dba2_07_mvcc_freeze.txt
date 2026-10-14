@@ -1,0 +1,754 @@
+Многоверсионность
+Заморозка
+16
+
+2
+Темы
+Проблема переполнения счетчика транзакций
+Заморозка версий строк и правила видимости
+Настройка автоочистки для выполнения заморозки
+Заморозка вручную
+3
+Переполнение счетчика
+меньшие номера — прошлое, бóльшие — будущее
+разрядность счетчика — 32 бита, что делать при переполнении?
+1 2
+транзакция 2
+началась позже
+транзакции 1
+прошлое будущее
+Кроме освобождения места в страницах, очистка выполняет также
+задачу по предотвращению проблем, связанных с переполнением
+счетчика транзакций.
+Под номер транзакции в PostgreSQL выделено 32 бита. Это довольно
+большое число (около 4 млрд номеров), но при активной работе
+сервера оно вполне может быть исчерпано. Например при нагрузке
+1000 транзакций в секунду это произойдет всего через полтора месяца
+непрерывной работы.
+Но мы говорили о том, что механизм многоверсионности полагается на
+последовательную нумерацию транзакций — из двух транзакций
+транзакция с меньшим номером считается начавшейся раньше.
+Понятно, что нельзя просто обнулить счетчик и продолжить нумерацию
+заново.
+Почему под номер транзакции не выделено 64 бита — ведь это
+полностью исключило бы проблему? Дело в том, что (как
+рассматривалось в теме «Страницы и версии строк») в заголовке
+каждой версии строки хранятся два номера транзакций — xmin и xmax.
+Заголовок и так достаточно большой, а увеличение разрядности
+привело бы к его увеличению еще на 8 байт.
+4
+пространство номеров транзакций закольцовано
+половина номеров — прошлое, половина — будущее
+Нумерация по кругу
+1 1
+2
+возраст транзакции
+Поэтому вместо линейной схемы все номера транзакций закольцованы.
+Для любой транзакции половина номеров «против часовой стрелки»
+считается принадлежащей прошлому, а половина «по часовой
+стрелке» — будущему.
+Возрастом транзакции называется число транзакций, прошедших
+с момента ее появления в системе (независимо от того, переходил ли
+счетчик через ноль или нет).
+5
+Проблема видимости
+1 1
+2
+2
+3
+3
+4
+транзакция 1
+находится далеко
+в прошлом
+транзакция 1
+внезапно оказалась
+в будущем?
+В такой закольцованной схеме возникает неприятная ситуация.
+Транзакция, находившаяся в далеком прошлом (транзакция 1
+на слайде), через некоторое время окажется в той половине круга,
+которая относится к будущему. Это, конечно, нарушит правила
+видимости и приведет к проблемам.
+6
+замороженные версии строк считаются «бесконечно старыми»
+номер транзакции xmin может быть использован заново
+Заморозка версий строк
+2
+3
+3
+4
+Чтобы не допустить путешествий из прошлого в будущее, процесс
+очистки выполняет еще одну задачу. Он находит достаточно старые и
+«холодные» версии строк (которые видны во всех снимках и изменение
+которых уже маловероятно) и специальным образом помечает —
+«замораживает» — их. Замороженная версия строки считается старше
+любых обычных данных и всегда видна во всех снимках данных. При
+этом уже не требуется смотреть на номер транзакции xmin, и этот
+номер может быть безопасно использован заново. Таким образом,
+замороженные версии строк всегда остаются в прошлом.
+https://postgrespro.ru/docs/postgresql/16/routine-vacuuming#VACUUM-FOR
+-WRAPAROUND
+7
+указатель
+Еще одна задача процесса очистки
+если вовремя не заморозить версии строк, они окажутся в будущем
+и сервер остановится для предотвращения ошибки
+Заморозка версий строк
+xmin committed
+xmin aborted
+xmax committed
+xmax aborted
+данные
+(0,1) normal 100 0 t t 42,FOO
+признак
+заморозки
+на номер
+больше не
+смотрим
+xmin xmax
+Для того чтобы пометить версию строки как замороженную, для
+транзакции xmin выставляются одновременно оба бита-подсказки —
+бит фиксации и бит отмены.
+Заметим, что транзакцию xmax замораживать не нужно. Ее наличие
+означает, что данная версия строки больше не актуальна. После того,
+как она перестанет быть видимой в снимках данных, такая версия
+строки будет очищена.
+Многие источники (включая документацию) упоминают специальный
+номер FrozenTransactionId = 2, который записывается на место xmin
+в замороженных версиях. Такая система действовала до версии 9.4,
+но сейчас заменена на биты-подсказки — это позволяет сохранить
+в версии строки исходный номер транзакции, что удобно для целей
+поддержки и отладки. Однако транзакции с номером 2 еще могут
+встретиться в старых системах, даже обновленных до последних
+версий.
+Важно, чтобы версии строк замораживались вовремя. Если возникнет
+ситуация, при которой еще не замороженный номер транзакции рискует
+попасть в будущее, PostgreSQL аварийно остановится. Это возможно
+в двух случаях: либо транзакция не завершена и, следовательно, не
+может быть заморожена, либо не сработала очистка.
+При запуске сервера транзакция будет автоматически отменена;
+дальше администратор должен вручную выполнить очистку, и после
+этого система сможет продолжить работу.
+8
+vacuum_freeze_min_age
+минимальный возраст,
+с которого начинается заморозка
+Настройка
+vacuum_freeze_min_age
+Заморозкой управляют четыре основных параметра.
+Параметр vacuum_freeze_min_age определяет минимальный возраст
+транзакции xmin, с которого начинается заморозка.
+Чем меньше это значение, тем больше может быть накладных
+расходов. Если строка «горячая» и активно меняется, заморозка ее
+версий будет пропадать без пользы: уже замороженные версии будут
+вычищаться, а новые версии придется снова замораживать.
+Поэтому более молодые версии строк замораживаются только в тех
+случаях, когда это точно не добавляет работы, например, если
+в странице уже требуется заморозка других (более старых) строк
+или при полной очистке таблицы.
+Заметим, что очистка просматривает только страницы, не отмеченные
+в карте видимости. Если на странице остались только актуальные
+версии, то очистка не придет в такую страницу и не заморозит их.
+В заголовке табличной страницы также имеется признак видимости
+всех версий строк в ней; очистка использует его вместе
+с соответствующей отметкой в карте видимости.
+9
+vacuum_freeze_table_age
+при достижении такого возраста
+замораживаются версии строк на всех страницах
+(«агрессивная» заморозка)
+для ускорения используется карта заморозки
+Настройка
+vacuum_freeze_min_age
+vacuum_freeze_table_age
+Параметр vacuum_freeze_table_age определяет возраст транзакции,
+при котором пора выполнять заморозку версий строк на всех страницах
+таблицы. Такая заморозка называется «агрессивной».
+Для каждой таблицы хранится номер транзакции (pg_class.relfrozenxid),
+для которого известно, что в версиях строк не осталось более старых
+незамороженных номеров транзакций. Возраст этой транзакции
+и сравнивается со значением параметра.
+Чтобы не просматривать всю таблицу целиком, вместе с картой
+видимости ведется карта заморозки. В ней отмечены страницы,
+в которых заморожены все версии строк. Такие страницы при заморозке
+можно пропускать.
+Даже в агрессивном режиме все версии строк с транзакциями младше
+vacuum_freeze_min_age не замораживаются, поэтому после заморозки
+новый возраст транзакции relfrozenxid будет равен не нулю,
+а vacuum_freeze_min_age. Таким образом, заморозка всех страниц
+выполняется раз в (vacuum_freeze_table_age − vacuum_freeze_min_age)
+транзакций.
+Мы уже говорили, что слишком маленькое значение параметра
+vacuum_freeze_min_age увеличивает накладные расходы на очистку.
+Но при больших значениях агрессивная заморозка будет выполняться
+слишком часто, что тоже плохо. Установка этого параметра требует
+компромисса.
+10
+autovacuum_freeze_max_age
+при достижении такого возраста
+заморозка запускается принудительно
+определяет размер CLOG
+VACUUM (index_cleanup off)
+Настройка
+vacuum_freeze_min_age
+vacuum_freeze_table_age
+autovacuum_freeze_max_age
+Параметр autovacuum_freeze_max_age определяет возраст
+транзакции, при котором заморозка будет выполняться принудительно.
+Автоочистка для предотвращения последствий переполнения счетчика
+транзакций запустится, даже если она отключена параметрами.
+Этот параметр также определяет размер структуры CLOG: данные
+о статусе более старых транзакций точно никогда не понадобятся,
+поэтому часть файлов из PGDATA/pg_xact может быть удалена.
+Если администратор понимает, что автоочистка не успеет заморозить
+версии строк до переполнения счетчика транзакций, можно
+воспользоваться ручной очисткой с параметром index_cleanup off.
+В этом случае индексы не будут очищаться, но за счет этого версии
+строк в таблицах будут заморожены быстрее.
+11
+vacuum_failsafe_age
+при достижении такого возраста
+очистка переходит в защитный режим работы
+Настройка
+vacuum_freeze_min_age
+autovacuum_freeze_max_age
+vacuum_failsafe_age
+vacuum_freeze_table_age
+Параметр vacuum_failsafe_age управляет включением защитного
+режима работы очистки, который служит для ускорения заморозки
+номеров транзакций.
+В этом режиме задержки, задаваемые параметрами
+autovacuum_vacuum_cost_delay и vacuum_cost_delay, будут отменены.
+Также не будут выполняться некоторые необязательные работы
+(например очистка индексов). Такие меры позволят очистке быстрее
+заморозить старые транзакции и перейти в обычный режим работы.
+12
+Настройка
+Конфигурационные параметры
+vacuum_freeze_min_age = 0 50 000 000
+vacuum_freeze_table_age = 150 000 000
+autovacuum_freeze_max_age = 200 000 000
+vacuum_failsafe_age = 1 600 000 000
+Параметры хранения таблиц
+autovacuum_freeze_min_age
+toast.autovacuum_freeze_min_age
+autovacuum_freeze_table_age
+toast.autovacuum_freeze_table_age
+autovacuum_freeze_max_age
+toast.autovacuum_freeze_max_age
+↑?
+Значения по умолчанию довольно консервативны. Предел для
+autovacuum_freeze_max_age – порядка 2 млрд транзакций,
+а используется значение в 10 раз меньшее. Можно увеличить значения
+vacuum_freeze_table_age и autovacuum_freeze_max_age для
+уменьшения накладных расходов, но важно понимать, что если по
+каким-то причинам (например, из-за активной транзакции) автоочистка
+вовремя не справится с заморозкой, у администратора останется мало
+времени для принятия мер. Заметьте, что изменение параметра
+autovacuum_freeze_max_age требует перезапуска сервера.
+Значение по умолчанию vacuum_failsafe_age значительно больше, чем
+autovacuum_freeze_max_age, и если до исчерпания номеров останется
+мало времени, защитный режим ускорит заморозку.
+Отметим, что сервер может скорректировать установленные значения
+параметров vacuum_freeze_min_age, vacuum_freeze_table_age и
+vacuum_failsafe_age исходя из значения autovacuum_freeze_max_age.
+Ряд параметров также можно устанавливать на уровне отдельных
+таблиц с помощью параметров хранения. Это имеет смысл делать
+только в особенных случаях, когда таблица действительно требует
+особого обхождения. Заметьте, что имена параметров на уровне таблиц
+немного отличаются от имен конфигурационных параметров.
+В модуле «Блокировки» рассматриваются т. н. мультитранзакции
+и дополнительные параметры настройки заморозки для них.
+https://postgrespro.ru/docs/postgresql/16/runtime-config-client
+https://postgrespro.ru/docs/postgresql/16/runtime-config-autovacuum
+Заморозка
+Установим для демонстрации параметры заморозки.
+Небольшой возраст транзакции:
+=> ALTER SYSTEM SET vacuum_freeze_min_age = 1;
+ALTER SYSTEM
+Возраст, после которого будет выполняться заморозка всех страниц:
+=> ALTER SYSTEM SET vacuum_freeze_table_age = 3;
+ALTER SYSTEM
+И отключим автоматическую очистку, чтобы запускать ее вручную в нужный момент.
+=> ALTER SYSTEM SET autovacuum = off;
+ALTER SYSTEM
+=> SELECT pg_reload_conf();
+pg_reload_conf
+----------------
+t
+(1 row)
+Создадим таблицу с данными. Установим минимальный fillfactor: на каждой странице будет всего две строки.
+=> CREATE DATABASE mvcc_freeze;
+CREATE DATABASE
+=> \c mvcc_freeze
+You are now connected to database "mvcc_freeze" as user "student".
+=> CREATE TABLE t(id integer, s char(300)) WITH (fillfactor = 10);
+CREATE TABLE
+Создадим представление для наблюдения за битами-подсказками на первых двух страницах таблицы.
+Сейчас нас интересует только xmin и биты, которые относятся к нему, поскольку версии строк с ненулевым xmax будут
+очищены. Кроме того, выведем и возраст транзакции xmin.
+=> CREATE EXTENSION pageinspect;
+CREATE EXTENSION
+=> CREATE VIEW t_v AS
+SELECT '('||blkno||','||lp||')' as ctid,
+CASE lp_flags
+WHEN 0 THEN 'unused'
+WHEN 1 THEN 'normal'
+WHEN 2 THEN 'redirect to '||lp_off
+WHEN 3 THEN 'dead'
+END AS state,
+t_xmin AS xmin,
+age(t_xmin) AS xmin_age,
+CASE WHEN (t_infomask & 256) > 0 THEN 't' END AS xmin_c,
+CASE WHEN (t_infomask & 512) > 0 THEN 't' END AS xmin_a,
+t_xmax AS xmax
+FROM (
+SELECT 0 blkno, * FROM heap_page_items(get_raw_page('t',0))
+UNION ALL
+SELECT 1 blkno, * FROM heap_page_items(get_raw_page('t',1))
+) q
+ORDER BY blkno, lp;
+CREATE VIEW
+Для того чтобы заглянуть в карту видимости и заморозки, воспользуемся еще одним расширением:
+=> CREATE EXTENSION pg_visibility;
+CREATE EXTENSION
+Вставляем данные. Сразу выполним очистку, чтобы построить карту видимости.
+=> INSERT INTO t(id, s) SELECT g.id, 'FOO' FROM generate_series(1,100) g(id);
+INSERT 0 100
+=> VACUUM t;
+VACUUM
+После очистки обе страницы отмечены в карте видимости (all_visible):
+=> SELECT * FROM generate_series(0,1) g(blkno), pg_visibility_map('t',g.blkno)
+ORDER BY g.blkno;
+blkno | all_visible | all_frozen
+-------+-------------+------------
+0 | t | f
+1 | t | f
+(2 rows)
+Каков возраст транзакции, создавшей строки?
+=> SELECT * FROM t_v;
+ctid | state | xmin | xmin_age | xmin_c | xmin_a | xmax
+-------+--------+------+----------+--------+--------+------
+(0,1) | normal | 748 | 1 | t | | 0
+(0,2) | normal | 748 | 1 | t | | 0
+(1,1) | normal | 748 | 1 | t | | 0
+(1,2) | normal | 748 | 1 | t | | 0
+(4 rows)
+Возраст равен 1; версии строк с такой транзакцией еще не будут заморожены.
+Обновим строку на нулевой странице. Новая версия попадет на ту же страницу благодаря небольшому значению
+fillfactor.
+=> UPDATE t SET s = 'BAR' WHERE id = 1;
+UPDATE 1
+=> SELECT * FROM t_v;
+ctid | state | xmin | xmin_age | xmin_c | xmin_a | xmax
+-------+--------+------+----------+--------+--------+------
+(0,1) | normal | 748 | 2 | t | | 749
+(0,2) | normal | 748 | 2 | t | | 0
+(0,3) | normal | 749 | 1 | | | 0
+(1,1) | normal | 748 | 2 | t | | 0
+(1,2) | normal | 748 | 2 | t | | 0
+(5 rows)
+Сейчас нулевая страница уже будет обработана заморозкой:
+возраст транзакции превышает значение, установленное в vacuum_freeze_min_age;
+страница изменена и исключена из карты видимости.
+=> SELECT * FROM generate_series(0,1) g(blkno), pg_visibility_map('t',g.blkno)
+ORDER BY g.blkno;
+blkno | all_visible | all_frozen
+-------+-------------+------------
+0 | f | f
+1 | t | f
+(2 rows)
+Выполняем очистку.
+=> VACUUM t;
+VACUUM
+Очистка обработала измененную страницу. У одной версии строки установлены оба бита — это признак заморозки.
+Другая версия строки слишком молода, однако тоже была заморожена при проходе страницы (это позволило отметить
+нулевую страницу в карте заморозки):
+=> SELECT * FROM t_v;
+ctid | state | xmin | xmin_age | xmin_c | xmin_a | xmax
+-------+---------------+------+----------+--------+--------+------
+(0,1) | redirect to 3 | | | | |
+(0,2) | normal | 748 | 2 | t | t | 0
+(0,3) | normal | 749 | 1 | t | t | 0
+(1,1) | normal | 748 | 2 | t | | 0
+(1,2) | normal | 748 | 2 | t | | 0
+(5 rows)
+Теперь обе страницы отмечены в карте видимости (все версии строк на них актуальны). Очистка теперь не будет
+обрабатывать ни одну из этих страниц, и незамороженные версии строк на первой странице так и останутся
+незамороженными.
+=> SELECT * FROM generate_series(0,1) g(blkno), pg_visibility_map('t',g.blkno)
+ORDER BY g.blkno;
+blkno | all_visible | all_frozen
+-------+-------------+------------
+0 | t | t
+1 | t | f
+(2 rows)
+Именно для такого случая и требуется параметр vacuum_freeze_table_age, определяющий, в какой момент нужно
+просмотреть страницы, отмеченные в карте видимости, если они не отмечены в карте заморозки.
+Для каждой таблицы сохраняется наибольший номер транзакции, для которого все версии строк с меньшими номерами
+xmin гарантированно заморожены. Ее возраст и сравнивается со значением параметра.
+=> SELECT relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 't';
+relfrozenxid | age
+--------------+-----
+748 | 2
+(1 row)
+Сымитируем выполнение еще одной транзакции, чтобы возраст relfrozenxid таблицы достиг значения параметра
+vacuum_freeze_table_age.
+=> SELECT pg_current_xact_id();
+pg_current_xact_id
+--------------------
+750
+(1 row)
+=> SELECT relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 't';
+relfrozenxid | age
+--------------+-----
+748 | 3
+(1 row)
+=> VACUUM t;
+VACUUM
+Теперь, поскольку гарантированно была проверена вся таблица, номер замороженной транзакции можно увеличить —
+мы уверены, что в страницах не осталось более старой незамороженной транзакции.
+=> SELECT relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 't';
+relfrozenxid | age
+--------------+-----
+751 | 0
+(1 row)
+Вот что получилось в страницах:
+=> SELECT * FROM t_v;
+ctid | state | xmin | xmin_age | xmin_c | xmin_a | xmax
+-------+---------------+------+----------+--------+--------+------
+(0,1) | redirect to 3 | | | | |
+(0,2) | normal | 748 | 3 | t | t | 0
+(0,3) | normal | 749 | 2 | t | t | 0
+(1,1) | normal | 748 | 3 | t | t | 0
+(1,2) | normal | 748 | 3 | t | t | 0
+(5 rows)
+Обе страницы теперь отмечены в карте заморозки.
+=> SELECT * FROM generate_series(0,1) g(blkno), pg_visibility_map('t',g.blkno)
+ORDER BY g.blkno;
+blkno | all_visible | all_frozen
+-------+-------------+------------
+0 | t | t
+1 | t | t
+(2 rows)
+Номер последней замороженной транзакции есть и на уровне всей БД:
+=> SELECT datname, datfrozenxid, age(datfrozenxid)
+FROM pg_database;
+datname | datfrozenxid | age
+-------------+--------------+-----
+postgres | 722 | 29
+student | 722 | 29
+template1 | 722 | 29
+template0 | 722 | 29
+mvcc_freeze | 722 | 29
+(5 rows)
+Он устанавливается в минимальное значение из relfrozenxid всех таблиц этой БД. Если возраст datfrozenxid превысит
+значение параметра autovacuum_freeze_max_age, автоочистка будет запущена принудительно.
+14
+Заморозка вручную
+VACUUM
+заморозка версий строк по возрасту в соответствии с настройками
+VACUUM FREEZE
+принудительная заморозка версий строк с xmin любого возраста
+тот же эффект и при VACUUM FULL, CLUSTER
+COPY … WITH FREEZE
+принудительная заморозка сразу после загрузки
+таблица должна быть создана или опустошена в той же транзакции
+могут нарушиться правила изоляции транзакции
+Несмотря на то, что во время работы автоочистки при необходимости
+выполняется и заморозка, иногда бывает удобно управлять заморозкой
+вручную.
+Команда VACUUM, как и автоочистка, выполнит заморозку
+в соответствии с настройками.
+Если выполнить команду VACUUM FREEZE, будут заморожены все
+версии строк без оглядки на возраст транзакций (как будто параметры
+vacuum_freeze_min_age и vacuum_freeze_table_age равны нулю).
+При перестройке таблицы командами VACUUM FULL или CLUSTER
+все строки также замораживаются.
+https://postgrespro.ru/docs/postgresql/16/sql-vacuum
+Данные можно заморозить и при начальной загрузке с помощью
+команды COPY, указав параметр FREEZE. Для этого таблица должна
+быть создана (или опустошена командой TRUNCATE) в той же
+транзакции, что и COPY. Поскольку для замороженных строк действуют
+отдельные правила видимости, такие строки будут видны в снимках
+данных других транзакций в нарушение обычных правил изоляции (для
+транзакций с уровнем Repeatable Read или Serializable), но обычно это
+не представляет проблемы. Подробнее такой случай рассматривается
+в практике.
+https://postgrespro.ru/docs/postgresql/16/sql-copy
+Текущая реализация такой заморозки для таблиц с TOAST строит карту
+видимости только для основной части таблицы, но не для TOAST. Это
+приводит к дополнительному проходу по всем страницам при
+последующей очистке.
+15
+Итоги
+Пространство номеров транзакций закольцовано
+Достаточно старые версии строк замораживаются
+процессом очистки
+Для оптимизации используется карта заморозки
+16
+Практика
+1. Проверьте с помощью расширения pageinspect, что при
+использовании команды COPY … WITH FREEZE версии
+строк действительно замораживаются.
+2. Убедитесь, что даже на уровне изоляции Repeatable Read
+строки, загруженные командой COPY … WITH FREEZE,
+оказываются видны в снимке данных.
+3. Уменьшив значение параметра autovacuum_freeze_max_age
+и отключив автоочистку, воспроизведите ситуацию
+принудительного срабатывания автоочистки, выполнив
+соответствующее количество транзакций.
+Учтите, что срабатывание произойдет не сразу, а при
+выполнении ручной очистки какой-нибудь таблицы
+(или при перезапуске сервера).
+3. Чтобы транзакциям выделялись настоящие (не виртуальные)
+номера, в транзакции нужно менять данные.
+Можно организовать цикл в bash, в котором вызывать psql с командой
+обновления:
+psql -c 'UPDATE ...'
+Другой вариант — использовать для организации цикла PL/pgSQL.
+Для этого можно создать процедуру, выполняющую фиксацию
+транзакции или использовать блок с обработкой исключений.
+При перехвате исключения транзакция будет откатываться к неявной
+точке сохранения: фактически начнется новая вложенная транзакция
+(см. тему «Страницы и версии строк»).
+Третий вариант — использовать утилиту pgbench:
+https://postgrespro.ru/docs/postgresql/16/pgbench
+1. Заморозка при COPY WITH FREEZE
+Создаем таблицу и загружаем несколько строк в одной и той же транзакции:
+=> CREATE DATABASE mvcc_freeze;
+CREATE DATABASE
+=> \c mvcc_freeze
+You are now connected to database "mvcc_freeze" as user "student".
+=> BEGIN;
+BEGIN
+=> CREATE TABLE t(n integer);
+CREATE TABLE
+=> COPY t FROM stdin WITH FREEZE;
+=> 1
+=> 2
+=> 3
+=> \.
+COPY 3
+=> COMMIT;
+COMMIT
+Проверяем версии строк:
+=> CREATE EXTENSION pageinspect;
+CREATE EXTENSION
+=> CREATE VIEW t_v AS
+SELECT '(0,'||lp||')' as ctid,
+CASE lp_flags
+WHEN 0 THEN 'unused'
+WHEN 1 THEN 'normal'
+WHEN 2 THEN 'redirect to '||lp_off
+WHEN 3 THEN 'dead'
+END AS state,
+t_xmin AS xmin,
+age(t_xmin) AS xmin_age,
+CASE WHEN (t_infomask & 256) > 0 THEN 't' END AS xmin_c,
+CASE WHEN (t_infomask & 512) > 0 THEN 't' END AS xmin_a,
+t_xmax AS xmax,
+t_ctid
+FROM heap_page_items(get_raw_page('t',0))
+ORDER BY lp;
+CREATE VIEW
+=> SELECT * FROM t_v;
+ctid | state | xmin | xmin_age | xmin_c | xmin_a | xmax | t_ctid
+-------+--------+------+----------+--------+--------+------+--------
+(0,1) | normal | 744 | 3 | t | t | 0 | (0,1)
+(0,2) | normal | 744 | 3 | t | t | 0 | (0,2)
+(0,3) | normal | 744 | 3 | t | t | 0 | (0,3)
+(3 rows)
+2. COPY WITH FREEZE и изоляция
+В другом сеансе начнем транзакцию с уровнем изоляции Repeatable Read.
+=> \c mvcc_freeze
+You are now connected to database "mvcc_freeze" as user "student".
+=> BEGIN ISOLATION LEVEL REPEATABLE READ;
+BEGIN
+=> SELECT pg_current_xact_id();
+pg_current_xact_id
+--------------------
+747
+(1 row)
+Обратите внимание, что эта транзакция не должна обращаться к таблице t.
+Теперь опустошим таблицу и загрузим в нее новые строки в одной транзакции. Если бы параллельная транзакция
+прочитала содержимое t, команда TRUNCATE ожидала бы ее завершения.
+=> BEGIN;
+BEGIN
+=> TRUNCATE t;
+TRUNCATE TABLE
+=> COPY t FROM stdin WITH FREEZE;
+=> 10
+=> 20
+=> 30
+=> \.
+COPY 3
+=> COMMIT;
+COMMIT
+Теперь параллельная транзакция видит новые данные, хотя это и нарушает изоляцию:
+=> SELECT * FROM t;
+n
+----
+10
+20
+30
+(3 rows)
+=> COMMIT;
+COMMIT
+=> \q
+3. Аварийное срабатывание автоочистки
+Предварительно заморозим все транзакции во всех базах. Для этого удобно воспользоваться командой vacuumdb:
+student$ vacuumdb --all --freeze
+vacuumdb: vacuuming database "mvcc_freeze"
+vacuumdb: vacuuming database "postgres"
+vacuumdb: vacuuming database "student"
+vacuumdb: vacuuming database "template1"
+Максимальный возраст незамороженных транзакций по всем БД:
+=> SELECT datname, datfrozenxid, age(datfrozenxid) FROM pg_database;
+datname | datfrozenxid | age
+-------------+--------------+-----
+postgres | 749 | 0
+student | 749 | 0
+template1 | 749 | 0
+template0 | 722 | 27
+mvcc_freeze | 749 | 0
+(5 rows)
+Отключаем автоочистку.
+=> ALTER SYSTEM SET autovacuum = off;
+ALTER SYSTEM
+Уменьшаем значения параметров:
+=> ALTER SYSTEM SET vacuum_freeze_min_age = 1_000;
+ALTER SYSTEM
+=> ALTER SYSTEM SET vacuum_freeze_table_age = 10_000;
+ALTER SYSTEM
+=> ALTER SYSTEM SET autovacuum_freeze_max_age = 100_000; # минимальное значение
+ALTER SYSTEM
+Требуется перезагрузка сервера.
+student$ sudo pg_ctlcluster 16 main restart
+student$ psql mvcc_freeze
+Получить большое количество транзакций можно разными способами; например, можно воспользоваться утилитой
+pgbench. Попросим ее инициализировать свои таблицы и выполнить 100000 транзакций.
+student$ pgbench -i mvcc_freeze
+dropping old tables...
+NOTICE: table "pgbench_accounts" does not exist, skipping
+NOTICE: table "pgbench_branches" does not exist, skipping
+NOTICE: table "pgbench_history" does not exist, skipping
+NOTICE: table "pgbench_tellers" does not exist, skipping
+creating tables...
+generating data (client-side)...
+100000 of 100000 tuples (100%) done (elapsed 0.18 s, remaining 0.00 s)
+vacuuming...
+creating primary keys...
+done in 0.46 s (drop tables 0.00 s, create tables 0.01 s, client-side generate 0.24 s,
+vacuum 0.08 s, primary keys 0.13 s).
+Выполнение ста тысяч транзакций может занять заметное время, ключ --protocol=prepared немного ускоряет работу за
+счет использования подготовленных операторов:
+student$ pgbench -t 100000 -P 5 --protocol=prepared mvcc_freeze
+pgbench (16.2 (Ubuntu 16.2-2.pgdg24.04+1))
+starting vacuum...end.
+progress: 5.0 s, 325.8 tps, lat 3.059 ms stddev 0.752, 0 failed
+progress: 10.0 s, 339.8 tps, lat 2.942 ms stddev 0.520, 0 failed
+progress: 15.0 s, 363.8 tps, lat 2.747 ms stddev 0.405, 0 failed
+progress: 20.0 s, 300.0 tps, lat 3.333 ms stddev 0.801, 0 failed
+progress: 25.0 s, 302.0 tps, lat 3.307 ms stddev 0.751, 0 failed
+progress: 30.0 s, 244.4 tps, lat 4.091 ms stddev 1.815, 0 failed
+progress: 35.0 s, 285.2 tps, lat 3.504 ms stddev 1.675, 0 failed
+progress: 40.0 s, 297.6 tps, lat 3.358 ms stddev 0.743, 0 failed
+progress: 45.0 s, 331.0 tps, lat 3.020 ms stddev 0.478, 0 failed
+progress: 50.0 s, 349.0 tps, lat 2.863 ms stddev 0.401, 0 failed
+progress: 55.0 s, 300.6 tps, lat 3.325 ms stddev 6.727, 0 failed
+progress: 60.0 s, 292.4 tps, lat 3.417 ms stddev 1.443, 0 failed
+progress: 65.0 s, 335.2 tps, lat 2.983 ms stddev 0.460, 0 failed
+progress: 70.0 s, 344.4 tps, lat 2.902 ms stddev 1.160, 0 failed
+progress: 75.0 s, 337.0 tps, lat 2.966 ms stddev 0.444, 0 failed
+progress: 80.0 s, 358.0 tps, lat 2.792 ms stddev 0.296, 0 failed
+progress: 85.0 s, 356.0 tps, lat 2.808 ms stddev 0.234, 0 failed
+progress: 90.0 s, 350.4 tps, lat 2.852 ms stddev 0.317, 0 failed
+progress: 95.0 s, 333.2 tps, lat 2.999 ms stddev 1.237, 0 failed
+progress: 100.0 s, 329.8 tps, lat 3.030 ms stddev 0.765, 0 failed
+progress: 105.0 s, 327.6 tps, lat 3.051 ms stddev 0.482, 0 failed
+progress: 110.0 s, 355.8 tps, lat 2.809 ms stddev 0.309, 0 failed
+progress: 115.0 s, 314.6 tps, lat 3.176 ms stddev 6.991, 0 failed
+progress: 120.0 s, 346.4 tps, lat 2.886 ms stddev 0.454, 0 failed
+progress: 125.0 s, 354.0 tps, lat 2.824 ms stddev 0.370, 0 failed
+progress: 130.0 s, 338.2 tps, lat 2.956 ms stddev 0.438, 0 failed
+progress: 135.0 s, 339.6 tps, lat 2.942 ms stddev 0.304, 0 failed
+progress: 140.0 s, 312.8 tps, lat 3.194 ms stddev 0.762, 0 failed
+progress: 145.0 s, 317.2 tps, lat 3.151 ms stddev 8.128, 0 failed
+progress: 150.0 s, 366.4 tps, lat 2.728 ms stddev 0.317, 0 failed
+progress: 155.0 s, 325.8 tps, lat 3.068 ms stddev 0.628, 0 failed
+progress: 160.0 s, 370.2 tps, lat 2.700 ms stddev 0.294, 0 failed
+progress: 165.0 s, 346.6 tps, lat 2.883 ms stddev 0.563, 0 failed
+progress: 170.0 s, 353.8 tps, lat 2.825 ms stddev 0.306, 0 failed
+progress: 175.0 s, 358.4 tps, lat 2.789 ms stddev 0.326, 0 failed
+progress: 180.0 s, 363.2 tps, lat 2.753 ms stddev 0.228, 0 failed
+progress: 185.0 s, 343.0 tps, lat 2.914 ms stddev 0.601, 0 failed
+progress: 190.0 s, 360.2 tps, lat 2.775 ms stddev 0.301, 0 failed
+progress: 195.0 s, 315.8 tps, lat 3.164 ms stddev 2.010, 0 failed
+progress: 200.0 s, 340.0 tps, lat 2.941 ms stddev 0.451, 0 failed
+progress: 205.0 s, 331.6 tps, lat 3.014 ms stddev 0.657, 0 failed
+progress: 210.0 s, 363.6 tps, lat 2.747 ms stddev 0.345, 0 failed
+progress: 215.0 s, 372.6 tps, lat 2.683 ms stddev 0.239, 0 failed
+progress: 220.0 s, 335.0 tps, lat 2.984 ms stddev 0.466, 0 failed
+progress: 225.0 s, 335.0 tps, lat 2.982 ms stddev 0.444, 0 failed
+progress: 230.0 s, 332.6 tps, lat 3.005 ms stddev 0.446, 0 failed
+progress: 235.0 s, 354.4 tps, lat 2.821 ms stddev 0.591, 0 failed
+progress: 240.0 s, 360.2 tps, lat 2.775 ms stddev 0.480, 0 failed
+progress: 245.0 s, 361.8 tps, lat 2.763 ms stddev 0.322, 0 failed
+progress: 250.0 s, 338.4 tps, lat 2.952 ms stddev 0.496, 0 failed
+progress: 255.0 s, 330.6 tps, lat 3.023 ms stddev 0.635, 0 failed
+progress: 260.0 s, 317.8 tps, lat 3.145 ms stddev 8.165, 0 failed
+progress: 265.0 s, 336.8 tps, lat 2.968 ms stddev 2.422, 0 failed
+progress: 270.0 s, 315.0 tps, lat 3.174 ms stddev 0.867, 0 failed
+progress: 275.0 s, 361.6 tps, lat 2.763 ms stddev 0.496, 0 failed
+progress: 280.0 s, 369.2 tps, lat 2.708 ms stddev 0.275, 0 failed
+progress: 285.0 s, 363.8 tps, lat 2.747 ms stddev 0.341, 0 failed
+progress: 290.0 s, 346.6 tps, lat 2.884 ms stddev 0.644, 0 failed
+progress: 295.0 s, 335.6 tps, lat 2.977 ms stddev 0.689, 0 failed
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 1
+query mode: prepared
+number of clients: 1
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 100000
+number of transactions actually processed: 100000/100000
+number of failed transactions: 0 (0.000%)
+latency average = 2.966 ms
+latency stddev = 2.034 ms
+initial connection time = 11.130 ms
+tps = 336.916669 (without initial connection time)
+Видно, что возраст незамороженных транзакций превышает установленное пороговое значение (100000):
+=> SELECT datname, datfrozenxid, age(datfrozenxid) FROM pg_database;
+datname | datfrozenxid | age
+-------------+--------------+--------
+postgres | 749 | 100013
+student | 749 | 100013
+template1 | 749 | 100013
+template0 | 722 | 100040
+mvcc_freeze | 749 | 100013
+(5 rows)
+Теперь при выполнении команды VACUUM для любой таблицы будет запущен процесс автоочистки.
+=> VACUUM t;
+VACUUM
+Среди процессов появился autovacuum worker:
+student$ sudo head -n 1 /var/lib/postgresql/16/main/postmaster.pid
+124747
+student$ ps -o pid,command --ppid 124747
+PID COMMAND
+124748 postgres: 16/main: checkpointer
+124749 postgres: 16/main: background writer
+124751 postgres: 16/main: walwriter
+124752 postgres: 16/main: logical replication launcher
+124796 postgres: 16/main: student mvcc_freeze [local] idle
+125384 postgres: 16/main: autovacuum worker template0
+И через некоторое время транзакции окажутся замороженными:
+=> SELECT datname, datfrozenxid, age(datfrozenxid) FROM pg_database;
+datname | datfrozenxid | age
+-------------+--------------+-----
+postgres | 100762 | 0
+student | 100762 | 0
+template1 | 100762 | 0
+template0 | 100762 | 0
+mvcc_freeze | 99829 | 933
+(5 rows)

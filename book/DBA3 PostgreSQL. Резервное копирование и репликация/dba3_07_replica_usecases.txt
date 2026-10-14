@@ -1,0 +1,964 @@
+
+
+Репликация
+Сценарии использования
+16
+
+2
+Темы
+Использование физической репликации
+Использование логической репликации
+3
+Физическая репликация
+Горячий резерв для высокой доступности
+Балансировка OLTP-нагрузки
+Реплика для отчетов
+Несколько реплик и каскадная репликация
+Отложенная репликация
+4
+Горячий резерв для HA
+синхронная репликация: реплика максимально соответствует мастеру
+запросы к реплике возможны, но не приоритетны:
+они будут прерваны при любом конфликте
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика)
+wal sender wal receiver startup
+synchronous_commit = on
+synchronous_standby_names
+hot_standby_feedback = off
+max_standby_streaming_delay = t
+Реплика может создаваться для решения разных задач, и настройка
+зависит от ее предназначения.
+Один из возможных вариантов — обеспечение горячего резерва для
+целей высокой доступности. Это означает, что при сбое основного
+сервера требуется как можно быстрее перейти на реплику, не потеряв
+при этом данные.
+Надежность обеспечивает синхронная репликация в режиме
+synchronous_commit = on (значение write не гарантирует надежность;
+значение apply может привести к неоправданным задержкам).
+Для синхронной репликации значение параметра
+synchronous_standby_names должно содержать список резервных
+серверов (реплик).
+Чтобы реплика как можно меньше отставала от основного сервера,
+нужно применять журнальные записи сразу же. Для этого выставляем
+задержку max_standby_streaming_delay в небольшое значение.
+Чтобы запросы к реплике не могли негативно повлиять на основной
+сервер, выключаем обратную связь (hot_standby_feedback = off).
+С такими настройками запросы к реплике возможны, но в случае
+конфликтов они будут прерваны. Если запросы к реплике не
+предполагаются, она может работать в режиме «теплого резерва»
+(hot_standby = off).
+Заметим, что репликация — базовый механизм для обеспечения
+высокой доступности, но далеко не все, что нужно. Более подробнее
+это обсуждается в модуле «Кластерные технологии».
+5
+Балансировка OLTP
+запросы на реплике должны отрабатывать
+долгие запросы повлияют на мастер, но в OLTP-нагрузке их не должно быть
+согласованность данных должна обеспечиваться отдельно
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика)
+wal sender wal receiver startup
+synchronous_commit = local hot_standby_feedback = on
+max_standby_streaming_delay = T
+Другой вариант — реплика используется для балансировки OLTP-
+нагрузки на чтение.
+OLTP-нагрузка характеризуется небольшими по длительности
+запросами. Это позволяет достаточно тесно связать реплику
+с основным сервером, чтобы запросы гарантированно не прерывались
+из-за конфликтов, и в то же время не беспокоиться о негативном
+влиянии на основной сервер.
+Включаем обратную связь (hot_standby_feedback = on) и выставляем
+достаточно большую задержку применения конфликтных записей
+(max_standby_streaming_delay).
+Синхронная репликация в такой конфигурации, скорее всего, не
+требуется. Она все равно не обеспечивает согласованность данных:
+фиксация изменения на основном сервере не гарантирует, что запрос
+к реплике немедленно его увидит.
+Для обеспечения согласованности нужно, чтобы изменения появлялись
+на обоих серверах одновременно. Режим synchronous_commit = apply
+позволяет дождаться применения журнальной записи на реплике
+(ценой сильного падения производительности основного сервера),
+но тогда можно увидеть данные на реплике раньше, чем на мастере.
+Надежное и прозрачное для приложений решение можно получить,
+используя специальные протоколы распределенных транзакций
+(см. модуль «Кластерные технологии»).
+6
+Реплика для отчетов
+запросы на реплике должны отрабатывать, в том числе и долгие
+(но не требуются самые актуальные данные)
+мастер не должен испытывать негативного влияния обратной связи
+чтобы совсем развязать серверы — убрать слот и использовать архив WAL
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика)
+wal sender wal receiver startup
+synchronous_commit = local hot_standby_feedback = off
+max_standby_streaming_delay = −1
+-
+Еще один возможный вариант — разделение по серверам нагрузки
+разного типа. Основной сервер может брать на себя OLTP-нагрузку,
+а длительные читающие запросы (отчеты) можно вынести на реплику.
+Кроме распределения нагрузки между серверами, такое решение
+позволит избежать проблемы с тем, что длительные запросы на
+основном сервере могут задерживать выполнение очистки и приводить
+к раздуванию (bloat).
+Из этих соображений «отчетная» реплика должна быть максимально
+отделена от основного сервера. Должна быть отключена обратная
+связь (hot_standby_feedback = off), а время откладывания
+конфликтующих журнальных записей нужно сильно увеличить, вплоть
+до бесконечности (max_standby_streaming_delay = −1).
+Поскольку для длительных отчетов не требуются сиюминутные данные,
+можно, при наличии архива, отказаться от слота репликации (не забыв
+выставить параметр max_standby_archive_delay аналогично
+max_standby_streaming_delay). Тогда, если мастер успеет удалить
+необходимый реплике файл, реплика возьмет его из архива.
+Такую реплику можно также использовать для выполнения резервного
+копирования.
+Разумеется, на практике возможны и другие сочетания параметров.
+Главное — четко понимать, какую задачу требуется решить, и какое
+влияние оказывают те или иные параметры.
+7
+Несколько реплик
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика A)
+wal sender
+резервный сервер
+(реплика B)
+wal sender
+wal receiver startup
+wal receiver startup
+pg_copy_physical_replication_slot()
+К основному серверу можно подключить несколько реплик. Никаких
+специальных настроек для этого не требуется, но надо учитывать, что
+каждой реплике будет соответствовать отдельный процесс wal sender
+и отдельный слот репликации. При развертывании можно
+растиражировать одну базовую копию и клонировать слот репликации
+функцией pg_copy_physical_replication_slot.
+https://postgrespro.ru/docs/postgresql/16/functions-admin#FUNCTIONS-RE
+PLICATION
+Обычно такая схема требуется для распределения нагрузки, но
+собственно распределение должно решаться внешними средствами
+(см. модуль «Кластерные технологии»).
+Мастер и две физические реплики
+Настроим конфигурацию с двумя репликами.
+Создадим автономную резервную копию первого сервера, одновременно создав слот.
+student$ pg_basebackup \
+--checkpoint=fast \
+--pgdata=/home/student/tmp/backup \
+-R \
+--create-slot --slot=beta
+Поскольку третий сервер при старте начнет применять записи WAL с той же позиции, что и второй, можно дублировать
+слот:
+α=> SELECT pg_copy_physical_replication_slot('beta','gamma');
+pg_copy_physical_replication_slot
+-----------------------------------
+(gamma,)
+(1 row)
+Выложим автономную копию в каталоги PG_DATA второго и третьего серверов:
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+student$ sudo rm -rf /var/lib/postgresql/16/beta
+student$ sudo cp -r /home/student/tmp/backup /var/lib/postgresql/16/beta
+student$ sudo chown -R postgres:postgres /var/lib/postgresql/16/beta
+student$ sudo pg_ctlcluster 16 gamma stop
+Cluster is not running.
+student$ sudo rm -rf /var/lib/postgresql/16/gamma
+student$ sudo cp -r /home/student/tmp/backup /var/lib/postgresql/16/gamma
+student$ sudo chown -R postgres:postgres /var/lib/postgresql/16/gamma
+В конфигурации третьего сервера укажем слот gamma:
+postgres$ sed 's/beta/gamma/g' -i /var/lib/postgresql/16/gamma/postgresql.auto.conf
+postgres$ tail -n 1 /var/lib/postgresql/16/gamma/postgresql.auto.conf
+primary_slot_name = 'gamma'
+Запускаем обе реплики:
+student$ sudo pg_ctlcluster 16 beta start
+student$ sudo pg_ctlcluster 16 gamma start
+Слоты инициализировались:
+α=> SELECT slot_name, active_pid, restart_lsn FROM pg_replication_slots;
+slot_name | active_pid | restart_lsn
+-----------+------------+-------------
+beta | 83683 | 0/3048438
+gamma | 83729 | 0/3048438
+(2 rows)
+Проверяем.
+α=> CREATE DATABASE replica_usecases;
+CREATE DATABASE
+α=> \c replica_usecases
+You are now connected to database "replica_usecases" as user "student".
+α=> CREATE TABLE revenue(city text, amount numeric);
+CREATE TABLE
+student$ psql -p 5433
+student$ psql -p 5434
+β=> \c replica_usecases
+You are now connected to database "replica_usecases" as user "student".
+γ=> \c replica_usecases
+You are now connected to database "replica_usecases" as user "student".
+β=> \d revenue
+Table "public.revenue"
+Column | Type | Collation | Nullable | Default
+--------+---------+-----------+----------+---------
+city | text | | |
+amount | numeric | | |
+γ=> \d revenue
+Table "public.revenue"
+Column | Type | Collation | Nullable | Default
+--------+---------+-----------+----------+---------
+city | text | | |
+amount | numeric | | |
+Мы настроили две реплики одного мастера на основе одной базовой копии.
+9
+позволяет снизить нагрузку на мастер и перераспределить сетевой трафик
+не поддерживается каскадная синхронная репликация
+обратная связь поступает от всех реплик
+Каскадная репликация
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика B)
+wal sender
+резервный сервер
+(реплика A)
+wal receiver startup wal sender wal receiver startup
+synchronous_standby_names = '' recovery_target_timeline = 'latest'
+или synchronous_commit = local
+Несколько реплик, подключенных к одному основному серверу, будут
+создавать на него определенную нагрузку. Кроме того, надо учитывать
+нагрузку на сеть для пересылки нескольких копий потока журнальных
+записей.
+Для снижения нагрузки реплики можно соединять каскадом; при этом
+серверы передают журнальные записи друг другу по цепочке. Чем
+дальше от мастера, тем большее запаздывание может накопиться.
+Схема мониторинга усложняется: процесс надо контролировать на
+нескольких серверах.
+Если совершится переход на реплику (ближайшую к основному
+серверу), то на ней увеличится номер линии времени. Значение
+recovery_target_timeline = 'latest' направит восстановление по этой
+новой линии (это значение по умолчанию).
+Заметим, что каскадная синхронная репликация не поддерживается:
+основной сервер может быть синхронизирован только
+с непосредственно подключенной к нему репликой. Поэтому на первой
+в каскаде реплике нужно установить synchronous_standby_names = ''
+или synchronous_commit = 'local'.
+А вот обратная связь поступает основному серверу от всех реплик.
+10
+Отложенная репликация
+«машина времени» и возможность восстановиться
+на определенный момент в прошлом без архива
+основной сервер
+(мастер)
+сегменты WAL
+select, insert
+update, delete
+резервный сервер
+(реплика)
+wal sender wal receiver startup
+recovery_min_apply_delay = T
+hot_standby_feedback = off
+Задача: иметь возможность просмотреть данные на некоторый момент
+в прошлом и, при необходимости, восстановить сервер на этот момент.
+Восстановление из архива на момент времени (point-in-time recovery)
+решает эту задачу, но занимает много времени и требует подготовки.
+Другое решение — создать реплику, которая применяет журнальные
+записи с заданной задержкой (recovery_min_apply_delay). При этом
+требуется синхронизация часов между серверами.
+Откладывается применение не всех записей, а только записей
+о фиксации изменений. Записи до фиксации могут быть применены
+«раньше времени», но это не представляет проблемы благодаря
+многоверсионности. Обратную связь следует отключать, чтобы не
+вызвать разрастание таблиц на мастере.
+Типичный сценарий: на основном сервере происходит какая-либо
+проблема (допустим, удалены критичные данные). На реплике данные
+еще есть, поскольку соответствующие записи еще не применены.
+Дальнейшее проигрывание записей приостанавливается с помощью
+функции pg_wal_replay_pause, пока идет исследование проблемы.
+Функцией pg_get_wal_replay_pause_state можно проверить состояние
+приостановки.
+Если принято решение продолжать, функцией pg_wal_replay_resume
+завершают паузу в проигрывании записей WAL и восстановление
+продолжается. Если решено вернуться на момент времени до
+удаления, нужно указать целевую точку восстановления одним из
+параметров recovery_target_* и перезапустить реплику.
+11
+Логическая репликация
+Консолидация и общие справочники
+Обновление основной версии сервера
+Мастер-мастер
+Логическое декодирование на физической реплике
+12
+получение и консолидация
+данных нескольких филиалов
+Консолидация
+центральный
+сервер
+select, insert
+update, delete
+региональный
+сервер
+wal sender
+региональный
+сервер
+wal sender
+select, insert
+update, delete
+сегменты WAL
+select, insert
+update, delete
+сегменты WAL
+logical repl.
+worker
+logical repl.
+worker
+сегменты WAL
+Пусть имеются несколько региональных филиалов, каждый из которых
+работает на собственном сервере PostgreSQL. Задача состоит
+в консолидации части данных на центральном сервере.
+Для решения на региональных серверах создаются публикации
+необходимых данных. Центральный сервер подписывается на эти
+публикации. Полученные данные можно обрабатывать (например,
+приводить к единому виду) с помощью триггеров на стороне
+центрального сервера.
+Поскольку репликация основана на передаче данных через слот, между
+серверами необходимо более или менее постоянное соединение, так
+как во время разрыва соединения региональные серверы будут
+вынуждены сохранять файлы журнала.
+Есть множество особенностей такого процесса и с точки зрения бизнес-
+логики, требующих всестороннего изучения. В ряде случаев может
+оказаться проще передавать данные пакетами раз в определенный
+интервал времени.
+13
+репликация справочников
+Общие справочники
+центральный
+сервер
+региональный
+сервер
+региональный
+сервер
+сегменты WAL
+сегменты WAL
+сегменты WAL
+select, insert
+update, delete
+wal sender
+wal sender
+select, insert
+update, delete
+logical repl.
+worker
+select, insert
+update, delete
+logical repl.
+worker
+Другая задача: на центральном сервере поддерживаются справочники,
+актуальные версии которых должны быть доступны на региональных
+серверах.
+В этом случае схему надо развернуть наоборот: центральный сервер
+публикует изменения, а региональные серверы подписываются на эти
+обновления.
+Консолидация с помощью логической репликации
+Повысим обе настроенные ранее реплики и настроим консолидацию данных.
+student$ sudo pg_ctlcluster 16 beta promote
+student$ sudo pg_ctlcluster 16 gamma promote
+β=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+f
+(1 row)
+γ=> SELECT pg_is_in_recovery();
+pg_is_in_recovery
+-------------------
+f
+(1 row)
+Для логической репликации нужно повысить уровень WAL (потребуется перезапуск).
+β=> ALTER SYSTEM SET wal_level = 'logical';
+ALTER SYSTEM
+γ=> ALTER SYSTEM SET wal_level = 'logical';
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 beta restart
+student$ sudo pg_ctlcluster 16 gamma restart
+Удалим на сервере alpha слоты репликации:
+α=> SELECT pg_drop_replication_slot('beta');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+α=> SELECT pg_drop_replication_slot('gamma');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+Публикуем таблицу на втором и третьем серверах:
+student$ psql -p 5433 -d replica_usecases
+β=> CREATE PUBLICATION revenue FOR TABLE revenue;
+CREATE PUBLICATION
+student$ psql -p 5434 -d replica_usecases
+γ=> CREATE PUBLICATION revenue FOR TABLE revenue;
+CREATE PUBLICATION
+Первый сервер подписывается на обе публикации:
+α=> CREATE SUBSCRIPTION msk
+CONNECTION 'port=5433 dbname=replica_usecases host=localhost user=student password=student'
+PUBLICATION revenue;
+NOTICE: created replication slot "msk" on publisher
+CREATE SUBSCRIPTION
+α=> CREATE SUBSCRIPTION spb
+CONNECTION 'port=5434 dbname=replica_usecases host=localhost user=student password=student'
+PUBLICATION revenue;
+NOTICE: created replication slot "spb" on publisher
+CREATE SUBSCRIPTION
+В филиалах кипит работа:
+β=> INSERT INTO revenue
+SELECT 'Москва', round(random()*1_000_000)
+FROM generate_series(1,70);
+INSERT 0 70
+γ=> INSERT INTO revenue
+SELECT 'Санкт-Петербург', round(random()*1_000_000)
+FROM generate_series(1,10);
+INSERT 0 10
+А центральный офис видит работу всей компании (подождем несколько секунд, чтобы сработала репликация):
+α=> SELECT city, sum(amount) FROM revenue GROUP BY city;
+city | sum
+-----------------+----------
+Москва | 41430874
+Санкт-Петербург | 4127614
+(2 rows)
+15
+Обновление серверов
+мастер и физическая реплика: требуется обновить основную версию
+основной
+сервер
+резервный
+сервер
+15.12
+wal sender wal receiver startup
+сегменты WAL
+select, insert
+update, delete
+15.12
+Логическая репликация может использоваться для обновления
+основной версии сервера без прерывания обслуживания (или
+с минимальным прерыванием).
+Допустим, имеется основной сервер и физическая потоковая реплика.
+16
+Обновление серверов
+основной
+сервер
+сегменты WAL
+select, insert
+update, delete
+резервный
+сервер
+wal sender wal receiver startup
+wal sender
+15.12 15.12
+репликация
+всех таблиц БД
+клиенты еще
+не подключены
+основной
+сервер
+сегменты WAL
+logical repl.
+worker
+16.8
+Создаем новый сервер с требуемой версией PostgreSQL и переносим
+на него структуру всех таблиц выбранной базы данных.
+На основном сервере предыдущей версии публикуем изменения всех
+таблиц базы данных. Поскольку изменения схемы данных не
+реплицируются, на время обновления такие изменения должны быть
+запрещены.
+17
+Обновление серверов
+основной
+сервер
+сегменты WAL
+select, insert
+update, delete wal sender
+15.12
+основной
+сервер
+сегменты WAL
+резервный
+сервер
+logical repl.
+worker
+wal sender
+16.8 16.8
+клиенты еще
+не подключены
+новая
+физическая
+реплика
+wal receiver startup
+резервный
+сервер
+wal sender wal receiver startup
+15.12
+Создаем физическую реплику, аналогичную реплике сервера
+предыдущей версии.
+В итоге получаем параллельную структуру серверов с новой версией
+PostgreSQL. Эта структура аналогична имеющейся для старой версии.
+18
+Обновление серверов
+клиенты
+переключены
+на новый
+сервер
+основной
+сервер
+сегменты WAL
+резервный
+сервер
+wal sender
+16.8 16.8
+select, insert wal receiver startup
+update, delete
+После этого переключаем клиентов на новые серверы, а старые
+останавливаем. Прерывание обслуживания будет определяться тем,
+насколько плавно можно выполнить это переключение.
+Надо иметь в виду, что такой процесс нельзя считать универсальным:
+он накладывает достаточно много ограничений и существенно более
+сложен, чем использование утилиты pg_upgrade, которая позволяет
+выполнить обновление за небольшое время.
+19
+кластер, в котором данные могут изменять несколько серверов
+Мастер-мастер
+основной сервер основной сервер
+select, insert
+update, delete
+сегменты WAL
+select, insert
+update, delete
+сегменты WAL
+wal sender
+logical repl.
+worker
+logical repl.
+worker
+wal sender
+Задача: обеспечить надежное хранение данных на нескольких серверах
+с возможностью записи на любом сервере (что полезно, например, для
+геораспределенной системы).
+Для решения можно использовать двунаправленную репликацию,
+передавая изменения в одних и тех же таблицах от одного сервера
+к другому и обратно (устанавливая ограничение на источник
+репликации, как было рассмотрено в теме «Логическая репликация»).
+Конечно, прикладная система должна быть построена таким образом,
+чтобы избегать конфликтов при изменении данных в одних и тех же
+таблицах. Например, использовать глобальные уникальные
+идентификаторы или гарантировать, что разные серверы работают
+с разными диапазонами ключей. Также можно использовать
+фильтрацию строк таблиц, появившуюся в PostgreSQL 15.
+Надо учитывать, что система мастер-мастер, построенная на
+логической репликации, не обеспечивает сама по себе выполнение
+глобальных распределенных транзакций. При использовании
+синхронной репликации можно гарантировать надежность, но не
+согласованность данных между серверами. Кроме того, никаких
+средств для автоматизации обработки сбоев, подключения или
+удаления узлов из кластера и т. п. в PostgreSQL не предусмотрено —
+эти задачи должны решаться внешним средствами.
+20
+логический слот можно разместить на физической реплике
+при создании логического слота нужен список активных транзакций
+сегменты WAL
+select, insert
+update, delete wal sender
+физическая
+реплика
+wal receiver startup wal sender logical repl.
+worker
+публикующий
+сервер подписчик
+Декодирование на реплике
+wal_level = logical
+hot_standby_feedback = on
+pg_log_standby_snapshot()
+Начиная с PostgreSQL 16, слот логической публикации может
+размещаться на физической реплике, что позволяет снять часть
+нагрузки с мастера.
+На реплике следует включить обратную связь параметром
+hot_standby_feedback, чтобы основной сервер не удалил нужные
+реплике версии строк раньше времени.
+При создании слота логической репликации нужна информация
+о номерах активных транзакций. Эту информацию передают процессы
+bgwriter и checkpointer мастера в виде записи WAL, и если на мастере
+нет активности, создание слота задержится. Чтобы избежать ожидания,
+можно вызвать на мастере функцию pg_log_standby_snapshot.
+https://postgrespro.ru/docs/postgresql/16/logicaldecoding-explanation
+https://postgrespro.ru/docs/postgresql/16/functions-admin
+21
+Итоги
+Физическая репликация — базовый механизм
+для решения целого ряда задач
+обеспечение высокой доступности
+балансировка однотипной нагрузки
+разделение разных видов нагрузки
+и др.
+Логическая репликация расширяет возможности
+22
+Практика
+1. Настройте физическую потоковую репликацию между
+серверами alpha и beta.
+2. Настройте каскадную репликацию на сервер gamma
+с задержкой применения записей WAL в десять секунд.
+3. Проверьте работу репликации, убедитесь в том, что на
+сервере gamma данные появляются с установленной
+задержкой.
+4. Остановите alpha и перейдите на сервер beta.
+5. Проверьте, что сервер gamma продолжает работать в режиме
+реплики.
+После завершения практических заданий удалите созданную базу
+данных и слот репликации, а также сбросьте настройки параметров
+конфигурации.
+1. Настройка репликации между серверами alpha и beta
+Сначала создадим базу данных.
+student$ psql
+α=> CREATE DATABASE replica_usecases;
+CREATE DATABASE
+α=> \c replica_usecases
+You are now connected to database "replica_usecases" as user "student".
+Создаем слот и автономную резервную копию.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ pg_basebackup \
+-p 5432 \
+--checkpoint=fast \
+--pgdata=/var/lib/postgresql/16/beta \
+-R \
+--create-slot \
+--slot=replica
+Файлы postgresql.auto.conf и standby.signal подготовлены утилитой pg_basebackup.
+postgres$ cat /var/lib/postgresql/16/beta/postgresql.auto.conf
+# Do not edit this file manually!
+# It will be overwritten by the ALTER SYSTEM command.
+primary_conninfo = 'user=postgres passfile=''/var/lib/postgresql/.pgpass''
+channel_binding=prefer port=5432 sslmode=prefer sslnegotiation=postgres sslcompression=0
+sslcertmode=allow sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer
+krbsrvname=postgres gssdelegation=0 target_session_attrs=any load_balance_hosts=disable'
+primary_slot_name = 'replica'
+postgres$ ls -l /var/lib/postgresql/16/beta/standby.signal
+-rw------- 1 postgres postgres 0 апр 10 18:27
+/var/lib/postgresql/16/beta/standby.signal
+Запускаем реплику:
+student$ sudo pg_ctlcluster 16 beta start
+2. Настройка репликации между серверами beta и gamma
+student$ psql -p 5433 -d replica_usecases
+Создадим автономную резервную копию с сервера beta, чтобы показать возможность выполнения резервного
+копирования с реплики. Слот создается утилитой.
+student$ sudo pg_ctlcluster 16 gamma stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/gamma
+postgres$ pg_basebackup \
+-p 5433 \
+--checkpoint=fast \
+--pgdata=/var/lib/postgresql/16/gamma \
+--create-slot --slot=replica \
+-R
+Файл postgresql.auto.conf подготовлен утилитой pg_basebackup, добавляем задержку воспроизведения:
+postgres$ echo "recovery_min_apply_delay = '10s'" | tee -a
+/var/lib/postgresql/16/gamma/postgresql.auto.conf
+recovery_min_apply_delay = '10s'
+Вот что получилось:
+postgres$ cat /var/lib/postgresql/16/gamma/postgresql.auto.conf
+# Do not edit this file manually!
+# It will be overwritten by the ALTER SYSTEM command.
+primary_conninfo = 'user=postgres passfile=''/var/lib/postgresql/.pgpass''
+channel_binding=prefer port=5432 sslmode=prefer sslnegotiation=postgres sslcompression=0
+sslcertmode=allow sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer
+krbsrvname=postgres gssdelegation=0 target_session_attrs=any load_balance_hosts=disable'
+primary_slot_name = 'replica'
+primary_conninfo = 'user=postgres passfile=''/var/lib/postgresql/.pgpass''
+channel_binding=prefer port=5433 sslmode=prefer sslnegotiation=postgres sslcompression=0
+sslcertmode=allow sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer
+krbsrvname=postgres gssdelegation=0 target_session_attrs=any load_balance_hosts=disable'
+primary_slot_name = 'replica'
+recovery_min_apply_delay = '10s'
+Запускаем сервер gamma.
+student$ sudo pg_ctlcluster 16 gamma start
+3. Проверка работы
+student$ psql -p 5434 -d replica_usecases
+На alpha создадим таблицу и проверим, что она появилась сначала на beta, а через 10 секунд — и на gamma.
+α=> CREATE TABLE test(s text);
+CREATE TABLE
+α=> INSERT INTO test VALUES ('Привет, мир!');
+INSERT 0 1
+β=> SELECT * FROM test;
+s
+--------------
+Привет, мир!
+(1 row)
+Проверяем gamma:
+γ=> SELECT * FROM test;
+ERROR: relation "test" does not exist
+LINE 1: SELECT * FROM test;
+^
+Таблицы пока нет. Подождем 10 секунд...
+γ=> SELECT * FROM test;
+s
+--------------
+Привет, мир!
+(1 row)
+Таблица появилась.
+4. Переход на сервер beta
+Текущая линия времени на gamma:
+γ=> SELECT received_tli FROM pg_stat_wal_receiver;
+received_tli
+--------------
+1
+(1 row)
+При повышении beta номер линии увеличится на единицу, процедура восстановления на gamma пойдет по новой линии
+благодаря значению по умолчанию:
+γ=> SELECT setting, boot_val FROM pg_settings WHERE name = 'recovery_target_timeline';
+setting | boot_val
+---------+----------
+latest | latest
+(1 row)
+student$ sudo pg_ctlcluster 16 alpha stop
+student$ sudo pg_ctlcluster 16 beta promote
+Линия времени на gamma сменилась.
+γ=> SELECT received_tli FROM pg_stat_wal_receiver;
+received_tli
+--------------
+2
+(1 row)
+5. Проверка работы
+На beta добавим в таблицу строку и проверим, что она появляется на gamma через 10 секунд.
+β=> INSERT INTO test VALUES ('После перехода на второй сервер');
+INSERT 0 1
+Проверяем:
+γ=> SELECT * FROM test;
+s
+--------------
+Привет, мир!
+(1 row)
+Второй строки пока нет. Ждем 10 секунд...
+γ=> SELECT * FROM test;
+s
+---------------------------------
+Привет, мир!
+После перехода на второй сервер
+(2 rows)
+Строка появилась.
+Уборка
+Удалим созданные базы данных и слоты репликации, сбросим настройки параметров конфигурации.
+γ=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+γ=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 gamma restart
+β=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+β=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+β=> DROP DATABASE replica_usecases;
+DROP DATABASE
+β=> SELECT pg_drop_replication_slot('replica');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+student$ sudo pg_ctlcluster 16 beta stop
+student$ sudo pg_ctlcluster 16 gamma stop
+student$ sudo pg_ctlcluster 16 alpha start
+student$ psql
+α=> SELECT pg_drop_replication_slot('replica');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+α=> DROP DATABASE replica_usecases;
+DROP DATABASE
+23
+Практика+
+1. Настройте физическую репликацию между серверами alpha
+и beta с обратной связью. При этом учтите необходимый
+уровень WAL для последующей настройки логической
+репликации.
+2. Настройте логическую репликацию таблицы с сервера alpha
+на сервер gamma, поместив слот на beta — физическую
+реплику. Чтобы ускорить создание слота логической
+репликации на beta, воспользуйтесь функцией
+pg_log_standby_snapshot.
+2. Перенесите структуру публикуемой таблицы на сервер gamma
+любым способом, например, используя pg_dump. Данные не
+переносите.
+Публикация должна быть создана на alpha, подписка — на gamma,
+а в строке соединения подписки нужно указать сервер beta.
+Верните конфигурацию системы к исходной: удалите созданную базу
+данных, слот репликации и сбросьте настройки параметров
+конфигурации.
+1. Физическая репликация alpha → beta
+Сразу включим обратную связь и установим уровень журнала, нужный для логической репликации:
+α=> ALTER SYSTEM SET hot_standby_feedback TO on;
+ALTER SYSTEM SET wal_level TO logical;
+ALTER SYSTEM
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
+Создадим базу данных и таблицу.
+student$ psql
+α=> CREATE DATABASE replica_usecases;
+CREATE DATABASE
+α=> \c replica_usecases
+You are now connected to database "replica_usecases" as user "student".
+α=> CREATE TABLE test(
+id int PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+descr text
+);
+CREATE TABLE
+Создаем автономную резервную копию.
+student$ sudo pg_ctlcluster 16 beta stop
+Cluster is not running.
+postgres$ rm -rf /var/lib/postgresql/16/beta
+postgres$ pg_basebackup \
+-p 5432 \
+--checkpoint=fast \
+--pgdata=/var/lib/postgresql/16/beta \
+-R \
+--create-slot --slot=replica
+student$ sudo pg_ctlcluster 16 beta start
+Проверим работу физической репликации.
+α=> INSERT INTO test(descr) VALUES('Физика');
+INSERT 0 1
+student$ psql -p 5433 -d replica_usecases
+β=> SELECT * FROM test;
+id | descr
+----+--------
+1 | Физика
+(1 row)
+2. Логическая репликация beta → gamma
+Скопируем базу данных и структуру таблицы на сервер gamma с beta, используя pg_dump.
+student$ sudo pg_ctlcluster 16 gamma start
+student$ pg_dump --create --schema-only --no-acl -d replica_usecases -p 5433 | psql -p 5434
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+CREATE DATABASE
+ALTER DATABASE
+You are now connected to database "replica_usecases" as user "student".
+SET
+SET
+SET
+SET
+SET
+set_config
+------------
+(1 row)
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+student$ psql -p 5434 -d replica_usecases
+γ=> SELECT * FROM test;
+id | descr
+----+-------
+(0 rows)
+Мы скопировали лишь структуру таблицы, не данные.
+Создадим публикацию.
+α=> CREATE PUBLICATION test_pub FOR TABLE test;
+CREATE PUBLICATION
+β=> \dRp+
+Publication test_pub
+Owner | All tables | Inserts | Updates | Deletes | Truncates | Via root
+---------+------------+---------+---------+---------+-----------+----------
+student | f | t | t | t | t | f
+Tables:
+"public.test"
+Подпишемся на публикуемые репликой (сервером beta) изменения в таблице test.
+γ=> CREATE SUBSCRIPTION test_sub
+CONNECTION 'user=student password=student dbname=replica_usecases host=localhost port=5433'
+PUBLICATION test_pub;
+Подписка ждет создания слота на сервере beta.
+Чтобы сократить ожидание, попросим alpha добавить в WAL запись с номерами активных транзакций:
+α=> SELECT pg_log_standby_snapshot();
+pg_log_standby_snapshot
+-------------------------
+0/305ADF0
+(1 row)
+NOTICE: created replication slot "test_sub" on publisher
+CREATE SUBSCRIPTION
+γ=> \dRs test_sub
+List of subscriptions
+Name | Owner | Enabled | Publication
+----------+---------+---------+-------------
+test_sub | student | t | {test_pub}
+(1 row)
+Слот и подписка созданы. Немного подождем...
+Строка таблицы появилась на логической реплике.
+γ=> SELECT * FROM test;
+id | descr
+----+--------
+1 | Физика
+(1 row)
+Добавим еще одну строку.
+α=> INSERT INTO test(descr) VALUES('А вот и логика');
+INSERT 0 1
+γ=> SELECT * FROM test;
+id | descr
+----+----------------
+1 | Физика
+2 | А вот и логика
+(2 rows)
+Уборка
+Удалим подписку, созданную базу данных и слот репликации, сбросим настройки параметров конфигурации.
+γ=> DROP SUBSCRIPTION test_sub;
+NOTICE: dropped replication slot "test_sub" on publisher
+DROP SUBSCRIPTION
+γ=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+γ=> DROP DATABASE replica_usecases;
+DROP DATABASE
+γ=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 gamma stop
+α=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+α=> DROP DATABASE replica_usecases;
+DROP DATABASE
+β=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+β=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 beta stop
+postgres$ rm -f /var/lib/postgresql/16/beta/standby.signal
+α=> SELECT pg_drop_replication_slot('replica');
+pg_drop_replication_slot
+--------------------------
+(1 row)
+α=> \c postgres postgres
+You are now connected to database "postgres" as user "postgres".
+α=> ALTER SYSTEM RESET ALL;
+ALTER SYSTEM
+student$ sudo pg_ctlcluster 16 alpha restart
