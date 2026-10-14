@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using CertifiedTestApplication.Data;
 using CertifiedTestApplication.Models.Entities;
@@ -7,6 +9,11 @@ namespace CertifiedTestApplication.Services;
 
 public class TestEvaluationService : ITestEvaluationService
 {
+    // Patterns for parsing numeric answers with units, ranges, and exponents
+    private static readonly Regex PowerPattern = new(@"(\d+(?:[.,]\d+)?)\s*\^\s*(\d+(?:[.,]\d+)?)", RegexOptions.Compiled);
+    private static readonly Regex NumberPattern = new(@"\d+(?:[.,]\d+)?", RegexOptions.Compiled);
+    private static readonly Regex RangePattern = new(@"(\d+(?:[.,]\d+)?)\s*[-–—~]\s*(\d+(?:[.,]\d+)?)", RegexOptions.Compiled);
+
     private readonly ApplicationDbContext _context;
 
     public TestEvaluationService(ApplicationDbContext context)
@@ -77,32 +84,82 @@ public class TestEvaluationService : ITestEvaluationService
         var correctAnswer = correctAnswers.FirstOrDefault();
         var userVal = userAnswers.FirstOrDefault()?.RawValue;
 
-        if (correctAnswer == null || userVal == null)
+        if (correctAnswer == null || string.IsNullOrWhiteSpace(userVal))
             return false;
 
-        var invariantVal = userVal.Replace(",", ".").Trim();
-        var correctText = correctAnswer.Text?.Replace(",", ".").Trim();
+        var correctText = correctAnswer.Text?.Trim() ?? string.Empty;
 
+        // 1. Приоритет у явного числового значения
         if (correctAnswer.NumericValue.HasValue)
         {
-            if (double.TryParse(invariantVal, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.InvariantCulture, out double val))
-            {
-                return Math.Abs(val - correctAnswer.NumericValue.Value) < 0.01;
-            }
-            return false;
+            var userNumbers = ExtractNumbers(userVal);
+            return userNumbers.Any(u => Math.Abs(u - correctAnswer.NumericValue.Value) < 0.01);
         }
 
-        if (double.TryParse(invariantVal, System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out double parsedUser) &&
-            double.TryParse(correctText, System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out double parsedCorrect))
+        var correctNumbers = ExtractNumbers(correctText);
+        var userNumbers2 = ExtractNumbers(userVal);
+
+        if (correctNumbers.Count > 0 && userNumbers2.Count > 0)
         {
-            return Math.Abs(parsedUser - parsedCorrect) < 0.01;
+            // Диапазон в правильном ответе, например "15-25%"
+            if (TryParseRange(correctText, out var min, out var max))
+                return userNumbers2.Any(u => u >= min - 0.01 && u <= max + 0.01);
+
+            // Совпадение с любым числом из правильного ответа
+            return userNumbers2.Any(u => correctNumbers.Any(c => Math.Abs(u - c) < 0.01));
         }
 
-        return string.Equals(invariantVal, correctText, System.StringComparison.OrdinalIgnoreCase);
+        // 2. Текстовый ответ без чисел (например "on") — сравнение строк
+        return string.Equals(NormalizeText(userVal), NormalizeText(correctText), StringComparison.OrdinalIgnoreCase);
     }
+
+    // Извлекает все числа из строки, поддерживая запись степени ("2^32" -> 4294967296)
+    private static List<double> ExtractNumbers(string input)
+    {
+        var result = new List<double>();
+        if (string.IsNullOrWhiteSpace(input))
+            return result;
+
+        var processed = PowerPattern.Replace(input, m =>
+        {
+            if (double.TryParse(m.Groups[1].Value.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out var b) &&
+                double.TryParse(m.Groups[2].Value.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out var e))
+            {
+                return Math.Pow(b, e).ToString(CultureInfo.InvariantCulture);
+            }
+            return m.Value;
+        });
+
+        foreach (Match match in NumberPattern.Matches(processed))
+        {
+            if (double.TryParse(match.Value.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out var val))
+                result.Add(val);
+        }
+
+        return result;
+    }
+
+    private static bool TryParseRange(string text, out double min, out double max)
+    {
+        min = 0;
+        max = 0;
+
+        var match = RangePattern.Match(text);
+        if (!match.Success)
+            return false;
+
+        if (double.TryParse(match.Groups[1].Value.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out min) &&
+            double.TryParse(match.Groups[2].Value.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out max))
+        {
+            return min <= max;
+        }
+
+        min = 0;
+        max = 0;
+        return false;
+    }
+
+    private static string NormalizeText(string value) => value.Replace(",", ".").Trim();
 
     private static bool EvaluateChoiceQuestion(List<Answer> correctAnswers, List<UserAnswer> userAnswers)
     {

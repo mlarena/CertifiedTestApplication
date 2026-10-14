@@ -40,12 +40,43 @@ public class CategoriesController : Controller
             _context.Logs.Add(new Log { 
                 Action = "Создание категории", 
                 EntityName = "Category", 
-                EntityId = name,
+                EntityId = category.Id.ToString(),
                 UserId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value)
             });
 
             await _context.SaveChangesAsync();
         }
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            TempData["Error"] = "Название категории не может быть пустым";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var category = await _context.Categories.FindAsync(id);
+        if (category == null)
+        {
+            TempData["Error"] = "Категория не найдена";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var oldName = category.Name;
+        category.Name = name.Trim();
+        
+        _context.Logs.Add(new Log { 
+            Action = $"Редактирование категории: {oldName} → {category.Name}", 
+            EntityName = "Category", 
+            EntityId = category.Id.ToString(),
+            UserId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value)
+        });
+
+        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
@@ -68,7 +99,7 @@ public class CategoriesController : Controller
             _context.Logs.Add(new Log { 
                 Action = "Удаление категории", 
                 EntityName = "Category", 
-                EntityId = category.Name,
+                EntityId = category.Id.ToString(),
                 UserId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value)
             });
 
