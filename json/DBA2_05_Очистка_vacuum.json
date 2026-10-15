@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Очистка VACUUM",
+  "Description": "15 вопросов по лекции dba2_05: фазы очистки, стоимость, мониторинг, VACUUM FULL и ANALYZE",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие три основные фазы выполняет обычная очистка (VACUUM)?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Очистка индексов",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Очистка таблицы и усечение (truncate)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Полная перестройка индексов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжатие данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сканирование таблицы (сбор TID)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что хранится в памяти (maintenance_work_mem) во время первой фазы VACUUM?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Массив идентификаторов (TID) очищаемых версий строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Резервную копию таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Статистику для планировщика",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Список заблокированных страниц",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит, если массив TID не помещается в maintenance_work_mem?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Индексы сканируются повторно несколько раз",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM аварийно завершается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Таблица блокируется на время очистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индексы не очищаются",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Когда VACUUM в PostgreSQL 14+ автоматически пропускает очистку индексов?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Когда включён autovacuum",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда таблица пуста",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда количество страниц с мёртвыми строками не превышает 2% от общего числа страниц",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда maintenance_work_mem = 0",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая блокировка требуется для этапа усечения (truncate) таблицы при VACUUM?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Блокировка не требуется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Общая разделяемая (AccessShareLock)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Исключительная (AccessExclusiveLock) на таблице",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только на индексах",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое представление показывает ход выполнения VACUUM?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "pg_stat_progress_vacuum",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_user_tables",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_activity",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что означает значение index_vacuum_count > 1 в pg_stat_progress_vacuum?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Индексы перестроены заново",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Включена параллельная очистка",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Памяти maintenance_work_mem не хватило — индексы сканировались несколько раз",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Таблица была усечена",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию у параметра vacuum_cost_limit?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "200",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "1000",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "100",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "500",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие значения по умолчанию у параметров стоимости очистки?",
+      "Type": 2,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "vacuum_cost_page_hit = 1",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_cost_page_hit = 16",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_cost_page_miss = 20",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_cost_page_dirty = 20",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_cost_page_miss = 2",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает VACUUM FULL?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Удаляет все данные из таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перестраивает таблицу и все её индексы заново, блокирует даже чтение, возвращает место ОС",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжимает данные в табличных страницах",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ускоряет только индексные сканирования",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение позволяет перестраивать таблицу без блокировки чтения?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "pg_prewarm",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pageinspect",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_repack",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает обычная VACUUM (не FULL)?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Перестраивает индексы заново",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Возвращает всё свободное место операционной системе",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удаляет неактуальные версии и помечает указатели unused",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Уменьшает размер файла таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит с планом запроса после ANALYZE таблицы, где все строки содержат одно и то же значение?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Планировщик начинает активнее использовать индекс",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ничего не меняется до перезапуска сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Запрос начинает выполняться в несколько потоков",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Планировщик узнаёт распределение данных и переходит с индексного доступа на последовательное сканирование",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что позволяет ускорить очистку индексов на большой таблице?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Параллельная очистка индексов (несколько процессов с max_parallel_maintenance_workers)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключение индексов перед VACUUM",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличение shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Установка autovacuum = off",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Когда VACUUM может обрезать (truncate) пустые страницы в конце файла?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Только при VACUUM FULL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При каждом запуске VACUUM",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Никогда — это делает только autovacuum",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда в конце файла образовалось достаточно много полностью пустых страниц",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

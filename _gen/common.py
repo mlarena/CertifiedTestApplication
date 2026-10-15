@@ -1,6 +1,14 @@
 """Shared helpers for JSON test generators."""
 import json
 import random
+import sys
+
+# Cyrillic file names must be printable on Windows consoles with any code page.
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 
 def A(text, ok=True, nv=None):
@@ -16,8 +24,11 @@ def Q(text, answers, order=1, qtype=None):
     return {"Text": text, "Type": qtype, "Order": order, "Answers": answers}
 
 
-def QN(text, correct, order=1, distractors=()):
-    """Numeric question helper: correct answer carries NumericValue."""
+def QN(text, correct, distractors=(), order=1):
+    """Numeric question helper: correct answer carries NumericValue.
+
+    Distractors are passed as the third positional argument for convenience.
+    """
     answers = [A(str(correct), True, float(correct))]
     for d in distractors:
         answers.append(A(str(d), False, None))

@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Обновление сервера",
+  "Description": "15 вопросов по лекции dba2_17: дополнительные выпуски и основные версии, pg_dumpall, pg_upgrade, логическая репликация",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Чем дополнительный выпуск (например, 16.4) отличается от основной версии (16 → 17)?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Основная версия всегда совместима на двоичном уровне",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Разницы нет",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Дополнительный выпуск меняет формат данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Дополнительный выпуск только исправляет ошибки и двоично совместим",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что нужно сделать для обновления на дополнительный выпуск?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Запустить pg_upgrade",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пересоздать кластер",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Восстановить базу из логической копии",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Установить новые пакеты/исполняемые файлы и перезапустить сервер; при необходимости обновить расширения",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит с сервером при перезапуске?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Журнал предзаписи очищается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер сразу принимает новые соединения",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Новые соединения запрещаются, сеансы завершаются (smart/fast), выполняется финальная контрольная точка",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Контрольная точка не выполняется",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как сократить время простоя при перезапуске на дополнительный выпуск?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Выполнить CHECKPOINT заранее и поставить PgBouncer на паузу",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличить max_connections",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключить fsync",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удалить старые сегменты WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как обновить сервер почти без прерывания обслуживания при наличии физической реплики?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Обновить основной, реплика обновится сама",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Использовать только pg_upgrade на основном",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Одновременно перезапустить оба сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сначала обновить резервный сервер, догнать основной и переключить пользователей",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие способы обновления основной версии существуют?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "pg_basebackup на тот же кластер",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Логическая репликация",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Логическая резервная копия (pg_dumpall)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Замена исполняемых файлов без действий",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Утилита pg_upgrade",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как ускорить перенос данных при обновлении через логическую копию?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Использовать VACUUM FULL перед выгрузкой",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_dumpall --globals-only, затем pg_dump в формате directory с --jobs=N и pg_restore --jobs=N",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличить shared_buffers на старом сервере",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключить WAL на время выгрузки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как сэкономить дисковое место при переносе логической копии?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Сжать архив утилитой gzip после выгрузки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Направить вывод pg_dumpall сразу на вход psql нового кластера",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Использовать формат custom",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Выгружать только схему",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен параметр --schema-only при проверке обновления?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Уменьшает требования к локалям",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Позволяет обойти reg-типы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключает сбор статистики",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Позволяет быстро выявить часть проблем, перенеся только схему без данных",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как быстрее дать оптимизатору статистику после восстановления копии?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "vacuumdb --analyze-in-stages (или расширение dump_stat)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM FULL всех таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ANALYZE одной самой большой таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перезапуск сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое ограничение делает pg_upgrade неприменимым?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Использование расширений",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Использование reg-типов в пользовательских таблицах(кроме regtype, regclass, regrole)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Более 100 баз данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Наличие табличных пространств",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие условия должны выполняться для pg_upgrade?",
+      "Type": 2,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Старый кластер должен работать во время работы утилиты",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обновление возможно только до версии, соответствующей утилите",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нужно предварительно удалить все расширения",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Поддерживается обновление с версий 8.4 и новее",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Новый кластер инициализирован с той же локалью и кодировкой",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что означают ключи pg_upgrade --link и --clone?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Создание резервной копии в облаке",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перенос только системного каталога",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перенос данных жёсткими ссылками либо клонированием файлов (copy-on-write) вместо копирования",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обновление через репликацию",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что важно помнить при обновлении в режиме --link?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "После первого запуска нового кластера старый нельзя безопасно запустить — нужен «план Б»",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обновление невозможно отменить всегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Старый кластер остаётся полностью рабочим",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Требуется вдвое больше дискового места",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что обязательно сделать после завершения обновления основной версии?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Отключить автоочистку",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пересоздать всех пользователей",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удалить файл pg_control",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Собрать статистику, обновить расширения и выполнить плановое резервное копирование",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

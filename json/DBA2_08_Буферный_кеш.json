@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Буферный кеш",
+  "Description": "15 вопросов по лекции dba2_08: устройство кеша, clock sweep, закрепления, буферные кольца, pg_buffercache, pg_prewarm",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой параметр задаёт размер буферного кеша и требует перезапуска сервера?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "maintenance_work_mem",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "temp_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что хранится в заголовке буфера?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Счётчик обращений usage count",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Контрольная сумма страницы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Счётчик закреплений pin count",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер таблицы в системном каталоге",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Признак «грязный» (данные изменены)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Расположение страницы на диске (файл и номер страницы)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что гарантирует закрепление буфера (pin count > 0)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Буфер автоматически очищается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Страница немедленно записывается на диск",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В этот буфер не может быть прочитана другая страница",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Страница становится недоступной другим процессам",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой алгоритм вытеснения страниц используется в буферном кеше?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "FIFO",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Случайный выбор буфера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "clock sweep: перебор буферов по кругу с уменьшением счётчика обращений",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "LRU с точным списком использования",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чему равно максимальное значение счётчика обращений (usage count) буфера?",
+      "Type": 3,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "10",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "5",
+          "IsCorrect": true,
+          "NumericValue": 5.0
+        },
+        {
+          "Text": "3",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт, если алгоритм вытеснения выбрал грязный буфер?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Изменённые данные теряются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Буфер пропускается навсегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер выполняет контрольную точку",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Страницу сначала нужно записать на диск, и только потом буфер займёт новая страница",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение показывает содержимое буферного кеша?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_prewarm",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pageinspect",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужны буферные кольца?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Для хранения временных таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы массовое чтение или запись не вытеснили полезные страницы кеша «одноразовыми» данными",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для ускорения контрольной точки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для кэширования планов запросов",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько страниц составляет буферное кольцо при последовательном чтении таблицы?",
+      "Type": 3,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "64",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "256",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "8",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "32",
+          "IsCorrect": true,
+          "NumericValue": 32.0
+        }
+      ]
+    },
+    {
+      "Text": "Какой размер у буферного кольца при массовой записи (COPY, CREATE TABLE AS SELECT)?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "32 страницы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обычно 2048 страниц, но не больше одной восьмой всего кеша",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Половина буферного кеша",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Кольцо не используется",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит с грязным буфером, появившимся в кольце при последовательном чтении?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Немедленно записывается на диск и освобождается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Игнорируется, изменения теряются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Он отключается от кольца, возвращается в общий кеш и вытесняется на общих основаниях",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Остаётся в кольце до конца сканирования",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что появилось в PostgreSQL 16 для статистики ввода-вывода с точки зрения СУБД?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Представление pg_stat_io с контекстами normal, bulkread, bulkwrite, vacuum",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Расширение pg_iostats",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Столбец io_waits в pg_stat_activity",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Представление pg_stat_wal_io",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как обслуживаются временные таблицы?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Для них выделяется отдельный кластер",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они вообще не кэшируются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они хранятся только в общем буферном кеше",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для них используется облегчённый локальный кеш в пределах temp_buffers, без блокировок и без колец",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение позволяет прогреть буферный кеш, заранее прочитав таблицу?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "amcheck",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_visibility",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_prewarm",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт размер буферного кольца для процесса очистки?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_buffer_usage_limit",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_cost_limit",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "maintenance_work_mem",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

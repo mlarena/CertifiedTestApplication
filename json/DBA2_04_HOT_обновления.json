@@ -1,0 +1,418 @@
+{
+  "Title": "DBA2. HOT-обновления",
+  "Description": "15 вопросов по лекции dba2_04: условия HOT, fillfactor, указатели, самоочистка страниц",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие два условия должны быть выполнены для HOT-обновления?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Индекс перестроен заново",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Изменены только неиндексные столбцы",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Новая версия помещается на той же странице",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Строка изменена в той же транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько ссылок в индексе содержит HOT-цепочка версий одной строки?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Одна — на первую (самую актуальную) версию",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Зависит от числа индексов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "По одной на каждую версию в цепочке",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ноль — HOT не использует индексы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой fillfactor установлен по умолчанию?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "90",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "75",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "100",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "50",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько байт из страницы (8 КБ) будет заполнено при fillfactor = 75%?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "6144",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "8192",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "4096",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "7168",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Когда страница автоматически очищается (pruning) от неактуальных версий строк?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "При каждом UPDATE строки на странице",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда количество версий превышает 10",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда страница заполнена более чем на fillfactor или более чем на 90%",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только при выполнении VACUUM",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой тип индекса не препятствует HOT даже при изменении «своего» столбца?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "B-tree",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "BRIN",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Hash",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "GIN",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит с указателями (item pointers) на вычищенные версии строк?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Немедленно удаляются со страницы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сначала становятся redirect-указателями, затем unused",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Заменяются на null-указатели",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Остаются как обычные указатели",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие преимущества даёт HOT-обновление?",
+      "Type": 2,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Меньше I/O при обновлении строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Меньше индексных записей добавляется при обновлении",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Устраняет необходимость в автоочистке полностью",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Уменьшает размер таблицы до исходного",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Версии вычищаются без обращения к VACUUM",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему при fillfactor = 100 HOT-обновления практически невозможны?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Страница уже заархивирована",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индекс блокирует страницу",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нет свободного места на странице для новой версии",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Включена только read-only репликация",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт с размером индекса при частых обновлениях без использования HOT?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Индекс автоматически сжимается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Размер индекса не меняется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индекс разрастается, страницы не склеиваются при удалении старых версий",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индекс удаляет старые записи за 1 VACUUM",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как отслеживать долю HOT-обновлений в таблице?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "По столбцу pg_buffercache usagecount",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "По количеству записей в WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "По количеству страниц в индексе",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "По столбцу n_tup_hot_upd представления pg_stat_user_tables",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему неактуальные версии строк из HOT-цепочки можно удалять без полной очистки индексов?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Индексы не содержат ссылок на табличные строки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индекс ссылается только на первую версию цепочки, а версии внутри страницы связаны ссылками ctid",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Версии HOT помечаются как замороженные",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индекс перестраивается автоматически при каждом UPDATE",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько версий строки может содержать HOT-цепочка на одной странице?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Не более двух",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Несколько, пока помещаются на странице",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ровно одну",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не более ста",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое unused указатель на странице и чем он отличается от redirect-указателя?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Redirect указывает на новую страницу, unused — свободен",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Unused и redirect — синонимы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Unused — свободен и не ссылается ни на что; redirect — указывает на новую версию на той же странице",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Unused указывает на удалённую страницу; redirect — на новую страницу",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чем опасно сильное уменьшение fillfactor?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Больше страниц, медленнее последовательное чтение, больше занимаемое место",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Индексы удаляются автоматически",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Уменьшается скорость INSERT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Страницы начинают часто перестраиваться",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

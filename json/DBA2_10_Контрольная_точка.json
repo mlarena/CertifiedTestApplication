@@ -1,0 +1,418 @@
+{
+  "Title": "DBA2. Контрольная точка",
+  "Description": "15 вопросов по лекции dba2_10: процесс checkpointer, запись грязных страниц, pg_control, настройка частоты и объёма WAL",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Зачем нужна контрольная точка?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Завершить все активные транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сбросить грязные страницы на диск, чтобы для восстановления не требовался весь журнал с момента инициализации",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Вытеснить все страницы из буферного кеша",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удалить старые журнальные файлы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой процесс выполняет контрольные точки?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "checkpointer",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "walwriter",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "bgwriter",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum launcher",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит со страницами данных во время контрольной точки?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Они только помечаются, запись не выполняется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они записываются на диск, но остаются в кеше",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они записываются и вытесняются из кеша",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они блокируются до конца контрольной точки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что показывает параметр checkpoint_completion_target = 0.9?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Какую часть времени между контрольными точками следует тратить на запись страниц",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Долю буферного кеша, которую нужно записать",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Число параллельных процессов записи",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процент грязных страниц, при котором начинается запись",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему не рекомендуют значения checkpoint_completion_target больше 0.9?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Это отключает переиспользование сегментов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это замедляет чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это увеличивает размер WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс может фактически затянуться за момент следующей контрольной точки",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Куда записывается информация о завершённой контрольной точке?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "В файл PGDATA/global/pg_control (плюс запись в журнале)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "В postgresql.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В каталог pg_xact",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В представление pg_stat_activity",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая утилита показывает состояние управляющего файла, включая последнюю контрольную точку?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "pg_controldata",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_ctlstatus",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_waldump",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_resetwal",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что ещё, кроме буферного кеша, сбрасывает контрольная точка?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Логи сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Буферы статуса транзакций (CLOG) — их немного, и они пишутся сразу",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Файл pg_hba.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Файлы расширений",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит со страницами, ставшими грязными уже после начала контрольной точки?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Изменения откатываются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Записываются и они",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Эта контрольная точка их не записывает",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер ждёт их записи",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры по умолчанию определяют частоту контрольных точек?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "checkpoint_timeout = 1min и max_wal_size = 64MB",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "checkpoint_timeout = 5min и max_wal_size = 1GB",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "checkpoint_interval = 10min",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "checkpoint_timeout = 30min и max_wal_size = 4GB",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Верно ли, что max_wal_size — жёсткое ограничение объёма журнала?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Да, старые сегменты удаляются автоматически",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нет, это ориентир для checkpointer; объём может быть превышен",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нет, но только на репликах",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Да, сервер останавливается при его превышении",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие журнальные файлы сервер не имеет права удалить?",
+      "Type": 2,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Файлы, созданные до последней автоочистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ещё не переданные через слоты репликации",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все файлы старше checkpoint_timeout",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нужные для восстановления после сбоя",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ещё не записанные в архив при непрерывной архивации",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает параметр wal_recycle = on?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Автоматически архивирует журналы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжимает старые сегменты",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличивает размер сегмента",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Старые сегменты не удаляются, а переименовываются и используются заново",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое состояние кластера показывает pg_controldata после корректной остановки?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "in production",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "in archive recovery",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "shut down",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "crashed",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "С какого момента начинается восстановление после сбоя?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "С LSN начала последней завершённой контрольной точки (REDO)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "С самого начала журнала",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "С конца последнего сегмента",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "С последней зафиксированной транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

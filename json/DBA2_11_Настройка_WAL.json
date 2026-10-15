@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Настройка журнала",
+  "Description": "15 вопросов по лекции dba2_11: уровни журнала, надёжность записи, контрольные суммы, полные образы, синхронная фиксация",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие уровни журнала поддерживает PostgreSQL?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "replica",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "full",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "minimal",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "archive",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "logical",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой уровень журнала используется по умолчанию?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "minimal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "logical",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "replica",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "archive",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что характерно для уровня minimal?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Журналируются все изменения без исключений",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Возможна только логическая репликация",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Возможна физическая репликация",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Операции массовой обработки данных (CREATE TABLE AS SELECT, CREATE INDEX, TRUNCATE) в журнал не записываются",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что придётся сделать, чтобы установить wal_level = minimal?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Отключить fsync",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ничего, параметр меняется на лету",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Задать max_wal_senders = 0 и перезапустить сервер",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удалить все слоты репликации и перезапустить только лаунчер",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен уровень logical?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Для сжатия журнала",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для горячих резервных копий",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для отключения full_page_writes",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для логической репликации и декодирования: в журнал добавляется дополнительная информация",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая утилита помогает выбрать наиболее подходящий способ синхронизации журнала?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "pg_waldump",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_controldata",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pgbench",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_test_fsync",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что необходимо гарантировать на уровне аппаратуры для надёжной записи журнала?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Что данные действительно доходят до диска: кеш контроллера — с батареей, для дисков — сквозная запись",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Наличие RAID-0",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Использование tmpfs для pg_wal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключение кеша диска всегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как обстоят дела с контрольными суммами?",
+      "Type": 2,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Контрольные суммы страниц включены по умолчанию",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Контрольные суммы страниц включаются при инициализации кластера (initdb -k)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнальные записи защищены CRC-32 всегда",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Их можно включить только при создании таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Их можно включить позже утилитой pg_checksums на остановленном сервере",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает параметр ignore_checksum_failure?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Позволяет не прерывать транзакцию, прочитавшую страницу с неверной контрольной суммой",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Включает контрольные суммы для WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключает вычисление контрольных сумм",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Восстанавливает повреждённую страницу",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен параметр full_page_writes?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Обязателен для логической репликации",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Защита от неатомарной записи: в журнал попадает образ всей страницы при первом её изменении после контрольной точки",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Записывает страницу на диск при каждом изменении",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ускоряет запись данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает параметр wal_compression?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Отключает запись полных образов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжимает полные образы страниц; поддерживаются pglz, lz4, zstd, значение on соответствует pglz",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжимает сами сегменты журнала",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжимает данные таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит при synchronous_commit = on (по умолчанию)?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Ждутся все фоновые процессы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Фиксация не ждёт записи журнала",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Фиксация транзакции ждёт записи журнала на диск",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал не используется",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чем отличается synchronous_commit = off?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Производительность выше, но при сбое могут пропасть зафиксированные изменения",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключается контрольная точка",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал не пишется вообще",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Реплика становится недоступной",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "За какое время фоновый процесс walwriter сбрасывает накопленные журнальные записи и какой риск связан с asynchronous фиксацией?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Немедленно; потерь нет",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Каждые wal_writer_delay (по умолчанию 200 мс); при сбое могут пропасть изменения младше 3 × wal_writer_delay",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Каждые checkpoint_timeout; потерь нет",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Раз в минуту; теряется весь сегмент",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Для чего предназначены параметры commit_delay и commit_siblings?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Заставить фиксирующуюся транзакцию подождать, чтобы записать журнал за компанию с другими, если активно не менее commit_siblings транзакций",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ограничить число одновременных транзакций",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличить время ожидания блокировок",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Замедлить автоочистку",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

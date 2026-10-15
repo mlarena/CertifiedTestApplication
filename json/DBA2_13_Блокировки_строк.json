@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Блокировки строк",
+  "Description": "15 вопросов по лекции dba2_13: xmax как блокировка, четыре режима, матрица совместимости, мультитранзакции, NOWAIT/SKIP LOCKED",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Чем физически представлена блокировка строки?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Бит в карте видимости",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер блокирующей транзакции в поле xmax актуальной версии",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Запись в таблице pg_locks в оперативной памяти",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отдельный файл в каталоге pg_locks",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько режимов блокировки строк существует?",
+      "Type": 3,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "2",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "8",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "4",
+          "IsCorrect": true,
+          "NumericValue": 4.0
+        },
+        {
+          "Text": "3",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие режимы блокировки строк существуют?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Update",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Share",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Key Share",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Exclusive",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "No Key Update",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "AccessShare",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "В каком режиме обычно блокирует строку команда UPDATE?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "No Key Update — PostgreSQL сам выбирает минимальный подходящий режим",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Update всегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Key Share",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Share",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой информационный бит отличает явную блокировку строки (SELECT FOR UPDATE) от её обновления или удаления?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "xmax lock only",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmax is multi",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "keys updated",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "heap only tuple",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему режим Key Share совместим с No Key Update?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Это позволяет проверять внешние ключи, не мешая изменению неключевых полей",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Потому что оба режима исключительные",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Потому что Key Share используется только для SELECT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это ошибка реализации",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как хранится информация о нескольких разделяемых блокировках одной строки?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "В журнале предзаписи",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Через мультитранзакцию: отдельный номер группы, бит xmax is multi, данные в PGDATA/pg_multixact",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "В виде списка в таблице pg_locks",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В карте видимости страницы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение показывает блокировки строк в удобном виде?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "pgrowlocks",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pageinspect",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие команды поддерживают ключевое слово NOWAIT для блокировок строк?",
+      "Type": 2,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "UPDATE ... NOWAIT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "DELETE ... NOWAIT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SELECT ... FOR UPDATE NOWAIT",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "LOCK TABLE ... NOWAIT",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужно ключевое слово SKIP LOCKED?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Пропустить уже заблокированные строки — удобно для очереди задач",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключить блокировки для таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Разблокировать чужие строки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не ждать блокировки и сразу выдать ошибку",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делать, если команда не поддерживает NOWAIT, но долго ждать блокировку нельзя?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Отключить fsync",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Использовать NOWAIT всё равно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Установить параметр lock_timeout",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Понизить уровень изоляции",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL поступает с взаимоблокировками блокировок строк?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Проверка выполняется после ожидания deadlock_timeout, одна из транзакций аварийно прерывается",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер перезапускается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировки снимаются у всех участников",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Транзакции ждут вечно",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему количество блокировок строк ничем не ограничено?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Они кэшируются в shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Их число ограничено max_locks_per_transaction",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они хранятся в самих версиях строк на диске и не занимают оперативную память",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они хранятся в индексах",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "За что отвечают параметры vacuum_multixact_freeze_min_age и autovacuum_multixact_freeze_max_age?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "За очистку индексов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "За удаление старых блокировок advisory",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "За обычную заморозку поля xmin версий строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "За замену старых номеров мультитранзакций в xmax актуальных версий строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что запрещает разделяемый режим Share для строки?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Фиксацию транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Изменение строки любыми транзакциями (но читать можно)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Изменение только ключевых полей",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтение строки другими транзакциями",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

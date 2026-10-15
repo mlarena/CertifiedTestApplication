@@ -1,0 +1,433 @@
+{
+  "Title": "DBA2. Локализация",
+  "Description": "15 вопросов по лекции dba2_16: категории локали и параметры, провайдеры libc/ICU, кодировки клиента и сервера, правила сортировки",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "На что влияет локализация в PostgreSQL?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Механизм репликации",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Форматирование дат, чисел и денег в to_char",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Построение планов запросов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Поиск по шаблону (LIKE, регулярные выражения)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Язык сообщений сервера и утилит",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сортировка и сравнение строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Функции upper, lower, initcap",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры локали может изменить любой пользователь?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "lc_messages",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "lc_numeric",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "lc_monetary",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "lc_time",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "lc_collate",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произошло с параметрами lc_collate и lc_ctype начиная с версии 16?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Их переименовали в lc_collation",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они переехали в postgresql.auto.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они стали доступны обычным пользователям",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Серверные параметры удалены; сведения о локали базы смотрят в pg_database",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие провайдеры локалей поддерживает PostgreSQL?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "winapi",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ICU — внешняя библиотека",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "postgres-native",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "libc — стандартная библиотека C",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как строятся имена локалей у провайдера ICU?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Произвольно, как имена правил сортировки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Как в libc: язык_регион.кодировка",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "По правилам языковых меток IETF BCP 47, например ru-RU",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только по названию языка без региона",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Где сохраняется информация о провайдере локали базы?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "В pg_settings, столбец provider",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В файле PGDATA/PG_VERSION",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В столбцах datlocprovider и daticulocale таблицы pg_database",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "В postgresql.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как создать базу данных с другой локалью или кодировкой?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "ALTER DATABASE ... SET LOCALE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "CREATE DATABASE ... TEMPLATE template0 с нужными ENCODING / LOCALE / ICU_LOCALE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "CREATE DATABASE с TEMPLATE template1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Достаточно изменить lc_collate в конфиге",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие локали совместимы с любой кодировкой символов?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Любые локали libc",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только ru_RU.UTF8",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "C и POSIX",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только локали ICU",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен префикс TM в форматной маске to_char для дат?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Для вывода времени в 12-часовом формате",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы использовать названия месяцев и дней недели, заданные lc_time",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для вывода таймзоны",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для вывода только года без месяцев",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "На что влияет параметр datestyle?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "На часовой пояс сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "На порядок строк в ORDER BY",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "На формат, возвращаемый to_char",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "На неявное преобразование значений дат и времени в текст и обратно",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что нужно учитывать при использовании денежного типа money?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Тип требует расширения currency",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Тип хранит валюту в каждом значении",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Код валюты берётся из lc_monetary, и в таблице фактически хранится одна валюта",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Тип поддерживает только рубли",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как клиент и сервер работают в разных кодировках?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Нужно вручную перекодировать каждый запрос",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это невозможно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обслуживающий процесс автоматически перекодирует символы между server_encoding и client_encoding",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перекодировка делает клиентская библиотека всегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какую переменную окружения можно использовать вместо явной установки client_encoding?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "PGCLIENTENCODING",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "CLIENT_ENCODING",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "PGENCODING",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "PGCODEPAGE",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как соотносятся переменные окружения LC_ALL, LANG и LANGUAGE?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "LC_ALL перекрывает все категории; LANG задаёт значения по умолчанию; LANGUAGE используется вместо LC_MESSAGES",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "LANGUAGE задаёт кодировку",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все три равнозначны",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "LANG перекрывает всё, LANGUAGE игнорируется",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чем недетерминированное правило сортировки отличается от детерминированного?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Оно сортирует всегда случайно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Оно требует отключения индексов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Оно работает только с латиницей",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Строки из разных байтов могут считаться равными, но LIKE не поддерживается и производительность ниже",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

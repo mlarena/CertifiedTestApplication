@@ -1,0 +1,413 @@
+{
+  "Title": "DBA2. Расширения PostgreSQL",
+  "Description": "15 вопросов по лекции dba2_15: состав расширения, установка через PGXS, версии и пути обновления, поведение pg_dump",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое расширение в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Упаковка связанных объектов БД с механизмом обновления версий и поддержкой pg_dump",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Резервная копия схемы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Плагин операционной системы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отдельная база данных с системными таблицами",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какими файлами описывается расширение?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Управляющий файл имя.control и SQL-скрипты имя--версия.sql",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только postgresql.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "XML-манифест",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Файл pg_hba.conf и скрипт",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Где располагаются файлы установленных расширений?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "В каждой базе данных отдельно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В каталоге SHAREDIR/extension (путь покажет pg_config --sharedir)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "В каталоге данных кластера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В /etc/postgresql",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "В каком представлении видно, какие расширения доступны и какие установлены?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "pg_extension_list",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_available_extensions",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_settings",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_available_libraries",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем в начале SQL-скрипта расширения стоит строка с \\echo и \\quit?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Для вывода комментария в psql",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для включения расширения в search_path",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы защитить скрипт от случайного ручного выполнения: он работает только внутри CREATE EXTENSION",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для установки кодировки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как выполняются команды скрипта создания расширения?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Каждая команда — отдельная транзакция",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все команды выполняются в одной транзакции, поэтому команды управления транзакциями и VACUUM недопустимы",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Асинхронно в фоновом процессе",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Вне транзакции, без отката",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт при попытке удалить функцию, входящую в расширение?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Сервер пересоздаст функцию",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Функция удалится, расширение останется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибка: объект нужен расширению; нужно удалять само расширение",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Будет выполнено отложенное удаление",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Отслеживает ли механизм расширений изменения объектов внутри расширения?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Отслеживаются только изменения прав доступа",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Да, изменения автоматически откатываются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нет: добавить столбец или переопределить функцию можно, но вносить изменения не следует",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Да, любое изменение вызовет ошибку",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как перенести расширение в другую схему?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "ALTER EXTENSION имя SET SCHEMA схема; требуется relocatable = true",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ALTER TABLE все объекты схемы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "DROP и CREATE с указанием схемы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перенос невозможен",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как обновить версию расширения?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "ALTER EXTENSION имя UPDATE [TO 'версия'], нужен скрипт имя--старая--новая.sql",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "SELECT pg_extension_update()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "DROP + CREATE всегда обязательны",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Перезапуск сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт при обновлении с версии 1.0 до 1.2, если есть только скрипты 1.0--1.1 и 1.1--1.2?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Расширение будет пересоздано",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибка: нужен прямой скрипт 1.0--1.2",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Механизм сам построит цепочку 1.0--1.1--1.2",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Будет применён только последний скрипт",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL понимает номера версий расширений?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Как имена: порядок версий 1.1 и 1.2 не определён, важны пути обновления",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Как хеши скриптов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Как числа: 1.10 новее, чем 1.9",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Как даты выпуска",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что требуется для установки расширения с компилируемым кодом, если PostgreSQL установлен из пакета?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Пакет для разработчиков (например, postgresql-server-dev-16), доступность pg_config и подключение PGXS в Makefile",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пересборка всего кластера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только права суперпользователя",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ничего, всё есть в поставке",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен дополнительный управляющий файл, привязанный к версии (например, имя--1.2.control)?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Описывать права доступа",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Задать параметры конкретной версии (например, зависимости); они имеют приоритет над основным файлом",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Хранить данные расширения",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключать автоочистку для таблиц расширения",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как утилита pg_dump выгружает объекты расширения?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Выгружает только управляющий файл",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не выгружает расширение вообще",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Выгружает каждый объект расширения отдельно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пишет CREATE EXTENSION IF NOT EXISTS, выгружает данные «конфигурационных» таблиц и права",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

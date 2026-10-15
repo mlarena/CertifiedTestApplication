@@ -1,0 +1,428 @@
+{
+  "Title": "DBA2. Уровни изоляции транзакций",
+  "Description": "15 вопросов по лекции dba2_01: уровни изоляции SQL и их реализация в PostgreSQL, аномалии, SSI, снимки на RC/RR",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие уровни изоляции транзакций реализованы в PostgreSQL?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Read Uncommitted",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Snapshot Isolation",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Read Committed",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Serializable",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Repeatable Read",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт, если начать транзакцию командой BEGIN ISOLATION LEVEL READ UNCOMMITTED?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Сервер перезапустится",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Транзакция начнётся с уровнем Read Committed: этот уровень в PostgreSQL не реализован",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Уровень применится, но с блокировками на чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Возникнет ошибка синтаксиса",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт уровень изоляции транзакций по умолчанию?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "transaction_isolation",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "isolation_level",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "default_transaction_isolation",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "server_isolation",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как проверить текущий уровень изоляции активной транзакции?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "SELECT current_isolation()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SHOW isolation_level",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SHOW transaction_isolation",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "SHOW default_transaction_isolation",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие данные видит оператор (запрос) на уровне Read Committed?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Те, что были зафиксированы на момент начала транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Те, что были зафиксированы на момент начала сессии",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Те, что были зафиксированы на момент начала этого оператора",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все данные, включая незафиксированные",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что верно для уровня Read Committed?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Потерянные изменения возможны, если значение подставляется извне (не одной командой)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Транзакция может быть автоматически оборвана для предотвращения аномалий",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "UPDATE после снятия блокировки перечитывает строку, чтобы избежать потери обновлений",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Незафиксированные изменения других транзакций видны",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Повторный запрос в той же транзакции может вернуть другие данные",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какую категорию изменчивости должна иметь функция с собственным запросом, чтобы видеть те же данные, что и основной запрос на уровне Read Committed?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "VOLATILE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "IMMUTABLE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "STRICT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "STABLE",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая аномалия: повторное чтение строки возвращает другие данные, если другая транзакция их изменила и зафиксировала?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Dirty read (грязное чтение)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Phantom read (фантомное чтение)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Lost update (потеря обновлений)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Non-repeatable read (неповторяющееся чтение)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чем уровень Repeatable Read в PostgreSQL строгее, чем требует стандарт SQL?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Использует блокировки на чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не допускает и фантомного чтения (повторный запрос по условию возвращает тот же набор строк)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не позволяет изменять данные",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Работает только с одной таблицей",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что получит транзакция на уровне Repeatable Read, которая пытается обновить строку, изменённую другой транзакцией после начала снимка?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Сервер аварийно остановится",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Строка будет обновлена по новой версии",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибка: could not serialize access due to concurrent update — транзакцию нужно повторить",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Она увидит новую версию строки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая аномалия возможна на уровне Repeatable Read, но предотвращается на Serializable?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Write skew (несогласованная запись)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Фантомное чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Грязное чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Неповторяющееся чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что означает уровень изоляции Serializable?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Результат конкурентного выполнения транзакций совпадает с некоторым последовательным порядком",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все транзакции выполняются по одному в очереди",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все данные блокируются на время транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер отказывается выполнять несколько транзакций одновременно",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие условия/ограничения верны для Serializable в PostgreSQL?",
+      "Type": 2,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Требует блокировок на чтение",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Требует отключения автоочистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не работает на физических репликах (hot standby)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Транзакции могут обрываться и требуют повтора при ошибке сериализации",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Все транзакции в базе должны использовать этот уровень для корректной работы SSI",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как ведут себя DDL-команды (CREATE TABLE, ALTER TABLE) в транзакции в PostgreSQL?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Они требуют блокировки ACCESS EXCLUSIVE, поэтому несовместимы с транзакциями",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они откладываются до COMMIT, но не откатываются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они транзакционны — можно откатить командой ROLLBACK",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они фиксируются немедленно, ROLLBACK не действует",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько уровней изоляции из четырёх, определённых стандартом SQL, реализовано в PostgreSQL?",
+      "Type": 3,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "3",
+          "IsCorrect": true,
+          "NumericValue": 3.0
+        },
+        {
+          "Text": "2",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "4",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

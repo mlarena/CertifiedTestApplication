@@ -1,0 +1,448 @@
+{
+  "Title": "DBA2. Блокировки в оперативной памяти",
+  "Description": "15 вопросов по лекции dba2_14: спин-блокировки, лёгкие блокировки, закрепления буферов, мониторинг ожиданий",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие виды краткосрочных блокировок оперативной памяти рассматриваются в лекции?",
+      "Type": 2,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Блокировки отношений",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Лёгкие блокировки (lwlock)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Спин-блокировки",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Закрепление буфера (buffer pin)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Предикатные блокировки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чем характерны спин-блокировки?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Удерживаются очень коротко, ожидание активное, мониторинг и обнаружение взаимоблокировок отсутствуют",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удерживаются до конца транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Имеют очередь ожидания и мониторинг",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Поддерживают пять режимов",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько режимов у лёгких блокировок (lwlock)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Два: исключительный и разделяемый",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Четыре, как у строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только исключительный",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Восемь, как у отношений",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая особенность очереди у лёгких блокировок может приводить к непредсказуемо долгим ожиданиям?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Очередь полностью отсутствует",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Очередь сбрасывается при каждой контрольной точке",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пока блокировка удерживается в разделяемом режиме, читающие проходят вне очереди",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пишущие всегда получают приоритет",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое закрепление буфера (buffer pin)?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Блокировка строки на странице",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Закрепление соединения с сервером",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Постоянное размещение страницы в кеше",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Счётчик процессов, работающих с содержимым буфера; пока он ненулевой, буфер нельзя занять другой страницей",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как ведёт себя процесс, которому нужен уже закреплённый другим процессом буфер?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Активно крутится в цикле ожидания",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Записывает буфер на диск",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Прерывает ожидающий процесс",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обычно пропускает его и берёт другой; при необходимости ждёт пассивно (его «будят» при снятии закрепления)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как устроена блокировка BufferMapping для хеш-таблицы буферного кеша?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Это транш из 128 отдельных блокировок, каждая защищает свою часть хеш-таблицы",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это одна блокировка на всю хеш-таблицу",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это спин-блокировка на каждый буфер",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировка отсутствует",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие блокировки защищают журнальный кеш?",
+      "Type": 2,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Спин-блокировка insert position lock для резервирования места",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "BufferContent lock",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Транш из 8 блокировок WALInsert lock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "WALWrite lock для записи на диск",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "WALBufMapping lock — единственная лёгкая блокировка хеш-таблицы",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему хеш-таблица журнального кеша защищена одной блокировкой, а буферного кеша — траншем?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Журнальный кеш обычно 1/32 буферного, и обращения к нему более упорядочены",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал не читается процессами",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это историческая ошибка",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнальный кеш не разделяется между процессами",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Где посмотреть текущее ожидание процесса?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "В pg_locks",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В pg_stat_activity: столбцы wait_event_type и wait_event",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "В pg_stat_wal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В pg_wait_events",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие значения может принимать wait_event_type?",
+      "Type": 2,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Tuple",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Lock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Vacuum",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Timeout",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Activity",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "LWLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Client",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "BufferPin",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "IO",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему для анализа ожиданий нужно семплирование?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Семплирование не нужно, всё есть в pg_stat_statements",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_activity показывает только текущий момент, накопленной статистики ожиданий нет",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ожидания пишутся только в WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_locks очищается каждую секунду",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение от PostgreSQL Pro собирает статистику ожиданий?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "pg_wait_sampling",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pgaudit",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_visibility",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "О чём говорит пустой wait_event у процесса?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Процесс завершён",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс простаивает",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс не находится в отслеживаемом ожидании — это неучтённое время",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс ждёт блокировки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает признак IO in progress в заголовке буфера?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Указывает на закрепление буфера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокирует страницу от изменения навсегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сообщает другим процессам, что страница читается с диска; при необходимости они встают в очередь",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Помечает буфер как грязный",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Заморозка транзакций",
+  "Description": "15 вопросов по лекции dba2_07: переполнение счётчика номеров, механизм заморозки, параметры и защитный режим",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Сколько бит выделено под номер транзакции в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "32",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "16",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "64",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "24",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что означает закольцованное пространство номеров транзакций?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Номера всегда растут бесконечно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номера распределяются между серверами",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Половина номеров относится к прошлому, половина — к будущему",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Каждая транзакция имеет два номера",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как помечается замороженная версия строки (freeze) в современных версиях PostgreSQL?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Одновременно выставляются оба бита-подсказки xmin: committed и aborted",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmax заменяется на номер замораживающей транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmin обнуляется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmin заменяется специальным номером FrozenTransactionId",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое FrozenTransactionId = 2?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Индекс последнего CHECKPOINT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер текущей транзакции в замороженной таблице",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер, который использовался для заморозки до версии 9.4 (сейчас заменён на биты-подсказки)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер процесса autovacuum",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужна заморозка транзакций?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Для уменьшения размера WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы старые номера xmin не попали в будущее при переполнении 32-битного счётчика",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для ускорения SELECT-запросов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для сжатия табличных страниц",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое значение в datfrozenxid базы данных?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Максимальное из relfrozenxid",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Последний номер транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер контрольной точки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Минимальное из relfrozenxid всех таблиц этой базы",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая функция вычисляет возраст номера транзакции (число транзакций, прошедших с её появления)?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "txid_current()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_xact_status()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_current_snapshot()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "age()",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию у vacuum_freeze_min_age?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "10 000 000",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "50 000 000",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "100 000 000",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "1 000 000",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что определяет параметр vacuum_freeze_table_age?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Возраст, при котором очистка начинает искать заморозку по всем страницам (полное сканирование)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Количество замороженных страниц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Порог для принудительной автоочистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Максимальный возраст транзакции в таблице",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр вызывает принудительную автоочистку при превышении возраста транзакций и требует перезапуска сервера для изменения?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "max_locks_per_transaction",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_freeze_min_age",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_freeze_max_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_failsafe_age",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит при достижении vacuum_failsafe_age (1 600 000 000)?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Отключается WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Очистка переходит в защитный режим: игнорируются пороги возраста и ограничение стоимости",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер аварийно останавливается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Начинается репликация",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие команды обеспечивают принудительную заморозку версий строк?",
+      "Type": 2,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "CLUSTER",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "COPY ... WITH FREEZE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM (без FREEZE) — тоже замораживает все версии",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM FULL",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM FREEZE",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое требование к команде COPY ... WITH FREEZE?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Требует отключения WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Таблица должна быть пуста",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нужна блокировка ACCESS EXCLUSIVE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Таблица должна быть создана (или опустошена TRUNCATE) в той же транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт, если не успеть заморозить версии строк до переполнения счётчика?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Старые строки станут невидимыми",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "WAL-файлы будут удалены",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер аварийно остановится (не примет команды), чтобы предотвратить потерю данных",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Начнётся логическая репликация",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры можно задать на уровне таблицы для заморозки?",
+      "Type": 2,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "autovacuum_freeze_max_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_freeze_min_age",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_scale_factor",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_freeze_min_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_freeze_table_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,433 @@
+{
+  "Title": "DBA2. Блокировки объектов",
+  "Description": "15 вопросов по лекции dba2_12: режимы блокировок отношений, очередь, мониторинг pg_locks, advisory- и предикатные блокировки",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "В каком представлении видны текущие блокировки объектов?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "pg_wait_events",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_activity",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_lock_status",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_locks",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько режимов блокировок отношений определено в PostgreSQL?",
+      "Type": 3,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "12",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "4",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "5",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "8",
+          "IsCorrect": true,
+          "NumericValue": 8.0
+        }
+      ]
+    },
+    {
+      "Text": "Какой блокировкой сопровождается обычный SELECT и с чем она несовместима?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "RowShareLock; несовместима с RowExclusiveLock",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "AccessExclusiveLock; несовместима со всем",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "AccessShareLock; несовместима только с AccessExclusiveLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ShareLock; несовместима с любым изменением данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие команды требуют блокировки AccessExclusiveLock?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "ALTER TABLE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM FULL",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "TRUNCATE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "SELECT ... FOR UPDATE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "CREATE INDEX CONCURRENTLY",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "DROP TABLE",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой режим блокировки использует CREATE INDEX CONCURRENTLY?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "ShareLock",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "RowExclusiveLock",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ShareUpdateExclusiveLock — совместим с изменением данных",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "AccessExclusiveLock",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему команды SELECT, пришедшие позже, не «проскакивают» вперёд очереди, пока VACUUM FULL ждёт своей очереди?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Так работает многоверсионность",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SELECT всегда блокируется на время ожидания",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Очередь честная: все встают за ожидающим, чтобы исключающая блокировка не голодала",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Буферный кеш удерживает страницу",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Для какого ресурса используется блокировка типа Extend?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "При добавлении страниц к файлу отношения",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "При создании новой базы данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При увеличении размера WAL-сегмента",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При расширении буферного кеша",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем каждая транзакция удерживает исключительную блокировку своих номеров (Virtualxid / Transactionid)?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Для защиты от вставки «грязных» данных",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это простой способ дождаться окончания другой транзакции: нужно запросить блокировку её номера",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для работы автоочистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для нумерации строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая функция покажет номера процессов, которые мешают данному получить блокировку?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "pg_blocking_pids()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_blocked_by()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_locks_waiters()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_advisory_lock()",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "При каком условии параметр log_lock_waits записывает сообщение в журнал сервера?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Только когда ожидает процесс автоочистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При каждом запросе блокировки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Если ожидание блокировки длится дольше deadlock_timeout",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "При каждой взаимоблокировке без исключений",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Чем ограничено количество блокировок объектов в сервере?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Числом max_connections на каждую транзакцию",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Произведением max_locks_per_transaction и max_connections; пул общий для всех транзакций",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Количеством таблиц в базе",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Объёмом shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что верно о рекомендательных (advisory) блокировках?",
+      "Type": 2,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Их устанавливает только приложение, сервер — никогда",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Разделяемый режим — функции с суффиксом _shared",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сеансовые нужно освобождать явно (pg_advisory_unlock)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Доступны только суперпользователю",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "До конца сеанса — pg_advisory_lock, до конца транзакции — pg_advisory_xact_lock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "PostgreSQL захватывает их автоматически при UPDATE",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что будет с сеансовой рекомендательной блокировкой, если транзакция, в которой она получена, откатится?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Блокировка сохранится: сеансовые advisory-блокировки не подчиняются логике транзакций",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировка автоматически снимется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировка станет транзакционной",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сервер выдаст ошибку",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое предикатные блокировки (режим SIRead)?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Блокировки уровней изоляции Read Committed",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Оптимистический механизм: они ничего не блокируют, а отслеживают зависимости транзакций по данным",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировки целых таблиц на время SELECT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировки, которые удерживают чтение строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит, когда число предикатных блокировок версий строк одной страницы превышает max_pred_locks_per_page?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Происходит повышение уровня: вместо мелких блокировок захватывается блокировка страницы",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Транзакция прерывается ошибкой сериализации",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Уровень изоляции понижается до Read Committed",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Предикатные блокировки отключаются",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

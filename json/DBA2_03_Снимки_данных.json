@@ -1,0 +1,418 @@
+{
+  "Title": "DBA2. Снимки данных",
+  "Description": "15 вопросов по лекции dba2_03: состав и время создания снимка, горизонты, экспорт и импорт снимка",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Когда создаётся снимок данных (snapshot) на уровне Read Committed?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Для каждого оператора (запроса)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "При каждом обращении к таблице",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Один раз за сеанс",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В момент начала транзакции (BEGIN)",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Когда создаётся снимок данных на уровне Repeatable Read?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Для каждого оператора",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При каждом COMMIT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В момент команды BEGIN",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При первом обращении к данным после начала транзакции (не в момент BEGIN)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "В каком виде функция pg_current_snapshot() возвращает информацию о снимке?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Только список активных транзакций",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "JSON с массивом всех транзакций",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только xmin и xmax",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmin:xmax:xip_list (минимум, максимум, список активных транзакций)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что входит в состав снимка данных?",
+      "Type": 2,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "LSN последней контрольной точки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmin — минимальный номер активной транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmax — максимальный номер транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "номер текущей страницы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "xip_list — список активных на момент создания транзакций",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как ведёт себя версия строки, если её xmin соответствует активной (незавершённой) транзакции (кроме самой этой транзакции)?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Сервер аварийно останавливается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Она видна как зафиксированная",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Она не видна",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Она видна как удалённая",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой номер получает транзакция, которая только читает данные и не изменяет их?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "Виртуальный (не требует регистрации в CLOG)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ноль",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отрицательный",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Стандартный 32-битный",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "В каком представлении можно посмотреть горизонт транзакции (backend_xmin)?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "pg_stat_activity",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_snapshots",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_locks",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_database",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как долгоиграющая транзакция, не обращающаяся к данным, влияет на систему?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Никак не влияет, если не читает данные",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Вызывает ошибки сериализации",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличивает размер WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удерживает горизонт базы данных, не даёт очищать неактуальные версии строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт максимальное время неактивности транзакции перед прерыванием?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "idle_session_timeout",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "idle_in_transaction_session_timeout",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "transaction_timeout",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "lock_timeout",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен экспорт снимка данных?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "Чтобы ускорить выполнение запросов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы несколько параллельных транзакций видели одну и ту же картину данных",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы отключить автоочистку",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Чтобы переключить уровень изоляции",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой командой импортируется экспортированный снимок?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "IMPORT SNAPSHOT 'идентификатор'",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SELECT pg_import_snapshot('идентификатор')",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SET TRANSACTION USE SNAPSHOT 'идентификатор'",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SET TRANSACTION SNAPSHOT 'идентификатор'",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Где физически хранится информация об экспортированном снимке?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "В WAL-файлах",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В представлении pg_buffercache",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В системном каталоге pg_extension",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Файл в каталоге PGDATA/pg_snapshots",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "До каких пор живёт экспортированный снимок?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "До перезапуска сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "До следующего COMMIT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Пока активна транзакция, которая его экспортировала",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Вечно, пока не удалён вручную",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "На каких уровнях изоляции имеет смысл использовать импорт экспортированного снимка?",
+      "Type": 2,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Serializable",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Read Committed",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Repeatable Read",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Read Uncommitted",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит с горизонтом базы данных после завершения транзакции?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Горизонт обнуляется",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Горизонт продвигается вперёд — неактуальные версии строк можно вычищать; обратного движения быть не может",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Горизонт сдвигается назад, чтобы сохранить больше версий",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Горизонт не меняется до следующей контрольной точки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

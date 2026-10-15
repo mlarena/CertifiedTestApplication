@@ -1,0 +1,418 @@
+{
+  "Title": "DBA2. Журнал предзаписи WAL",
+  "Description": "15 вопросов по лекции dba2_09: LSN, менеджеры ресурсов, сегменты, wal_buffers, pg_waldump и pg_walinspect",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Что такое LSN в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "Номер строки в таблице",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер страницы в файле",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "64-битный номер журнальной записи — байтовое смещение от начала журнала",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Идентификатор сессии",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "В каком виде выводится значение типа pg_lsn?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Дата и время",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Два 32-битных числа в шестнадцатеричной системе через косую черту",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Одно 64-битное десятичное число",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Имя файла и смещение через двоеточие",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что содержится в заголовке журнальной записи?",
+      "Type": 2,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "Номер транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Имя таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "План запроса",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Менеджер ресурсов (resource manager)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Контрольная сумма (CRC)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое менеджер ресурсов в журнале?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Раздел pg_hba.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс, записывающий журнал на диск",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Расширение для архивации журнала",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Компонент, который понимает формат данных записи: Heap, Btree, CLOG, Transaction и т. п.",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что нового появилось в версии 16 для разработчиков расширений?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "Добавлен новый уровень изоляции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Разрешено менять формат страниц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал стал необязательным",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Расширения могут создавать собственные менеджеры ресурсов журнала",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой размер сегмента журнала по умолчанию и когда его можно задать?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "8 Мбайт; меняется параметром wal_segment_size",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "16 Мбайт; размер задаётся при инициализации кластера",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "64 Мбайт; фиксирован навсегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "16 Мбайт; меняется без перезапуска",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как устроены имена файлов журнала в каталоге pg_wal?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Составлены из трёх чисел: номер линии времени и два старших разряда LSN",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Имя совпадает с именем таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это порядковые номера без привязки к LSN",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это контрольные суммы сегментов",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что означает значение wal_buffers = -1?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Размер подбирается автоматически: 1/32 буферного кеша, но не меньше 64 Кбайт и не больше сегмента WAL",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Используется весь буферный кеш",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнальный кеш отключён",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Выделяется 1 Мбайт",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как работает журнальный кеш?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "Каждая запись пишется в отдельный буфер",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Не используется, всё пишется сразу на диск",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Как обычный LRU-кеш",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Как кольцевой буфер: записи добавляются в голову, а на диск сбрасываются с хвоста",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая утилита позволяет прочитать содержимое файлов журнала?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "pg_waldump",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_controldata",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_walsummary",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_resetwal",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение позволяет исследовать журнал средствами SQL, и какие привилегии требует?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "pageinspect; прав не требует",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_walinspect; нужна роль pg_read_server_files или суперпользователь",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_buffercache; достаточно прав SELECT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements; нужен перезапуск",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая функция возвращает текущую позицию вставки в журнал?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "pg_wal_lsn()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_wal_status()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_walfile_name()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_current_wal_insert_lsn()",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как узнать имя сегмента журнала, в котором находится указанная запись?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "pg_wal_name('0/1FF1260')",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_ls_waldir('0/1FF1260')",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_wal_segment('0/1FF1260')",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_walfile_name('0/1FF1260')",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему файлы журнала двоично несовместимы между разными платформами?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Из-за сжатия журнальных записей",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Из-за разного размера сегмента",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Начало каждой записи выравнивается по границе машинного слова",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Из-за шифрования журнала",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как измерить объём журнала, порождённый одним оператором?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Вычислить разность значений типа pg_lsn до и после оператора",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Посчитать строки в pg_stat_activity",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Использовать pg_total_relation_size()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Посмотреть размер таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

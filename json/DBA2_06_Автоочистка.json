@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Автоочистка",
+  "Description": "15 вопросов по лекции dba2_06: лаунчер и рабочие процессы, пороги и параметры, мониторинг",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какие процессы составляют подсистему автоочистки?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "launcher (автоматический запуск) + рабочие процессы(workers)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс checkpointer",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только один фоновый процесс",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только пользовательские сессии",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько рабочих процессов автоочистки запускается по умолчанию?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "10",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "3",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "5",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Через какой интервал (в секундах) лаунчер автоочистки проверяет необходимость запуска рабочих процессов по умолчанию?",
+      "Type": 3,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "10",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "60",
+          "IsCorrect": true,
+          "NumericValue": 60.0
+        },
+        {
+          "Text": "300",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "По какой формуле определяется порог запуска очистки для таблицы?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "autovacuum_vacuum_threshold * число_строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_max_workers + число_строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_threshold + autovacuum_vacuum_scale_factor * число_строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_scale_factor / число_строк",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию у autovacuum_vacuum_threshold?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "50",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "20",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "0",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "100",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию у autovacuum_vacuum_scale_factor?",
+      "Type": 1,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "0.5",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "0.1",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "1.0",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "0.2",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Зачем нужен порог очистки для вставок (autovacuum_vacuum_insert_threshold)?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Для таблиц, в которые только вставляют данные (без UPDATE/DELETE), чтобы не ждать накопления мёртвых строк",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для таблиц с внешними ключами",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для временных таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Для TOAST-таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как отключить автоочистку для конкретной таблицы?",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Установить параметр хранения autovacuum_enabled = false",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Удалить таблицу",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Установить autovacuum_vacuum_scale_factor = 0",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключить параметр autovacuum в postgresql.conf",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры автоочистки можно задать на уровне таблицы?",
+      "Type": 2,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "autovacuum_analyze_scale_factor",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_threshold",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_max_workers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_cost_delay",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_scale_factor",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое значение по умолчанию у autovacuum_vacuum_cost_delay?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "2 мс",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "0 мс",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "100 мс",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "20 мс",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что используется в качестве памяти для автоочистки, если autovacuum_work_mem = -1?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "wal_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "temp_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "maintenance_work_mem (по умолчанию 64 МБ)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Когда автоочистка запускается принудительно из-за заморозки?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Когда таблица достигает 1 ГБ",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда возраст datfrozenxid превышает autovacuum_freeze_max_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Когда количество индексов превышает 10",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "При каждом перезапуске сервера",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры автоочистки имеют префикс toast. для TOAST-таблиц?",
+      "Type": 2,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "toast.autovacuum_freeze_min_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast.autovacuum_freeze_max_age",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast.autovacuum_vacuum_scale_factor",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast.autovacuum_max_workers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast.autovacuum_naptime",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Где хранится информация о последней автоочистке таблицы?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "В представлениях pg_stat_user_tables (last_autovacuum) и pg_stat_progress_vacuum",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "В pg_buffercache",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В WAL-файлах",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В представлении pg_locks",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как лаунчер выбирает, какую таблицу обработать, если рабочих процессов меньше, чем «запущенных» таблиц?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Обрабатывает первую таблицу в списке",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обрабатывает в первую очередь таблицы с наибольшим возрастом (самые старые); новые рабочие запускаются раз в naptime",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Случайным образом",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Обрабатывает таблицы в алфавитном порядке",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}

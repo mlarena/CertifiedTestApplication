@@ -1,0 +1,423 @@
+{
+  "Title": "DBA2. Страницы и версии строк",
+  "Description": "15 вопросов по лекции dba2_02: устройство страниц, заголовки, xmin/xmax, биты-подсказки, CLOG, расширение pageinspect",
+  "TimeLimit": 600,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой размер страницы по умолчанию в PostgreSQL?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "16 Кбайт",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "4 Кбайт",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "8 Кбайт",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "32 Кбайт",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Можно ли изменить размер страницы?",
+      "Type": 1,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "Да, параметром block_size без пересборки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Нет, размер страницы фиксирован на уровне ОС",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Да, но только через ALTER TABLE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Да, вплоть до 32 Кбайт, но только при сборке из исходников",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько байт занимает заголовок табличной страницы?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "24",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "8",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "32",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "16",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Из чего состоит идентификатор версии строки (ctid / tid)?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "Номер таблицы + номер строки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Временная метка + счётчик",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер страницы + номер указателя (смещение) в массиве указателей страницы",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Хеш от содержимого строки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Сколько байт занимает заголовок версии строки (tuple header)?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "8",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "16",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "23",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "32",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая информация хранится в заголовке версии строки?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "xmin — номер создавшей транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ctid — указатель на текущую версию",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "контрольная сумма версии",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "xmax — номер удаляющей транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "время изменения строки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "информационные биты (infomask)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит физически при удалении строки?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "Строка физически удаляется со страницы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Страница перестраивается заново",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Указатель на страницу заменяется на null",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "В поле xmax текущей версии записывается номер удаляющей транзакции, версия остаётся на странице",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Кто и когда устанавливает биты-подсказки (hint bits)? ",
+      "Type": 1,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "Любой процесс, первым обратившийся к странице, а не процесс фиксации транзакции",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только процесс фиксации (коммитер)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс записи WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Процесс autovacuum при следующей очистке",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Где в PostgreSQL хранится информация о завершённости транзакций (CLOG)?",
+      "Type": 1,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "PGDATA/pg_wal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "PGDATA/global",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Каталог PGDATA/pg_xact",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "PGDATA/base",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какое расширение позволяет посмотреть содержимое табличной страницы?",
+      "Type": 1,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_trgm",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pageinspect",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит при отмене (ROLLBACK) транзакции, которая удалила строку?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "Номер транзакции остаётся в xmax, при первом обращении ставится бит xmax aborted",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Страница перестраивается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер стирается из xmax",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Строка физически удаляется",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит при обновлении (UPDATE) строки на физическом уровне?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "Страница полностью перестраивается",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Старая версия перезаписывается на месте",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Старая версия удаляется физически",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Старая версия помечается xmax, новая вставляется на странице, в индексе появляются ссылки на обе версии",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему число блокировок строк не ограничено объёмом оперативной памяти?",
+      "Type": 1,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "Блокировки хранятся в буферном кеше",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировка — это номер транзакции в xmax версии строки, хранится на диске в табличных страницах",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировки не ограничены, потому что используется snapshot-изоляция",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Блокировки хранятся в WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Почему между значениями столбцов в версии строки могут возникать незаполненные байты (padding)?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "Это контрольные суммы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это место для индексных ссылок",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Это резерв для будущих версий PostgreSQL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Выравнивание по границам машинного слова",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как PostgreSQL выделяет номера транзакций для частичных откатов (SAVEPOINT / ROLLBACK TO)?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "Те же номер транзакции, но с флагом savepoint",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Номер не выделяется — используется виртуальный",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Вложенной транзакции (subtransaction) выделяется собственный номер",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отдельный глобальный счётчик для точек сохранения",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}
