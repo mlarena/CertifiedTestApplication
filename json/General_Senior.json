@@ -1,0 +1,2378 @@
+{
+  "Title": "PostgreSQL — Senior (Advanced Operations)",
+  "Description": "Тест Senior: 80 вопросов по продвинутой эксплуатации, настройке и HA PostgreSQL",
+  "TimeLimit": 1200,
+  "CanReturnToQuestion": true,
+  "Questions": [
+    {
+      "Text": "Какой параметр определяет максимальное количество подготовленных транзакций?",
+      "Type": 1,
+      "Order": 1,
+      "Answers": [
+        {
+          "Text": "max_prepared_transactions",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_standby_streams",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_worker_processes",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_replication_slots",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие библиотеки можно включить через shared_preload_libraries?",
+      "Type": 2,
+      "Order": 2,
+      "Answers": [
+        {
+          "Text": "auto_explain",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "uuid-ossp",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pgcrypto",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт имя экземпляра (кластера)?",
+      "Type": 1,
+      "Order": 3,
+      "Answers": [
+        {
+          "Text": "cluster_name",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "instance_name",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_cluster",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "server_name",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая утилита позволяет связать OID объекта с именем файла?",
+      "Type": 1,
+      "Order": 4,
+      "Answers": [
+        {
+          "Text": "pg_controldata",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_lsclusters",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "oid2name",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_whoami",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт время ожидания перед переключением WAL-сегмента при архивировании?",
+      "Type": 1,
+      "Order": 5,
+      "Answers": [
+        {
+          "Text": "wal_switch_delay",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_timeout",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "archive_completion",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "archive_timeout",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие переменные psql управляют обработкой ошибок?",
+      "Type": 2,
+      "Order": 6,
+      "Answers": [
+        {
+          "Text": "AUTOCOMMIT",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ERROR",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ON_ERROR_STOP",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ON_ERROR_ROLLBACK",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая команда psql выполняет каждый результат выборки как SQL-запрос?",
+      "Type": 1,
+      "Order": 7,
+      "Answers": [
+        {
+          "Text": "\\go",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\g",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\do",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\gexec",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие переменные psql хранят информацию о последней ошибке?",
+      "Type": 2,
+      "Order": 8,
+      "Answers": [
+        {
+          "Text": "LAST_ERROR_MESSAGE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "SQLSTATE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "LAST_ERROR",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "LAST_ERROR_SQLSTATE",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как получить план выполнения запроса без его фактического выполнения?",
+      "Type": 2,
+      "Order": 9,
+      "Answers": [
+        {
+          "Text": "EXPLAIN SELECT ...",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\explain SELECT ...",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\explain analyze SELECT ...",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "EXPLAIN ANALYZE SELECT ...",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие метакоманды psql позволяют получить информацию об объектах?",
+      "Type": 2,
+      "Order": 10,
+      "Answers": [
+        {
+          "Text": "\\dt (список таблиц)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dv (список представлений)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\d (описание объекта)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\df (список функций)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\di (список индексов)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dp (привилегии)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр управляет количеством рабочих процессов autovacuum?",
+      "Type": 1,
+      "Order": 11,
+      "Answers": [
+        {
+          "Text": "max_parallel_workers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_parallel",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_max_workers",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_worker_processes",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт процент от размера таблицы для запуска VACUUM?",
+      "Type": 1,
+      "Order": 12,
+      "Answers": [
+        {
+          "Text": "vacuum_percentage",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_threshold",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "vacuum_cost_scale",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_scale_factor",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры влияют на планировщик запросов?",
+      "Type": 2,
+      "Order": 13,
+      "Answers": [
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "random_page_cost",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "work_mem",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "seq_page_cost",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "effective_cache_size",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт размер WAL в памяти?",
+      "Type": 1,
+      "Order": 14,
+      "Answers": [
+        {
+          "Text": "wal_shared_mem",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_memory",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_cache_size",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_buffers",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет минимальный размер WAL перед контрольной точкой?",
+      "Type": 1,
+      "Order": 15,
+      "Answers": [
+        {
+          "Text": "wal_min_size",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_keep",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_wal_size",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "min_wal_size",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие процессы PostgreSQL управляют WAL?",
+      "Type": 2,
+      "Order": 16,
+      "Answers": [
+        {
+          "Text": "bgwriter",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "checkpointer",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "walwriter",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "walsender",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "walreceiver",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое prepared statement в протоколе PostgreSQL?",
+      "Type": 1,
+      "Order": 17,
+      "Answers": [
+        {
+          "Text": "Запрос, требующий подтверждения транзакции",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Заранее разобранный и переписанный запрос с сохранённым деревом разбора",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Запрос, записанный в журнал предзаписи",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Запрос, выполненный на реплике",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие типы процессов PostgreSQL существуют?",
+      "Type": 2,
+      "Order": 18,
+      "Answers": [
+        {
+          "Text": "Фоновые (checkpointer, walwriter, autovacuum и др.)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Postmaster",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Backend (обслуживающие)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Client-процессы (клиентские приложения)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Worker-процессы для параллельных запросов",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое портал (portal) в PostgreSQL?",
+      "Type": 1,
+      "Order": 19,
+      "Answers": [
+        {
+          "Text": "Кэш системного каталога",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Представление курсора на сервере — результат подготовленного запроса",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Соединение между клиентом и сервером",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал выполнения запроса",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие свойства ACID в PostgreSQL реализуются без WAL?",
+      "Type": 1,
+      "Order": 20,
+      "Answers": [
+        {
+          "Text": "Долговечность",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Изоляция (через MVCC)",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Согласованность",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Атомарность",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ни одно из этих свойств, WAL обязателен для долговечности",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие аномалии возможны при уровне Repeatable Read?",
+      "Type": 1,
+      "Order": 21,
+      "Answers": [
+        {
+          "Text": "Phantom reads",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Dirty reads",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Lost updates",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Non-repeatable reads",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой механизм предотвращает дедлоки в PostgreSQL?",
+      "Type": 1,
+      "Order": 22,
+      "Answers": [
+        {
+          "Text": "Фиксированный порядок захвата блокировок",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ожидание с обратной отсрочкой (wait with backoff) + детекция дедлоков",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Приоритеты транзакций",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключение блокировок при дедлоках",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие типы блокировок строк существуют в PostgreSQL?",
+      "Type": 2,
+      "Order": 23,
+      "Answers": [
+        {
+          "Text": "RowExclusiveLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "UpdateLock",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "ExclusiveLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "AccessShareLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "WriteLock",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "AccessExclusiveLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "RowShareLock",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой уровень изоляции требует обработки ошибок сериализации?",
+      "Type": 1,
+      "Order": 24,
+      "Answers": [
+        {
+          "Text": "Read Uncommitted",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Repeatable Read",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Serializable",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Read Committed",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое Serializable Isolation Failure?",
+      "Type": 1,
+      "Order": 25,
+      "Answers": [
+        {
+          "Text": "Ошибку при записи в WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибка, возникающая когда PostgreSQL обнаруживает, что сериализация невозможна",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибку при чтении из реплики",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибку блокировки из-за нехватки памяти",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое table bloat?",
+      "Type": 1,
+      "Order": 26,
+      "Answers": [
+        {
+          "Text": "Переполнение таблицы при превышении размера файла",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Разрастание таблицы из-за накопления мёртвых версий строк, которые не были вычищены",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Увеличение размера таблицы при вставке",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжатие таблицы при VACUUM FULL",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры autovacuum можно задать на уровне таблицы?",
+      "Type": 2,
+      "Order": 27,
+      "Answers": [
+        {
+          "Text": "autovacuum_vacuum_scale_factor",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_enabled",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_threshold",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_vacuum_cost_delay",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "autovacuum_analyze_threshold",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое vacuum cost delay?",
+      "Type": 1,
+      "Order": 28,
+      "Answers": [
+        {
+          "Text": "Задержка, которую autovacuum делает между операциями для снижения нагрузки на I/O",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Задержка перед записью WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Время между запусками autovacuum",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Время, необходимое для выполнения полной очистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие команды перестраивают объекты?",
+      "Type": 2,
+      "Order": 29,
+      "Answers": [
+        {
+          "Text": "REINDEX CONCURRENTLY",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ANALYZE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "CLUSTER",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "REINDEX",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "VACUUM FULL",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает CLUSTER?",
+      "Type": 1,
+      "Order": 30,
+      "Answers": [
+        {
+          "Text": "Пересортировывает строки таблицы по индексу и перестраивает таблицу физически",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Вычищает мёртвые строки из таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Сжимает данные в TOAST-таблице",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Создаёт новый индекс для таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр задаёт количество конкурентных операций ввода-вывода?",
+      "Type": 1,
+      "Order": 31,
+      "Answers": [
+        {
+          "Text": "max_io_threads",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "effective_io_concurrency",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "io_parallelism",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "io_concurrency",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных параметров влияют на производительность записи?",
+      "Type": 2,
+      "Order": 32,
+      "Answers": [
+        {
+          "Text": "checkpoint_completion_target",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "synchronous_commit",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "full_page_writes",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_wal_size",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_buffers",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает параметр full_page_writes?",
+      "Type": 1,
+      "Order": 33,
+      "Answers": [
+        {
+          "Text": "Записывает полный WAL-файл при каждом запросе",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Включает полную блокировку при записи",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Включает запись полных страниц в WAL при их первом изменении после контрольной точки",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключает запись в WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие из перечисленных параметров влияют на производительность чтения?",
+      "Type": 2,
+      "Order": 34,
+      "Answers": [
+        {
+          "Text": "max_wal_size",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "effective_cache_size",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "random_page_cost",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "work_mem",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое checkpoint_flush_after?",
+      "Type": 1,
+      "Order": 35,
+      "Answers": [
+        {
+          "Text": "Порог в байтах, после которого грязные страницы принудительно сбрасываются через ОС",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Интервал между контрольными точками",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Максимальное время выполнения контрольной точки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Минимальный размер WAL перед контрольной точкой",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие привилегии нужны для создания схемы в базе данных?",
+      "Type": 1,
+      "Order": 36,
+      "Answers": [
+        {
+          "Text": "INSERT на pg_database",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "SELECT на pg_namespace",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "CREATE на уровне БД",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "USAGE на схеме public",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт при попытке удалить схему, в которой есть объекты?",
+      "Type": 1,
+      "Order": 37,
+      "Answers": [
+        {
+          "Text": "Схема и объекты будут удалены",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Схема перейдёт в режим только для чтения",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Объекты останутся в схеме public",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибка — нужно указать CASCADE для удаления объектов",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие системные представления содержат информацию о схемах?",
+      "Type": 2,
+      "Order": 38,
+      "Answers": [
+        {
+          "Text": "pg_namespace",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dn",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "information_schema.schemata",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_schemas",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое pg_temp_N схема?",
+      "Type": 1,
+      "Order": 39,
+      "Answers": [
+        {
+          "Text": "Схема для системных таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Схема для объектов пользователя по умолчанию",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Схема для TOAST-таблиц",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Временная схема для каждого сеанса, содержащая временные объекты",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры влияют на поиск объектов по имени?",
+      "Type": 1,
+      "Order": 40,
+      "Answers": [
+        {
+          "Text": "schema_priority",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "default_tablespace",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "search_order",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "search_path",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие из этих таблиц находятся в pg_catalog?",
+      "Type": 2,
+      "Order": 41,
+      "Answers": [
+        {
+          "Text": "pg_type",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_class",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "sys_objects",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_attribute",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_database",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_proc",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая системная таблица хранит информацию о правах доступа?",
+      "Type": 2,
+      "Order": 42,
+      "Answers": [
+        {
+          "Text": "pg_roles",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_user_mapping",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_authid",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_hba_file_rules",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_permissions",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_policy",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как узнать, какая таблица использует какое табличное пространство?",
+      "Type": 2,
+      "Order": 43,
+      "Answers": [
+        {
+          "Text": "pg_tables.spcname",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dt+",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_class.reltablespace",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_tablespace spcname",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой столбец pg_class указывает OID схемы, которой принадлежит объект?",
+      "Type": 1,
+      "Order": 44,
+      "Answers": [
+        {
+          "Text": "relpath",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "relowner",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "relschema",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "relnamespace",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие системные представления хранят информацию о блокировках?",
+      "Type": 2,
+      "Order": 45,
+      "Answers": [
+        {
+          "Text": "pg_lock_status",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_blocking_pids",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_activity",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_locks",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие объекты хранятся в pg_global?",
+      "Type": 1,
+      "Order": 46,
+      "Answers": [
+        {
+          "Text": "Только временные объекты",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Общие объекты кластера (pg_database, pg_authid, pg_authrol)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только файлы WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "TOAST-таблицы",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что происходит с данными при удалении табличного пространства?",
+      "Type": 1,
+      "Order": 47,
+      "Answers": [
+        {
+          "Text": "Данные удаляются принудительно",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Данные архивируются",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Ошибка, если в нём есть объекты; иначе — удаление",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Данные перемещаются в pg_default",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая функция возвращает размер табличного пространства?",
+      "Type": 1,
+      "Order": 48,
+      "Answers": [
+        {
+          "Text": "SELECT size FROM pg_tablespace",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "spc_size('name')",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_tablespace_size('name')",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_tablespace('name').size",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры задают табличные пространства для временных объектов?",
+      "Type": 1,
+      "Order": 49,
+      "Answers": [
+        {
+          "Text": "pg_default_temp",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "temp_tablespace",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "default_temp_tablespace",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "temp_tablespaces",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая команда перемещает все объекты пользователя в другое табличное пространство?",
+      "Type": 2,
+      "Order": 50,
+      "Answers": [
+        {
+          "Text": "ALTER USER ... SET TABLESPACE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ALTER TABLE ALL ... SET TABLESPACE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "REASSIGN OWNED BY ... TO ...",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "MOVE ALL IN TABLESPACE",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие функции PostgreSQL работают с размером объектов?",
+      "Type": 2,
+      "Order": 51,
+      "Answers": [
+        {
+          "Text": "pg_table_size()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_size_pretty()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_total_relation_size()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_relation_size()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_column_size()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_indexes_size()",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие слои fork существуют у нежурналируемой (UNLOGGED) таблицы?",
+      "Type": 2,
+      "Order": 52,
+      "Answers": [
+        {
+          "Text": "fsm",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "main",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "init",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "vm",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что произойдёт с UNLOGGED таблицами при восстановлении после сбоя?",
+      "Type": 1,
+      "Order": 53,
+      "Answers": [
+        {
+          "Text": "Они будут очищены и заполнены пустым слоем init",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они будут восстановлены из WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они перейдут в режим только для чтения",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Они будут удалены навсегда",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет стратегию сжатия TOAST по умолчанию?",
+      "Type": 1,
+      "Order": 54,
+      "Answers": [
+        {
+          "Text": "default_storage_compression",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "default_toast_compression",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast_compression",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "toast_method",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как TOAST обрабатывает значения, которые помещаются в одну страницу?",
+      "Type": 1,
+      "Order": 55,
+      "Answers": [
+        {
+          "Text": "Сжатие и перенос в TOAST-таблицу",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Авто-сжатие алгоритмом lz4",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Стандартное хранение (plain) — без сжатия и переноса",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Хранение inline в основной странице",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие расширения обеспечивают дополнительную статистику?",
+      "Type": 2,
+      "Order": 56,
+      "Answers": [
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pgstattuple",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_prewarm",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_cron",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_buffercache",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_freespacemap",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая функция сбрасывает статистику для текущей базы данных?",
+      "Type": 1,
+      "Order": 57,
+      "Answers": [
+        {
+          "Text": "pg_stat_reset()",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_reset_stats()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_reset_database()",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_clear()",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как узнать, какие запросы потребляют больше всего ресурсов?",
+      "Type": 2,
+      "Order": 58,
+      "Answers": [
+        {
+          "Text": "pg_stat_statements",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_database.blks_read",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_activity.query",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_all_tables.idx_scan",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие данные хранит pg_buffercache?",
+      "Type": 1,
+      "Order": 59,
+      "Answers": [
+        {
+          "Text": "Список активных подключений",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал WAL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Статистику запросов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Содержимое буферного кеша PostgreSQL",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое pg_stat_progress_vacuum?",
+      "Type": 1,
+      "Order": 60,
+      "Answers": [
+        {
+          "Text": "Статистику обращений к таблицам",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал ошибок автоочистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Список таблиц, требующих очистки",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Представление, показывающее прогресс выполнения VACUUM",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие команды управления доступом существуют в PostgreSQL?",
+      "Type": 2,
+      "Order": 61,
+      "Answers": [
+        {
+          "Text": "GRANT",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "AUTHORIZE",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "REVOKE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ALTER DEFAULT PRIVILEGES",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ALTER ROLE",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "CREATE ROLE",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что делает ALTER DEFAULT PRIVILEGES?",
+      "Type": 1,
+      "Order": 62,
+      "Answers": [
+        {
+          "Text": "Сбрасывает все привилегии к значениям по умолчанию",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Отключает проверку привилегий",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Изменяет привилегии для существующих объектов",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Задаёт привилегии по умолчанию для объектов, которые будут созданы в будущем",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие системные представления хранят информацию о привилегиях?",
+      "Type": 2,
+      "Order": 63,
+      "Answers": [
+        {
+          "Text": "pg_grants",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_class.relacl",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_namespace.nspacl",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "information_schema.role_table_grants",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_roles.rolpriv",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "information_schema.table_privileges",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Как отозвать все привилегии у роли у таблице?",
+      "Type": 2,
+      "Order": 64,
+      "Answers": [
+        {
+          "Text": "REVOKE ALL PRIVILEGES ON TABLE t FROM role",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "DROP TABLE t",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "REVOKE ALL ON TABLE t FROM role",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "ALTER TABLE t DROP ALL FROM role",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие предопределённые роли позволяют чтение данных?",
+      "Type": 2,
+      "Order": 65,
+      "Answers": [
+        {
+          "Text": "pg_read_all_settings",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_read_all_data",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_read_all_stats",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_monitor",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_read_server_files",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры WAL-архивирования нужны для PITR?",
+      "Type": 2,
+      "Order": 66,
+      "Answers": [
+        {
+          "Text": "shared_buffers",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "max_wal_size",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "archive_command",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "archive_mode = on",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "wal_level = replica",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "checkpoint_timeout",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие утилиты PostgreSQL поддерживают параллельное выполнение?",
+      "Type": 2,
+      "Order": 67,
+      "Answers": [
+        {
+          "Text": "pg_dumpall",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_basebackup",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_restore --jobs",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_dump --jobs",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой формат pg_dump позволяет восстановить только определённые объекты?",
+      "Type": 2,
+      "Order": 68,
+      "Answers": [
+        {
+          "Text": "directory",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "tar",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "custom",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "plain",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое backup_label?",
+      "Type": 1,
+      "Order": 69,
+      "Answers": [
+        {
+          "Text": "Файл, созданный pg_basebackup, содержащий информацию о базовой резервной копии",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Журнал выполненных резервных копий",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Файл с параметрами резервной копии",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Файл конфигурации для восстановления",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой файл указывает PostgreSQL на необходимость восстановления?",
+      "Type": 1,
+      "Order": 70,
+      "Answers": [
+        {
+          "Text": "restore.signal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "backup.signal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_restore.signal",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "recovery.signal (или standby.signal для реплики)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры настройки физической репликации?",
+      "Type": 2,
+      "Order": 71,
+      "Answers": [
+        {
+          "Text": "hot_standby = on",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "synchronous_commit",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "primary_conninfo",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "replica_mode",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "synchronous_standby_names",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "primary_slot_name",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой параметр определяет режим синхронной репликации?",
+      "Type": 2,
+      "Order": 72,
+      "Answers": [
+        {
+          "Text": "sync_replication",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "synchronous_mode",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "synchronous_standby_names",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "synchronous_commit",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие режимы синхронной репликации существуют?",
+      "Type": 2,
+      "Order": 73,
+      "Answers": [
+        {
+          "Text": "async",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "remote_write (записано на standby)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "fast",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "on (гарантированная)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "remote_apply (реплики применили на standby)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "local (записано на master)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие представления показывают состояние репликации?",
+      "Type": 2,
+      "Order": 74,
+      "Answers": [
+        {
+          "Text": "pg_replication_slots",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_all_tables",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_wal_receiver (на реплике)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "pg_stat_replication (на мастере)",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Что такое replication slot?",
+      "Type": 1,
+      "Order": 75,
+      "Answers": [
+        {
+          "Text": "Список реплик в кластере",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Клиентский параметр подключения",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Серверный объект, удерживающий WAL-файлы до их прочтения клиентом",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Параметр синхронной репликации",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие объекты создаются при логической репликации?",
+      "Type": 2,
+      "Order": 76,
+      "Answers": [
+        {
+          "Text": "Publication",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Replication slot",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Subscription",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Materialized view",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Foreign table",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какая команда показывает информацию о публикации?",
+      "Type": 2,
+      "Order": 77,
+      "Answers": [
+        {
+          "Text": "\\dp+",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dRp+",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dRp",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "\\dR+",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие ограничения есть у логической репликации?",
+      "Type": 2,
+      "Order": 78,
+      "Answers": [
+        {
+          "Text": "Не реплицируются TRUNCATE по умолчанию (нужно указать)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "DDL не реплицируется",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Требует одинаковых версий PostgreSQL",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Таблица должна иметь PRIMARY KEY или UNIQUE NOT NULL",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Только одна публикация на подписку",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какой тип репликации позволяет реплицировать только часть строк?",
+      "Type": 1,
+      "Order": 79,
+      "Answers": [
+        {
+          "Text": "Логическая репликация с фильтром (FOR TABLE ... WHERE ...)",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "Физическая репликация с фильтром",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Репликация по схеме",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "Репликация с pglogical",
+          "IsCorrect": false,
+          "NumericValue": null
+        }
+      ]
+    },
+    {
+      "Text": "Какие параметры подписки (subscription) можно настроить?",
+      "Type": 2,
+      "Order": 80,
+      "Answers": [
+        {
+          "Text": "two_phase",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "binary",
+          "IsCorrect": false,
+          "NumericValue": null
+        },
+        {
+          "Text": "create_subscription",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "enabled",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "copy_data",
+          "IsCorrect": true,
+          "NumericValue": null
+        },
+        {
+          "Text": "streaming",
+          "IsCorrect": true,
+          "NumericValue": null
+        }
+      ]
+    }
+  ]
+}
