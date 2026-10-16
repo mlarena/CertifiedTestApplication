@@ -87,6 +87,62 @@ SHOW myapp.region;
 \set
 ```
 
+### Шаг 7. Защита от долгих запросов и блокировок
+
+```sql
+-- Таймаут выполнения запроса (защита от зависших SELECT)
+SET statement_timeout TO '5s';
+SHOW statement_timeout;
+
+-- Таймаут ожидания блокировки (защита от взаимных блокировок)
+SET lock_timeout TO '3s';
+SHOW lock_timeout;
+
+-- Таймаут простоя в транзакции (защита от idle in transaction)
+SET idle_in_transaction_session_timeout TO '30s';
+SHOW idle_in_transaction_session_timeout;
+
+-- Сброс
+RESET statement_timeout;
+RESET lock_timeout;
+RESET idle_in_transaction_session_timeout;
+```
+
+### Шаг 8. Temp buffers
+
+```sql
+-- Размер буферов для временных таблиц
+SHOW temp_buffers;
+
+-- Установка большего размера для сеанса
+SET temp_buffers TO '16MB';
+SHOW temp_buffers;
+
+-- Создание и использование временной таблицы
+CREATE TEMP TABLE tmp_lab(n integer);
+INSERT INTO tmp_lab SELECT generate_series(1, 1000);
+SELECT count(*) FROM tmp_lab;
+
+-- Сброс
+RESET temp_buffers;
+```
+
+### Шаг 9. Параметры на уровне роли
+
+```sql
+-- Установка параметра для роли (применяется при входе в сеанс)
+CREATE ROLE lab_role LOGIN;
+ALTER ROLE lab_role SET work_mem TO '32MB';
+ALTER ROLE lab_role SET statement_timeout TO '10s';
+
+-- Проверка
+SELECT rolname, rolconfig FROM pg_roles WHERE rolname = 'lab_role';
+
+-- Очистка
+ALTER ROLE lab_role RESET ALL;
+DROP ROLE lab_role;
+```
+
 ## Решение
 
 ### Шаг 1: Результат

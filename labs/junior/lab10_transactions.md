@@ -80,6 +80,61 @@ SELECT * FROM accounts WHERE id = 1;
 -- Теперь видит 10000
 ```
 
+### Шаг 6. SET TRANSACTION ISOLATION LEVEL
+
+```sql
+-- Read Committed (по умолчанию)
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT * FROM accounts;
+COMMIT;
+
+-- Repeatable Read
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SELECT * FROM accounts;
+SELECT * FROM accounts;
+-- Оба запроса возвращают одинаковые данные
+COMMIT;
+
+-- Serializable
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT * FROM accounts;
+COMMIT;
+
+-- Read Only
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY DEFERRABLE;
+SELECT * FROM accounts;
+COMMIT;
+```
+
+### Шаг 7. Установка таймаутов блокировок
+
+```sql
+-- Таймаут ожидания блокировки (в мс)
+BEGIN;
+SET lock_timeout TO '2s';
+UPDATE accounts SET balance = balance + 1 WHERE id = 1;
+
+-- Если другой сеанс удерживает блокировку, через 2 секунды
+-- будет ошибка: canceling statement due to lock timeout
+COMMIT;
+```
+
+### Шаг 8. Транзакция с DEFERRABLE
+
+```sql
+-- Только для SERIALIZABLE READ ONLY
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY DEFERRABLE;
+-- DEFERRABLE позволяет отложить запрос, если есть конфликтующие
+-- блокировки (полезно на реплике)
+SELECT * FROM accounts;
+COMMIT;
+```
+
 ## Решение
 
 ### Шаг 2: Результат

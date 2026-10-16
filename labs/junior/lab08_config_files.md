@@ -75,6 +75,50 @@ SELECT pg_reload_conf();
 SHOW work_mem;
 ```
 
+### Шаг 7. Горячие параметры vs требующие рестарта
+
+```sql
+-- Параметр, который можно менять на лету (session или superuser)
+SELECT name, context, boot_val, reset_val
+FROM pg_settings WHERE name IN ('work_mem', 'statement_timeout', 'shared_buffers');
+
+-- shared_buffers требует рестарта — попробуем изменить на лету
+ALTER SYSTEM SET shared_buffers TO '256MB';
+SELECT pg_reload_conf();
+SHOW shared_buffers;
+-- Результат: 128MB (старое значение — не применилось!)
+
+-- Для shared_buffers нужен restart
+-- Сброс
+ALTER SYSTEM RESET shared_buffers;
+SELECT pg_reload_conf();
+
+-- statement_timeout — применяется сразу
+ALTER SYSTEM SET statement_timeout TO '5s';
+SELECT pg_reload_conf();
+SHOW statement_timeout;
+-- Результат: 5s
+```
+
+### Шаг 8. Включение каталога конфига
+
+```bash
+# В postgresql.conf раскомментируйте или добавьте:
+# include_dir = 'conf.d'
+
+# Создаём файл
+echo "log_min_duration_statement = 1000" \
+  | sudo tee /etc/postgresql/16/main/conf.d/lab_log.conf
+
+# Перезагрузка — параметры из conf.d загружаются автоматически
+sudo -u postgres psql -c "SELECT pg_reload_conf();"
+sudo -u postgres psql -c "SHOW log_min_duration_statement;"
+
+# Удаление
+sudo rm /etc/postgresql/16/main/conf.d/lab_log.conf
+sudo -u postgres psql -c "SELECT pg_reload_conf();"
+```
+
 ## Решение
 
 ### Шаг 4: Результат

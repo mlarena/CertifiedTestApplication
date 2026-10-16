@@ -73,6 +73,67 @@ CREATE DATABASE lab_backup2;
 pg_dump -d lab_backup -t products | psql -d lab_backup2
 ```
 
+### Шаг 9. Исключение объектов
+
+```bash
+# Исключение таблицы
+pg_dump -d lab_backup --exclude-table=products -Fc -f /tmp/exclude_products.dump
+
+# Исключение схемы
+pg_dump -d lab_backup --exclude-schema='temp_*' -Fc -f /tmp/exclude_schema.dump
+
+# Включение только определённых таблиц
+pg_dump -d lab_backup --include-table=products -Fc -f /tmp/include_products.dump
+
+# Включение только определённой схемы
+pg_dump -d lab_backup --include-schema=public -Fc -f /tmp/include_schema.dump
+```
+
+### Шаг 10. Экспорт глобальных объектов
+
+```bash
+# Экспорт ролей, tablespaces, баз данных
+pg_dumpall --globals-only -f /tmp/globals_only.sql
+
+# Полный экспорт всех баз
+pg_dumpall -f /tmp/all_databases.sql
+
+# Восстановление глобальных объектов
+psql -f /tmp/globals_only.sql
+```
+
+### Шаг 11. Параллельное восстановление
+
+```bash
+# Создание директории для параллельного восстановления
+mkdir -p /tmp/lab_restore_dir
+
+# Распаковка custom в directory (для параллельного восстановления)
+pg_restore -d lab_backup2 --list /tmp/lab_backup_custom.dump | head -20
+
+# Параллельное восстановление (4 потока)
+pg_restore -d lab_backup2 -j 4 -Fd /tmp/lab_backup_dir/
+
+# Проверка
+psql -d lab_backup2 -c "SELECT count(*) FROM products;"
+```
+
+### Шаг 12. pg_restore — список объектов
+
+```bash
+# Вывод оглавления custom-файла
+pg_restore -l /tmp/lab_backup_custom.dump
+
+# Поиск конкретных объектов
+pg_restore -l /tmp/lab_backup_custom.dump | grep -i index
+
+# Восстановление только индексов
+pg_restore -l /tmp/lab_backup_custom.dump \
+  | grep -i index \
+  | cut -d: -f3 \
+  | xargs pg_restore -d lab_backup2 --no-owner --no-privileges
+```
+
 ## Решение
 
 ### Шаг 2: Результат

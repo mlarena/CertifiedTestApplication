@@ -63,6 +63,51 @@ sudo pg_ctlcluster 16 main start
 tail -n 15 /var/log/postgresql/postgresql-16-main.log
 ```
 
+### Шаг 8. Управление несколькими кластерами
+
+```bash
+# Список всех кластеров
+pg_lsclusters
+
+# Создание второго кластера
+sudo pg_createcluster 16 lab2cluster -- -E UTF8 --locale=C
+
+# Старт и проверка
+sudo pg_ctlcluster 16 lab2cluster start
+pg_lsclusters
+```
+
+### Шаг 9. Управление параметрами через pg_conftool
+
+```bash
+# Установка параметра (в postgresql.conf)
+sudo pg_conftool 16 main set log_connections on
+sudo pg_conftool 16 main get log_connections
+
+# Применение без рестарта
+sudo pg_ctlcluster 16 main reload
+
+# Удаление параметра
+sudo pg_conftool 16 main unset log_connections
+sudo pg_ctlcluster 16 main reload
+```
+
+### Шаг 10. Приоритет postgresql.auto.conf
+
+```bash
+# ALTER SYSTEM пишет в postgresql.auto.conf
+psql -U postgres -c "ALTER SYSTEM SET work_mem TO '32MB';"
+psql -U postgres -c "SELECT pg_reload_conf();"
+psql -U postgres -c "SHOW work_mem;"
+# Результат: 32MB (приоритет auto.conf)
+
+# Удаление из auto.conf — параметр из postgresql.conf или default
+psql -U postgres -c "ALTER SYSTEM RESET work_mem;"
+psql -U postgres -c "SELECT pg_reload_conf();"
+psql -U postgres -c "SHOW work_mem;"
+# Результат: 4MB (значение по умолчанию)
+```
+
 ## Решение
 
 ### Шаг 1: Результат

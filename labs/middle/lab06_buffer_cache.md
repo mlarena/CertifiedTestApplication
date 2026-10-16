@@ -69,6 +69,76 @@ SHOW shared_buffers;
 SELECT pg_relation_size('t') / 8192 AS pages;
 ```
 
+### Шаг 6. Детальный анализ pg_buffercache
+
+```sql
+-- Статистика по страницам в кеше
+SELECT count(*) AS total_buffers,
+       count(*) FILTER (WHERE relname = 't') AS t_buffers
+FROM pg_buffercache b
+JOIN pg_class c ON c.oid = b.relation;
+
+-- Распределение usagecount (0 = кандидат на вытеснение, 5 = защищён)
+SELECT usagecount, count(*)
+FROM pg_buffercache
+GROUP BY usagecount
+ORDER BY usagecount;
+
+-- Блокировка буферов для таблицы t (pin count > 0)
+SELECT count(*) AS pinned_buffers
+FROM pg_buffercache b
+JOIN pg_class c ON c.oid = b.relation
+WHERE c.relname = 't';
+```
+
+### Шаг 7. Буферное кольцо для последовательного сканирования
+
+```sql
+-- Выполняем полное сканирование
+SELECT * FROM t;
+
+-- Проверяем, какие страницы оказались в кеше
+SELECT relname, count(*) AS buffers
+FROM pg_buffercache b
+JOIN pg_class c ON c.oid = b.relation
+GROUP BY relname;
+
+-- Пытаемся увеличить кеш для seqscan (требует прав суперпользователя)
+-- ALTER SYSTEM SET seq_page_ratio = '1.0';
+-- SELECT pg_reload_conf();
+```
+
+### Шаг 8. Прогрев кеша через pg_prewarm
+
+```sql
+CREATE EXTENSION pg_prewarm;
+
+-- Прогреваем таблицу (чтение в кеш)
+SELECT pg_prewarm('t');
+
+-- Сравниваем EXPLAIN ANALYZE до и после
+EXPLAIN (analyze, buffers, costs off, timing off) SELECT * FROM t;
+-- Должно быть: Buffers: shared hit=443
+
+-- Прогрев с выводом прогресса
+SELECT pg_prewarm('t', 'buffer', 'page', true);
+
+-- Прогрев индекса
+SELECT pg_prewarm('idx_t', 'buffer', 'page', true);
+```
+
+### Шаг 9. Мониторинг ввода-вывода (pg_stat_io)
+
+```sql
+-- Статистика ввода-вывода (PostgreSQL 16+)
+SELECT * FROM pg_stat_io WHERE context = 'normal' \gx
+LIMIT 20;
+
+-- Статистика для Vacuum
+SELECT * FROM pg_stat_io WHERE context = 'vacuum' \gx
+LIMIT 20;
+```
+
 ## Решение
 
 ### Шаг 2: Результат
