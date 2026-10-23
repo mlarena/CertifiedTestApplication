@@ -1,5 +1,5 @@
-dotnet ef migrations add InitMigration
 dotnet ef migrations add InitialCreate
+dotnet ef database update
 
 
-scp "C:\git\CertifiedTestApplication\admin\cta.zip" devuser@192.168.192.152:/tmp
+scp "C:\git\CertifiedTestApplication\admin\cta.zip" devuser@192.168.19.129:/tmp
