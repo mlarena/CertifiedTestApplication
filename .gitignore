@@ -44,6 +44,7 @@ TestResult.xml
 [Rr]eleasePS/
 release/
 dlldata.c
+appsettings.json
 
 # DNX
 project.lock.json
@@ -277,22 +278,6 @@ __pycache__/
 *Bundle.css
 *Bundle.js
 
-/Burstroy.VideoServerAPI/wwwroot/StreamStorage
-/Burstroy.TCU.WebAssembly/Server/wwwroot/snapshots
-/Burstroy.TCU.WebAssembly/Server/wwwroot/schemes
-/Burstroy.TCU.WebAssembly/Server/wwwroot/audio
-/Burstroy.TCU.WebAssembly/Server/wwwroot/snapshots/defects
-/Burstroy.TCU.WebAssembly/Client/wwwroot/panorama/
-/Burstroy.VideoServerAPI/wwwroot/panorama
-/Burstroy.TCU.WebAssembly/Server/wwwroot/content/png63.png
-/Burstroy.TCU.WebAssembly/Server/wwwroot/content/png62.png
-/Burstroy.TCU.WebAssembly/Server/wwwroot/content/png61.png
-/Burstroy.TCU.WebAssembly/Server/wwwroot/content/
-/Burstroy.TCU.WebAssembly/Server/wwwroot/defects/a6008dab-384c-4eec-a6aa-e4d103d7a62e.jpeg
-/Burstroy.TCU.WebAssembly/Server/wwwroot/audio
-/Neuro
-/admin/publish_cmd/tcm.zip
-/admin/publish_cmd/tcm_arm.zip
 
 # Docker secrets
 .env
